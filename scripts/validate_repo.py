@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Structural checks for the implement-issue workflow source repository."""
+"""Structural and security checks for the IssueCraft workflow source repository."""
 from __future__ import annotations
 
 import json
@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     "VERSION",
     "manifest.json",
+    "README.md",
+    "README.pt-BR.md",
     "core/WORKFLOW.md",
     "core/CAPABILITIES.md",
     "core/EVIDENCE_MODEL.md",
@@ -28,8 +30,11 @@ REQUIRED = [
     "schemas/project-blueprint.schema.json",
     "templates/PROJECT_PROFILE.yaml",
     "templates/PROJECT_BLUEPRINT.yaml",
+    "templates/LEARNINGS.md",
+    "templates/WORKFLOW_IMPROVEMENT_PROPOSAL.md",
     ".agents/skills/implement-issue/SKILL.md",
     ".claude/skills/implement-issue/SKILL.md",
+    "scripts/run_evals.py",
 ]
 VENDOR_TERMS = re.compile(r"\b(codex|claude|antigravity|openai|anthropic|gemini)\b", re.I)
 STACK_TERMS = re.compile(
@@ -37,6 +42,7 @@ STACK_TERMS = re.compile(
     r"postgresql|mysql|mongodb|redis|npm|pnpm|yarn|pytest|jest|vitest|flyway|liquibase|prisma)\b",
     re.I,
 )
+ACTION_REF = re.compile(r"^\s*uses:\s*[^@\s]+@([0-9a-f]{40})(?:\s+#.*)?$", re.M)
 
 
 def check_required(errors: list[str]) -> None:
@@ -46,11 +52,11 @@ def check_required(errors: list[str]) -> None:
 
 
 def check_json(errors: list[str]) -> None:
-    for p in list((ROOT / "schemas").glob("*.json")) + [ROOT / "manifest.json"]:
+    for path in list((ROOT / "schemas").glob("*.json")) + [ROOT / "manifest.json"]:
         try:
-            json.loads(p.read_text(encoding="utf-8"))
+            json.loads(path.read_text(encoding="utf-8"))
         except Exception as exc:
-            errors.append(f"invalid JSON {p.relative_to(ROOT)}: {exc}")
+            errors.append(f"invalid JSON {path.relative_to(ROOT)}: {exc}")
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -62,8 +68,8 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     out: dict[str, str] = {}
     for line in text[4:end].splitlines():
         if ":" in line:
-            k, v = line.split(":", 1)
-            out[k.strip()] = v.strip()
+            key, value = line.split(":", 1)
+            out[key.strip()] = value.strip()
     return out
 
 
@@ -72,30 +78,30 @@ def check_skills(errors: list[str]) -> None:
         ROOT / ".agents/skills/implement-issue/SKILL.md",
         ROOT / ".claude/skills/implement-issue/SKILL.md",
     ]
-    texts = []
-    for p in paths:
-        text = p.read_text(encoding="utf-8")
+    texts: list[str] = []
+    for path in paths:
+        text = path.read_text(encoding="utf-8")
         texts.append(text)
         fm = parse_frontmatter(text)
         if fm.get("name") != "implement-issue":
-            errors.append(f"invalid/missing skill name in {p.relative_to(ROOT)}")
+            errors.append(f"invalid/missing skill name in {path.relative_to(ROOT)}")
         if not fm.get("description"):
-            errors.append(f"missing skill description in {p.relative_to(ROOT)}")
+            errors.append(f"missing skill description in {path.relative_to(ROOT)}")
         if "core/WORKFLOW.md" not in text:
-            errors.append(f"adapter does not delegate to canonical workflow: {p.relative_to(ROOT)}")
+            errors.append(f"adapter does not delegate to canonical workflow: {path.relative_to(ROOT)}")
     if len(set(texts)) != 1:
         errors.append("agent skill adapters must be behaviorally identical")
 
 
 def check_core_neutrality(errors: list[str]) -> None:
-    for p in (ROOT / "core").glob("*.md"):
-        text = p.read_text(encoding="utf-8")
-        m = VENDOR_TERMS.search(text)
-        if m:
-            errors.append(f"provider term '{m.group(0)}' leaked into canonical core: {p.relative_to(ROOT)}")
-        m = STACK_TERMS.search(text)
-        if m:
-            errors.append(f"stack-specific term '{m.group(0)}' leaked into canonical core: {p.relative_to(ROOT)}")
+    for path in (ROOT / "core").glob("*.md"):
+        text = path.read_text(encoding="utf-8")
+        vendor = VENDOR_TERMS.search(text)
+        if vendor:
+            errors.append(f"provider term '{vendor.group(0)}' leaked into canonical core: {path.relative_to(ROOT)}")
+        stack = STACK_TERMS.search(text)
+        if stack:
+            errors.append(f"stack-specific term '{stack.group(0)}' leaked into canonical core: {path.relative_to(ROOT)}")
 
 
 def check_quality_contracts(errors: list[str]) -> None:
@@ -104,12 +110,10 @@ def check_quality_contracts(errors: list[str]) -> None:
     tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8")
     security = (ROOT / "core/SECURITY.md").read_text(encoding="utf-8")
     performance = (ROOT / "core/PERFORMANCE.md").read_text(encoding="utf-8")
-    required_workflow_refs = ["TEST_STRATEGY.md", "SECURITY.md", "PERFORMANCE.md", "security-impact triage", "performance-impact triage"]
-    for phrase in required_workflow_refs:
+    for phrase in ("TEST_STRATEGY.md", "SECURITY.md", "PERFORMANCE.md", "security-impact triage", "performance-impact triage"):
         if phrase not in workflow:
             errors.append(f"workflow quality contract missing phrase: {phrase}")
-    required_test_terms = ["Unit", "Integration", "Contract", "End-to-end", "Regression", "property-based", "fuzz", "mutation", "concurrency", "accessibility", "load", "stress", "soak", "compatibility", "migration"]
-    for phrase in required_test_terms:
+    for phrase in ("Unit", "Integration", "Contract", "End-to-end", "Regression", "property-based", "fuzz", "mutation", "concurrency", "accessibility", "load", "stress", "soak", "compatibility", "migration"):
         if phrase.lower() not in tests.lower():
             errors.append(f"test taxonomy missing category: {phrase}")
     if "material security regression" not in security:
@@ -120,26 +124,28 @@ def check_quality_contracts(errors: list[str]) -> None:
         errors.append("validation must distinguish not_applicable from unavailable")
 
 
+def check_learning_contract(errors: list[str]) -> None:
+    learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
+    gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
+    for phrase in (".implement-issue/proposals/", ".implement-issue/LEARNINGS.md", "explicit human approval"):
+        if phrase not in learning:
+            errors.append(f"persistent learning contract missing phrase: {phrase}")
+    if "Persistence and adoption are distinct decisions" not in gates:
+        errors.append("human gate must separate learning persistence from adoption")
+
+
 def check_eval_coverage(errors: list[str]) -> None:
-    required = [
-        "11-security-sensitive.md",
-        "12-performance-sensitive.md",
-        "13-test-taxonomy.md",
-        "14-agent-neutrality.md",
-        "15-stack-neutrality.md",
-        "16-safe-expensive-tests.md",
-    ]
-    for name in required:
-        if not (ROOT / "evals/scenarios" / name).is_file():
-            errors.append(f"missing quality regression eval: {name}")
+    scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
+    if len(scenarios) != 16:
+        errors.append(f"expected 16 behavioral eval scenarios, found {len(scenarios)}")
+    if not (ROOT / "scripts/run_evals.py").is_file():
+        errors.append("deterministic contract eval runner missing")
 
 
 def check_human_gates(errors: list[str]) -> None:
-    workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
-    gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
-    required_phrases = ["PROJECT_PROFILE", "PROJECT_BLUEPRINT", "Done", "human"]
-    for phrase in required_phrases:
-        if phrase not in workflow + gates:
+    text = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8") + (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
+    for phrase in ("PROJECT_PROFILE", "PROJECT_BLUEPRINT", "Done", "human"):
+        if phrase not in text:
             errors.append(f"human gate contract missing phrase: {phrase}")
 
 
@@ -148,8 +154,43 @@ def check_manifest(errors: list[str]) -> None:
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     if manifest.get("version") != version:
         errors.append("manifest.json version does not match VERSION")
+    if manifest.get("name") != "issuecraft-workflow":
+        errors.append("manifest name must be issuecraft-workflow")
     if manifest.get("canonical_entry") != "core/WORKFLOW.md":
         errors.append("manifest canonical_entry must be core/WORKFLOW.md")
+
+
+def check_readmes(errors: list[str]) -> None:
+    for name in ("README.md", "README.pt-BR.md"):
+        text = (ROOT / name).read_text(encoding="utf-8")
+        for phrase in ("IssueCraft Workflow", "git clone https://github.com/portoduque/issuecraft-workflow.git", "cd issuecraft-workflow", "scripts/install.py", "$implement-issue", "/implement-issue", "PROJECT_PROFILE", "PROJECT_BLUEPRINT", "In Review", "Done", "LEARNINGS.md", "--overwrite-system"):
+            if phrase not in text:
+                errors.append(f"{name} onboarding missing: {phrase}")
+        if "<REPOSITORY_URL>" in text or "<URL_DO_REPOSITORIO>" in text:
+            errors.append(f"{name} still contains clone URL placeholder")
+
+
+def check_ci_hardening(errors: list[str]) -> None:
+    text = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    for os_name in ("ubuntu-latest", "macos-latest", "windows-latest"):
+        if os_name not in text:
+            errors.append(f"CI matrix missing OS: {os_name}")
+    if "persist-credentials: false" not in text:
+        errors.append("checkout must disable persisted credentials")
+    uses_lines = [line for line in text.splitlines() if line.strip().startswith("uses:")]
+    for line in uses_lines:
+        if not ACTION_REF.match(line):
+            errors.append(f"GitHub Action is not pinned to an immutable SHA: {line.strip()}")
+    if "python scripts/run_evals.py" not in text:
+        errors.append("CI must execute deterministic contract evals")
+
+
+def check_release_hardening(errors: list[str]) -> None:
+    text = (ROOT / "scripts/release_zip.py").read_text(encoding="utf-8")
+    if '".git"' not in text:
+        errors.append("release ZIP must exclude .git")
+    if "issuecraft-workflow-" not in text:
+        errors.append("release ZIP must use IssueCraft artifact name")
 
 
 def validate() -> list[str]:
@@ -161,9 +202,13 @@ def validate() -> list[str]:
     check_skills(errors)
     check_core_neutrality(errors)
     check_quality_contracts(errors)
+    check_learning_contract(errors)
     check_eval_coverage(errors)
     check_human_gates(errors)
     check_manifest(errors)
+    check_readmes(errors)
+    check_ci_hardening(errors)
+    check_release_hardening(errors)
     return errors
 
 
@@ -171,8 +216,8 @@ def main() -> int:
     errors = validate()
     if errors:
         print("VALIDATION FAILED")
-        for err in errors:
-            print(f"- {err}")
+        for error in errors:
+            print(f"- {error}")
         return 1
     print("VALIDATION PASSED")
     return 0

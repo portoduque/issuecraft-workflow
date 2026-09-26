@@ -1,4 +1,4 @@
-# Repository maintenance instructions
+# IssueCraft repository maintenance instructions
 
 This repository is the canonical source for the `implement-issue` workflow.
 
@@ -7,6 +7,8 @@ This repository is the canonical source for the `implement-issue` workflow.
 - `.agents/skills/implement-issue/SKILL.md` and `.claude/skills/implement-issue/SKILL.md` are thin adapters and should remain behaviorally identical.
 - Human gates must not be weakened silently.
 - Security-impact triage, performance-impact triage, and comprehensive risk-based test selection are canonical invariants.
+- Continuous-learning persistence and adoption require explicit human approval.
 - Keep `core/SECURITY.md`, `core/PERFORMANCE.md`, and `core/TEST_STRATEGY.md` provider- and stack-neutral.
-- New generic behavior should be backed by an eval scenario.
-- Run `python scripts/validate_repo.py` and `python -m unittest discover tests -v` before considering a change complete.
+- New generic behavior should be backed by a deterministic contract eval and, where practical, a repository test.
+- GitHub Actions dependencies must stay pinned to immutable commit SHAs.
+- Run `python scripts/validate_repo.py`, `python scripts/run_evals.py`, and `python -m unittest discover tests -v` before considering a change complete.

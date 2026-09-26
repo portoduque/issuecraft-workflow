@@ -1,5 +1,5 @@
 name: Bug report
-description: Report behavior that violates the workflow contract
+description: Report behavior that violates the IssueCraft workflow contract
 title: "[Bug] "
 labels: [bug]
 body:
@@ -38,6 +38,6 @@ body:
     id: version
     attributes:
       label: Workflow version
-      placeholder: 0.1.0
+      placeholder: 0.3.0
     validations:
       required: true

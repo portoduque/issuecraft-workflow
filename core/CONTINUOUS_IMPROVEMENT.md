@@ -1,20 +1,21 @@
 # Continuous Improvement
 
-The workflow may learn from real use, but it must not self-modify silently.
+The workflow may learn from real use, but it must not self-modify silently. Learning, persistence, and adoption are separate steps.
 
-## During execution
+## Classification
 
-When a recurring friction, missed edge case, security/performance escape, missing test category, validation gap, or useful generic pattern is observed, classify it:
+When recurring friction, a missed edge case, a security/performance escape, an omitted test family, a validation gap, or a useful reusable pattern is observed, classify it as:
 
-- `generic_workflow`: plausibly useful across unrelated stacks/projects/providers.
-- `project_specific`: convention or constraint that belongs only to the target project.
+- `generic_workflow`: plausibly useful across unrelated projects and agent hosts.
+- `project_specific`: a convention or constraint that belongs only to the target project.
 - `agent_adapter`: discovery/invocation compatibility specific to an agent surface.
-- `not_actionable`: insufficient evidence or one-off occurrence.
+- `not_actionable`: insufficient evidence or a one-off occurrence.
 
-## Improvement proposal
+## Proposal
 
-For an actionable case, produce a proposal using `../templates/WORKFLOW_IMPROVEMENT_PROPOSAL.md` containing:
+For an actionable case, prepare a proposal using `../templates/WORKFLOW_IMPROVEMENT_PROPOSAL.md`. Include:
 
+- stable proposal identifier;
 - problem;
 - evidence/scenario;
 - current behavior;
@@ -23,15 +24,43 @@ For an actionable case, produce a proposal using `../templates/WORKFLOW_IMPROVEM
 - expected benefit;
 - risks/tradeoffs;
 - regression/eval case;
-- files that would change if approved.
+- files or project knowledge that would change if adopted.
 
-## Adoption
+Preparing a proposal in the current conversation does not change future behavior.
 
-Do not modify the canonical workflow as part of implementing an unrelated issue. Present the proposal for human review.
+## Persistence gate
 
-For project-specific improvements, do not silently place them in `PROJECT_RULES.md`; use the project-rule human gate.
+Persistent learning requires explicit human approval.
 
-For generic improvements to this repository, add/update an eval scenario before considering the change complete.
+After the human approves persistence, save the proposal under:
+
+`.implement-issue/proposals/WIP-<stable-id>.md`
+
+Do not persist rejected/speculative proposals merely to accumulate memory. Pending proposals are evidence records, not normative rules, and must not silently influence future implementation behavior.
+
+## Learning ledger
+
+Human-approved reusable observations may be recorded in:
+
+`.implement-issue/LEARNINGS.md`
+
+Use `../templates/LEARNINGS.md` when creating the ledger. Each entry records provenance, classification, status, evidence, related proposal, and adoption target.
+
+The ledger is historical/project memory. An entry does not become normative merely because it is recorded.
+
+## Adoption gate
+
+Adoption is a separate explicit human decision.
+
+- `project_specific` learning belongs in approved project knowledge such as `PROJECT_RULES.md`, `PROJECT_PROFILE.yaml`, or `PROJECT_BLUEPRINT.yaml`, using the applicable human gate.
+- `generic_workflow` learning becomes a proposed change to the canonical workflow source and requires regression/eval coverage before adoption.
+- `agent_adapter` learning belongs in adapter/discovery compatibility, not canonical core unless the underlying semantics are generic.
+
+Never edit the installed canonical runtime in-place merely to apply a learning discovered while implementing an unrelated issue.
+
+## Statuses
+
+Use clear lifecycle states such as `proposed`, `approved_for_record`, `adopted`, `rejected`, or `superseded`. Preserve enough provenance to understand why the learning exists.
 
 ## End-of-issue retrospective
 
@@ -40,7 +69,8 @@ Before final completion, perform a short internal retrospective:
 1. Was important project information rediscovered that should be proposed for approved project knowledge?
 2. Did a defect escape because an applicable test family was omitted?
 3. Did security-impact or performance-impact triage miss a relevant surface?
-4. Did a human validation failure reveal a reusable workflow gap?
+4. Did human validation reveal a reusable workflow gap?
 5. Did the agent depend on provider- or stack-specific behavior that belongs in an adapter/project rule rather than canonical core?
+6. Is there already an equivalent pending/adopted learning, making a duplicate proposal unnecessary?
 
 If no actionable evidence exists, create no proposal. Learning must remain evidence-driven rather than accumulating speculative rules.

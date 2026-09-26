@@ -13,9 +13,15 @@
 - [ ] No change
 - [ ] Changes a human gate (explain explicitly below)
 
+## Security / performance impact
+
+- Security:
+- Performance:
+
 ## Evals / regression coverage
 
 ## Validation
 
 - [ ] `python scripts/validate_repo.py`
+- [ ] `python scripts/run_evals.py`
 - [ ] `python -m unittest discover tests -v`

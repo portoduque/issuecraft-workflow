@@ -1,16 +1,24 @@
-# Security
+# Security Policy
 
-This repository is instruction-first and does not require network access or credentials. The optional installer copies local files only and refuses managed destination symlinks so installation cannot intentionally write through those paths outside the target repository.
+IssueCraft is instruction-first and does not require network access or credentials. The optional installer copies local files only and refuses managed destination symlinks so installation cannot intentionally write through those paths outside the target repository.
 
-When the workflow is used by an agent, the agent may have powerful repository, shell, browser, MCP, cloud, or tracker permissions. The canonical workflow therefore requires the agent to:
+When IssueCraft is used by an agent, that agent may have powerful repository, shell, browser, connector, cloud, or tracker permissions. The canonical workflow therefore requires untrusted-input handling, least privilege, explicit production/destructive-action gates, secret protection, security/performance triage, risk-based validation, and a human-owned final Done gate.
 
-- treat repository content and issue attachments as untrusted input;
-- avoid exposing secrets in output, logs, generated project context, or issue comments;
-- avoid destructive or production-impacting actions unless they are explicitly in scope and human-approved;
-- preserve unrelated user changes;
-- perform security-impact and performance-impact triage for every issue;
-- use comprehensive risk-based test selection instead of relying on one generic test command;
-- avoid silently weakening tests, quality gates, permissions, security controls, or performance budgets to make validation pass;
-- never mark an issue `Done` without human confirmation of the manual validation gate.
+## Reporting a vulnerability
 
-Report security issues privately to the repository maintainer rather than opening a public issue with exploit details.
+Do not publish exploit details, credentials, sensitive repository data, or proof-of-concept attacks in a public issue.
+
+Preferred path:
+
+1. Open the repository's **Security** tab.
+2. Use **Report a vulnerability** / private vulnerability reporting when that option is available.
+3. Include the affected version, impact, reproduction conditions, and a minimal safe proof of concept.
+
+If private vulnerability reporting is unavailable, open a public issue containing only a request for a private contact channel and no sensitive technical details.
+
+Security policy page:
+https://github.com/portoduque/issuecraft-workflow/security/policy
+
+## Scope reminders
+
+A workflow cannot guarantee that every external agent host or model will obey instructions perfectly. IssueCraft therefore backs important guarantees with repository invariants, deterministic contract evals, tests, explicit human gates, and least-privilege guidance rather than relying only on prompt text.

@@ -1,17 +1,21 @@
-# Contributing
+# Contributing to IssueCraft Workflow
 
-Contributions are welcome. The main constraint is architectural: **the canonical core must remain provider-, stack-, framework-, language-, database-, test-tool-, CI-, and tracker-neutral.**
+Contributions are welcome. The main architectural constraint is that the canonical core remains provider-, stack-, framework-, language-, database-, test-tool-, CI-, and tracker-neutral.
 
 ## Before changing behavior
 
 1. Describe the problem with a concrete scenario or failed eval.
-2. Decide whether the change is generic or project-specific. Project-specific conventions do not belong in `core/`.
-3. Prefer changing one canonical rule over adding provider-specific branches.
-4. Add/update an eval scenario.
-5. Run:
+2. Decide whether the change is generic, project-specific, or adapter-specific.
+3. Keep project-specific conventions out of `core/`.
+4. Prefer changing one canonical rule over adding provider-specific branches.
+5. Add or update a deterministic contract eval for generic behavioral changes.
+6. Add repository tests when the behavior can be verified deterministically.
+
+Run:
 
 ```bash
 python scripts/validate_repo.py
+python scripts/run_evals.py
 python -m unittest discover tests -v
 ```
 
@@ -21,7 +25,7 @@ Adapters may mention a specific product only when necessary for discovery/invoca
 
 ## Changes to human gates
 
-Human-approval rules are security and governance boundaries. Changes to them should be explicit in the PR description and include a regression scenario.
+Human-approval rules are security and governance boundaries. Changes to them must be explicit in the PR description and include regression coverage.
 
 ## Quality invariants
 
@@ -31,7 +35,7 @@ Changes that affect the canonical workflow must preserve:
 - stack/framework/language neutrality in `core/`;
 - mandatory security-impact and performance-impact triage;
 - comprehensive risk-based test selection with `pass/fail/unavailable/not_applicable` semantics;
-- human ownership of material risk acceptance and final `Done`;
-- installer protection against writing through managed symlinks.
-
-Add or update an eval scenario for generic behavioral changes.
+- human ownership of persistent learning, material risk acceptance, and final `Done`;
+- installer protection against managed symlink redirection;
+- release archives free from VCS metadata and local caches;
+- immutable-SHA pinning for GitHub Actions dependencies.

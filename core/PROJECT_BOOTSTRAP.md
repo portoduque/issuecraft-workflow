@@ -28,7 +28,7 @@ Ask one compact initial batch. Adapt wording to the project, but cover only what
 6. Are there security/privacy/compliance constraints or trust boundaries already decided?
 7. Are there performance/reliability/capacity targets or budgets already decided?
 8. Are there constraints from an external system, organization, API, license, hosting environment, or supported platform?
-7. For undecided technology choices, should they remain undecided, or does the human want proposals/options?
+9. For undecided technology choices, should they remain undecided, or does the human want proposals/options?
 
 Do not ask questions whose answers already exist in supplied documentation or the current conversation.
 

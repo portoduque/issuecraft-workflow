@@ -11,6 +11,9 @@ When an approved Profile exists, re-check the evidence most likely to change eng
 - language/runtime/toolchain version markers;
 - framework/build configuration;
 - test/lint/format/typecheck configuration and scripts;
+- security tooling, policies, trust-boundary documentation, and security gates recorded in the Profile;
+- performance tooling, budgets, baselines, capacity/SLO evidence, and performance gates recorded in the Profile;
+- observability/health configuration that materially affects validation;
 - database/data-access and migration configuration;
 - CI/CD definitions;
 - major component/module structure;
@@ -27,6 +30,9 @@ Treat a change as material when it can alter how issues should be implemented or
 - language/runtime/framework added/replaced/removed;
 - database or migration mechanism changed;
 - test/build/lint/typecheck command changed;
+- security mechanism/policy/gate materially changed;
+- performance budget/baseline/tooling materially changed;
+- observability or health verification materially changed;
 - CI/release strategy materially changed;
 - monorepo/service boundaries changed;
 - previously recorded evidence disappeared or conflicts with new evidence.
