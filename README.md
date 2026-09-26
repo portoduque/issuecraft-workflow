@@ -1,8 +1,11 @@
-# Implement Issue Workflow
+# IssueCraft Workflow
 
-A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues with discovery, planning, security, performance, testing, review, and human approval built in.
+[![CI](https://github.com/portoduque/issuecraft-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/portoduque/issuecraft-workflow/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Version:** 0.2.1  
+A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
+
+**Version:** 0.3.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -10,18 +13,16 @@ A reusable, AI-agent-neutral and stack-neutral workflow for implementing softwar
 
 ## Quick start
 
-You only need **Git**, **Python 3** for the installer, and one supported coding agent.
+You need **Git**, **Python 3** for installation, and a compatible coding agent.
 
-### 1. Clone this repository
+### 1. Clone IssueCraft
 
 ```bash
-git clone <REPOSITORY_URL>
-cd implement-issue-workflow
+git clone https://github.com/portoduque/issuecraft-workflow.git
+cd issuecraft-workflow
 ```
 
-Replace `<REPOSITORY_URL>` with the GitHub clone URL of this project.
-
-### 2. Install the workflow into your project
+### 2. Install it into your project
 
 ```bash
 python scripts/install.py /path/to/your-project
@@ -37,9 +38,9 @@ python scripts/install.py ~/projects/my-app
 python scripts/install.py C:\dev\my-app
 ```
 
-The installer does **not** change your application stack and does **not** create project decisions automatically. It only installs the workflow runtime and agent entry points.
+The installer copies only the workflow runtime and agent entry points. It does **not** change your application's stack and does **not** pre-create project decisions.
 
-### 3. Open your project in your coding agent and run the workflow
+### 3. Invoke `implement-issue`
 
 | Agent | Command |
 |---|---|
@@ -47,24 +48,38 @@ The installer does **not** change your application stack and does **not** create
 | Claude Code | `/implement-issue` |
 | Antigravity | `/implement-issue` |
 
-Then give it the issue, task, bug, or feature you want implemented.
-
 Example:
 
 ```text
 /implement-issue
-Implement issue #42: add password visibility toggle to the user form.
+Implement issue #42: add a password visibility toggle to the user form.
 ```
 
 For Codex, use `$implement-issue` instead of `/implement-issue`.
 
-**That is enough to start.** On the first run, the workflow discovers how your project actually works before changing code.
+**That is enough to start.** On the first run, IssueCraft learns how the repository actually works before changing application code.
 
 ---
 
-## What happens on the first run?
+## What IssueCraft does
 
-The workflow starts by inspecting the repository instead of assuming a stack.
+IssueCraft provides one canonical `implement-issue` workflow that:
+
+- discovers an existing project's real languages, frameworks, package/dependency management, database, migrations, tests, CI, lint, build, security and performance tooling from evidence;
+- bootstraps empty projects through a short adaptive interview instead of inventing a stack;
+- creates a proposed `PROJECT_PROFILE` for observed reality or `PROJECT_BLUEPRINT` for planned architecture;
+- requires human approval before persisting important project knowledge;
+- detects project drift on later runs;
+- plans and implements the smallest coherent issue change;
+- performs mandatory security-impact and performance-impact triage;
+- selects tests by risk instead of assuming one framework or one test command;
+- moves work through `In Progress → In Review → human validation → Done`;
+- generates an issue-specific manual validation plan before `In Review`;
+- learns from real usage while keeping persistence and adoption human-controlled.
+
+---
+
+## First run: existing project vs. empty project
 
 ```text
 first run
@@ -86,48 +101,38 @@ inspect repository
 
 ### Existing project
 
-The workflow looks for evidence of:
+IssueCraft inspects repository evidence for:
 
-- languages and runtimes;
-- frameworks and major libraries;
-- package/dependency managers;
-- databases and persistence;
-- migration systems;
-- test tools and test commands;
-- lint, format and type-check commands;
-- build and run commands;
-- CI/CD configuration;
-- security tooling and policies;
-- performance tooling, benchmarks and budgets;
-- repository architecture and relevant conventions.
+- languages, runtimes, frameworks and major libraries;
+- dependency/package managers and workspaces;
+- persistence, databases and migrations;
+- unit, integration, contract, system, E2E and other existing tests;
+- lint, format, type/static analysis and build commands;
+- CI/CD and release automation;
+- security policies/tooling and trust boundaries;
+- performance tooling, budgets, baselines and capacity evidence;
+- architecture, modules/services and project conventions.
 
-It proposes a `PROJECT_PROFILE.yaml` based on evidence.
+It proposes `.implement-issue/PROJECT_PROFILE.yaml`.
 
-If something cannot be determined, it remains `unknown` or `not_detected`. The workflow must not invent missing information.
+If a fact cannot be established, it remains `unknown` or `not_detected`. Absence of evidence is not silently converted into a project fact.
 
-### Empty project
+### Empty or near-empty project
 
-If there is not enough implementation to discover a stack, the workflow enters **Project Bootstrap**.
+IssueCraft does not pretend to discover a stack that does not exist.
 
-It:
-
-1. reads any existing documentation;
-2. reuses decisions that are already documented;
-3. asks a short, adaptive set of questions only for unresolved decisions;
-4. leaves undecided items as `undecided`;
-5. proposes a `PROJECT_BLUEPRINT.yaml`;
-6. waits for human approval before saving it.
+It reads any existing documentation first, asks only the unresolved questions needed for the current scaffold, keeps optional decisions `undecided`, and proposes `.implement-issue/PROJECT_BLUEPRINT.yaml`.
 
 The distinction is intentional:
 
-- **Blueprint** = what you intend to build.
-- **Profile** = what the repository proves currently exists.
+- **Blueprint** = intended design.
+- **Profile** = observed repository reality.
+
+Both are human-approved before persistence.
 
 ---
 
-## Normal issue flow
-
-After onboarding, every issue follows the same core lifecycle:
+## Issue lifecycle
 
 ```text
 issue/task
@@ -136,7 +141,7 @@ understand context
    ↓
 In Progress
    ↓
-plan
+plan from evidence
    ↓
 implement
    ↓
@@ -155,92 +160,62 @@ human validation
    └── passed → Done
 ```
 
-The workflow can move an issue to **In Review**, but **Done is human-owned**. It must not mark an issue Done merely because the agent believes its own implementation is correct.
+IssueCraft may prepare an issue for `In Review`, but **Done is human-owned**. Automated checks, an agent's own UI interaction, or confidence in the diff never substitute for the final human validation gate.
 
 ---
 
-## Why it is stack-neutral
+## AI-agent neutral by design
 
-The canonical workflow does not contain project-specific commands such as:
-
-```text
-npm test
-pytest
-mvn test
-docker compose up
-```
-
-Instead, it discovers the commands actually used by the repository and stores them in project context.
-
-Conceptually, the core asks for things like:
-
-```text
-build command
-unit-test command
-integration-test command
-lint command
-migration mechanism
-database type
-CI behavior
-```
-
-The project supplies the concrete answers through evidence.
-
-This lets the same workflow operate on web apps, APIs, CLIs, libraries, mobile projects, monorepos, services, or other software projects without embedding one preferred language or framework in the core.
-
----
-
-## Why it is AI-agent-neutral
-
-There is only **one canonical workflow**:
+There is one canonical workflow:
 
 ```text
 core/WORKFLOW.md
 ```
 
-Agent-specific files are thin entry points that delegate to that same core.
-
-```text
-Codex ─────────┐
-Claude Code ───┼──→ canonical core
-Antigravity ───┘
-```
-
-The repository includes automated checks that prevent provider-specific behavior from leaking into `core/`.
-
-Current entry points:
+Agent-specific files are thin entry points that delegate to the same core:
 
 ```text
 .agents/skills/implement-issue/SKILL.md
 .claude/skills/implement-issue/SKILL.md
 ```
 
-See [`docs/compatibility.md`](docs/compatibility.md) for details.
+The canonical core is not allowed to branch behavior by AI provider. Repository validation scans the core for provider leakage, and the two adapters must remain behaviorally identical.
+
+See [docs/compatibility.md](docs/compatibility.md).
+
+---
+
+## Stack, framework and language neutral
+
+The core works with semantic concepts such as:
+
+```text
+build command
+test commands
+migration mechanism
+persistence type
+security checks
+performance checks
+CI behavior
+```
+
+It does not hardcode one preferred package manager, framework, database, migration tool, test library or operating system. Concrete commands come from repository evidence and approved project context.
+
+Monorepos and multi-service repositories are discovered per component instead of being forced into one global stack.
 
 ---
 
 ## Security is mandatory
 
-Every issue gets a security-impact triage, even when the issue does not initially appear security-related.
+Every issue gets a security-impact triage, even if the issue title does not look security-related.
 
-The workflow considers relevant areas such as:
+When applicable, IssueCraft considers authentication/authorization, tenant or privilege boundaries, untrusted input, secrets, sensitive data, files, network trust, persistence, dependency/supply-chain changes, state transitions, concurrency, logging, and other changed attack surfaces.
 
-- authentication and authorization;
-- permissions and privilege boundaries;
-- secrets and credentials;
-- sensitive data;
-- input validation;
-- injection risks;
-- file handling;
-- network boundaries;
-- persistence and data integrity;
-- dependencies and supply-chain changes;
-- concurrency and state consistency;
-- logging and accidental information exposure.
+A known material security regression blocks `In Review` unless that **specific residual risk** is explicitly accepted by a human.
 
-Validation is proportional to the risk of the change. A known material security regression blocks review unless a human explicitly accepts that specific risk.
+IssueCraft does not claim absolute security. It records what was assessed, what actually ran, and what remains unverified.
 
-See [`core/SECURITY.md`](core/SECURITY.md).
+See [core/SECURITY.md](core/SECURITY.md).
 
 ---
 
@@ -248,62 +223,23 @@ See [`core/SECURITY.md`](core/SECURITY.md).
 
 Every issue also gets a performance-impact triage.
 
-When relevant, the workflow considers:
+When relevant, IssueCraft considers algorithmic work, database/storage I/O, network calls, memory/resources, concurrency/locks, caching, payloads, startup/build cost, client responsiveness, background processing and observability volume.
 
-- algorithmic complexity;
-- database queries and I/O;
-- network calls;
-- memory use;
-- CPU use;
-- concurrency and locks;
-- cache behavior;
-- payload sizes;
-- startup/build cost;
-- resource leaks;
-- existing performance budgets and baselines.
+Existing budgets and baselines are respected when found. Numeric thresholds are never invented.
 
-It uses real project baselines when available and must not invent performance thresholds.
+High-load or destructive testing against production/shared systems requires explicit authorization.
 
-Expensive or destructive load/stress testing must not be run against production without explicit authorization.
-
-See [`core/PERFORMANCE.md`](core/PERFORMANCE.md).
+See [core/PERFORMANCE.md](core/PERFORMANCE.md).
 
 ---
 
-## Testing strategy
+## Comprehensive risk-based testing
 
-The workflow does **not** blindly run every possible test type. It considers the complete test space and selects what is applicable to the risks introduced by the issue.
+IssueCraft considers the full semantic test space but runs/adds only what is applicable to the change and available in the project.
 
-Depending on the project and change, that can include:
+That can include unit, component, integration, contract, API/interface, system, end-to-end, acceptance, smoke, regression, negative/boundary, property-based, fuzz, mutation, concurrency/race/idempotency, resilience/fault-injection, security, benchmark, load, stress, spike, soak, accessibility, visual regression, compatibility, migration, recovery, lint, typecheck and build verification.
 
-- unit tests;
-- component tests;
-- integration tests;
-- contract tests;
-- API tests;
-- system tests;
-- end-to-end tests;
-- acceptance tests;
-- smoke and sanity tests;
-- regression tests;
-- negative and boundary tests;
-- property-based tests;
-- fuzz tests;
-- mutation tests;
-- concurrency, race, locking and idempotency tests;
-- resilience and fault-injection tests;
-- security tests;
-- benchmarks;
-- load, stress, spike and soak tests;
-- accessibility tests;
-- visual regression tests;
-- compatibility tests;
-- install, upgrade, downgrade and rollback tests;
-- migration and data-integrity tests;
-- backup, restore and recovery tests;
-- static analysis, lint, type checking and build validation.
-
-The result of a test category must remain explicit:
+Every selected check keeps an explicit result:
 
 ```text
 pass
@@ -312,107 +248,78 @@ not_applicable
 unavailable
 ```
 
-`not_applicable` and `unavailable` are never treated as `pass`.
+`not_applicable` and `unavailable` never mean `pass`.
 
-For reproducible bug fixes, the preferred flow is to create or identify a regression reproducer that fails before the fix and passes after it whenever practical.
+For reproducible bugs, IssueCraft prefers a durable regression reproducer that fails before the fix and passes after it when feasible.
 
-See [`core/TEST_STRATEGY.md`](core/TEST_STRATEGY.md).
+See [core/TEST_STRATEGY.md](core/TEST_STRATEGY.md).
 
 ---
 
 ## Manual validation before Done
 
-When implementation and automated validation are complete, the workflow generates a manual validation plan tailored to the issue.
-
-It should contain, when applicable:
-
-- prerequisites;
-- test data;
-- exact actions;
-- expected results;
-- edge cases;
-- regression checks;
-- security-sensitive checks;
-- performance-sensitive checks;
-- cleanup steps.
-
-It must not produce a vague checklist such as “check if it works.”
-
-The issue then enters **In Review**. A human performs the validation and decides whether it can become **Done**.
-
----
-
-## Project drift detection
-
-Projects change over time. The workflow therefore does not assume the original Profile is permanently correct.
-
-On later runs, it performs a lightweight drift check against important evidence.
-
-Example:
+When automated validation is complete, IssueCraft generates:
 
 ```text
-PROJECT_PROFILE says:
-package manager = A
-
-repository now shows:
-lockfile for B
-manifest declares B
-old lockfile removed
-
-→ possible drift detected
-→ proposed Profile update
-→ human approval required
+.implement-issue/MANUAL_VALIDATION_PLAN.md
 ```
 
-It never silently rewrites approved project knowledge.
+The plan is derived from the issue, acceptance criteria, actual diff, affected code, project rules and automated results. It includes exact prerequisites, actions and expected results plus relevant regression, security, performance, accessibility, compatibility, migration and cleanup checks.
 
-See [`core/DRIFT_DETECTION.md`](core/DRIFT_DETECTION.md).
+It must not degrade into a generic "check that it works" checklist.
 
 ---
 
-## Continuous improvement without silent self-modification
+## Drift detection
 
-The workflow can learn from repeated use, but it does not silently modify itself.
+An approved Profile is not assumed to stay correct forever.
 
-If it discovers a reusable improvement, it can generate a structured proposal containing:
+On later runs, IssueCraft performs a cheap preflight over evidence that can change engineering behavior: manifests, lockfiles, runtimes, frameworks, test/build commands, security policies/tooling, performance budgets/baselines/tooling, observability, persistence/migrations, CI and architecture boundaries.
 
-- the problem;
-- evidence;
-- current behavior;
-- proposed behavior;
-- whether the learning is generic or project-specific;
-- expected benefit;
-- risks/trade-offs;
-- suggested regression coverage.
+Material differences become a drift proposal. IssueCraft does not silently rewrite the Profile.
 
-Only after human approval should a persistent workflow or project rule be changed.
-
-This prevents one project's conventions from contaminating the generic workflow.
-
-See [`core/CONTINUOUS_IMPROVEMENT.md`](core/CONTINUOUS_IMPROVEMENT.md).
+See [core/DRIFT_DETECTION.md](core/DRIFT_DETECTION.md).
 
 ---
 
-## What the installer adds to your project
+## Controlled learning over time
 
-Running:
+IssueCraft can learn from real use without becoming a silently self-modifying system.
 
-```bash
-python scripts/install.py /path/to/your-project
+At the end of an issue it can identify reusable evidence such as a missed edge case, validation gap, project convention, security/performance escape, or adapter limitation.
+
+The workflow separates:
+
+```text
+observe
+  ↓
+draft proposal
+  ↓
+human approval to persist
+  ↓
+.implement-issue/proposals/WIP-*.md
+  ↓
+optional approved learning record
+  ↓
+.implement-issue/LEARNINGS.md
+  ↓
+separate human approval to adopt behavior
 ```
 
-adds:
+A persisted proposal or entry in `LEARNINGS.md` is **not automatically normative**. Adoption into `PROJECT_RULES`, Profile/Blueprint, an adapter or the canonical core requires the appropriate human decision.
+
+This prevents one project's habits from contaminating the generic workflow.
+
+See [core/CONTINUOUS_IMPROVEMENT.md](core/CONTINUOUS_IMPROVEMENT.md).
+
+---
+
+## What gets installed
 
 ```text
 your-project/
-├── .agents/
-│   └── skills/
-│       └── implement-issue/
-│           └── SKILL.md
-├── .claude/
-│   └── skills/
-│       └── implement-issue/
-│           └── SKILL.md
+├── .agents/skills/implement-issue/SKILL.md
+├── .claude/skills/implement-issue/SKILL.md
 └── .implement-issue/
     └── system/
         ├── core/
@@ -422,67 +329,56 @@ your-project/
         └── VERSION
 ```
 
-It does **not** pre-create:
-
-```text
-PROJECT_PROFILE.yaml
-PROJECT_BLUEPRINT.yaml
-PROJECT_RULES.md
-```
-
-Those are project-owned state and require the workflow's evidence/decision process and human approval.
-
-The target project does not become a Python project. Python is only used by this repository's installer.
+IssueCraft does **not** pre-create `PROJECT_PROFILE`, `PROJECT_BLUEPRINT`, `PROJECT_RULES.md`, `LEARNINGS.md`, or persistent proposals. They are project-owned state and are created only through the appropriate workflow/human gate.
 
 ---
 
-## Updating an existing installation
+## Updating IssueCraft in a project
 
-Pull or download the newer workflow release, then run:
+Update this repository, then reinstall only the runtime:
 
 ```bash
+git pull
 python scripts/install.py /path/to/your-project --overwrite-system
 ```
 
-This replaces the workflow runtime and adapters while preserving project-owned state such as approved Profile, Blueprint, Rules, validation artifacts, and improvement proposals.
+`--overwrite-system` replaces the installed IssueCraft runtime/adapters while preserving project-owned state under `.implement-issue/`.
 
 ---
 
-## Installing without Python
+## Install without Python
 
-Python is only a convenience for copying the runtime. Manual installation is supported.
+Python is only the convenience installer. Manual installation is documented in [docs/install.md](docs/install.md).
 
-Copy:
+---
 
-```text
-core/      → <project>/.implement-issue/system/core/
-schemas/   → <project>/.implement-issue/system/schemas/
-templates/ → <project>/.implement-issue/system/templates/
-VERSION    → <project>/.implement-issue/system/VERSION
-manifest.json → <project>/.implement-issue/system/manifest.json
+## Verify the repository
 
-.agents/skills/implement-issue/
-    → <project>/.agents/skills/implement-issue/
+Run the same three deterministic layers used by CI:
 
-.claude/skills/implement-issue/
-    → <project>/.claude/skills/implement-issue/
+```bash
+python scripts/validate_repo.py
+python scripts/run_evals.py
+python -m unittest discover tests -v
 ```
 
-Do not create a Profile or Blueprint from the templates manually just to skip onboarding.
+CI runs these on Linux, macOS and Windows.
+
+The 16 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 
 ## Repository structure
 
 ```text
-implement-issue-workflow/
+issuecraft-workflow/
 ├── core/                 # canonical provider/stack-neutral behavior
 ├── schemas/              # Profile and Blueprint contracts
-├── templates/            # generated-artifact templates
-├── docs/                 # architecture, installation and examples
-├── evals/                # behavioral regression scenarios
+├── templates/            # generated/project-state templates
+├── docs/                 # installation, architecture and examples
+├── evals/                # behavioral scenarios
 ├── tests/                # repository/invariant tests
-├── scripts/              # installer, validator and release tooling
+├── scripts/              # installer, validator, eval runner, release tooling
 ├── .agents/skills/       # Codex/Antigravity entry point
 ├── .claude/skills/       # Claude Code entry point
 ├── manifest.json
@@ -490,20 +386,7 @@ implement-issue-workflow/
 └── README.md
 ```
 
-The most important file is [`core/WORKFLOW.md`](core/WORKFLOW.md). It is the canonical execution contract.
-
----
-
-## Verify this repository
-
-Before publishing or modifying the workflow, run:
-
-```bash
-python scripts/validate_repo.py
-python -m unittest discover tests -v
-```
-
-These checks validate structural contracts including provider neutrality, stack neutrality, quality contracts, adapters, installer safety, schemas, and regression coverage.
+The normative execution contract is [core/WORKFLOW.md](core/WORKFLOW.md).
 
 ---
 
@@ -511,70 +394,41 @@ These checks validate structural contracts including provider neutrality, stack 
 
 ### The agent does not see `implement-issue`
 
-1. Confirm you installed the workflow into the same repository/workspace opened by the agent.
-2. Confirm one of these files exists:
+Confirm the workflow was installed into the same repository/workspace opened by the agent and that the appropriate skill file exists:
 
 ```text
 .agents/skills/implement-issue/SKILL.md
 .claude/skills/implement-issue/SKILL.md
 ```
 
-3. Restart/reopen the coding agent if it caches project skills.
-4. Use the explicit command for your agent from the compatibility table above.
+Restart/reload the agent workspace if its skill discovery is cached.
 
-### The installer says the workflow already exists
+### The runtime is already installed
 
-Use the update mode:
+Use:
 
 ```bash
 python scripts/install.py /path/to/your-project --overwrite-system
 ```
 
-### I already have `.agents/` or `.claude/`
+Project-owned state is preserved.
 
-That is fine. The installer only manages the `implement-issue` skill directory inside those locations.
+### A first-run fact is wrong
 
-### My repository is empty
+Do not approve the proposed Profile/Blueprint as-is. Correct the fact, provide the evidence if needed, and let IssueCraft reconcile the proposal before persistence.
 
-That is supported. Run the workflow normally. It will use Project Bootstrap instead of pretending it discovered a stack.
+### A test cannot run
 
-### My project uses an unusual language/framework/tool
-
-That is supported by design. The workflow should derive its behavior from repository evidence and project commands rather than from a fixed allowlist of technologies.
-
----
-
-## More documentation
-
-Start here only if you need deeper details:
-
-- [Installation](docs/install.md)
-- [Architecture](docs/architecture.md)
-- [Agent compatibility](docs/compatibility.md)
-- [Project-owned files](docs/project-files.md)
-- [Security, performance and testing baseline](docs/security-quality-baseline.md)
-- [Existing-project example](docs/examples/existing-project.md)
-- [Empty-project example](docs/examples/empty-project.md)
-- [Drift example](docs/examples/drift.md)
+IssueCraft should report the applicable check as `unavailable`, explain why, and use the strongest safe alternative. It must not report a false pass.
 
 ---
 
 ## Contributing
 
-Contributions are welcome. Changes to the canonical workflow should preserve:
+Read [CONTRIBUTING.md](CONTRIBUTING.md). Generic behavior changes should include a concrete scenario and deterministic regression/eval coverage.
 
-- provider neutrality;
-- stack/language/framework neutrality;
-- evidence before assumptions;
-- human approval gates;
-- security and performance triage;
-- comprehensive risk-based validation;
-- human ownership of Done.
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
----
+Security reports should follow [SECURITY.md](SECURITY.md).
 
 ## License
 
-MIT. See [`LICENSE`](LICENSE).
+MIT — see [LICENSE](LICENSE).

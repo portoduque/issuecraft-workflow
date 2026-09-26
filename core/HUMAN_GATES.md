@@ -10,7 +10,7 @@ Purely mechanical metadata refreshes may be bundled with the proposed change, bu
 
 ## Gate B — persist new normative project rules
 
-If the agent proposes a new rule that will govern future work (for example an architectural prohibition, testing policy, migration policy, or status mapping), show the proposed rule and source/rationale before writing it to `PROJECT_RULES.md`.
+If the agent proposes a new rule that will govern future work, show the proposed rule and source/rationale before writing it to `PROJECT_RULES.md`.
 
 ## Gate C — destructive/production-impacting actions
 
@@ -18,9 +18,16 @@ Require explicit approval before an action that is materially irreversible or ca
 
 Do not turn ordinary file edits, local tests, dependency reads, or reversible implementation work into approval gates.
 
-## Gate D — workflow improvement adoption
+## Gate D — continuous-learning persistence and adoption
 
-The agent may generate an improvement proposal, but may not modify the canonical workflow or silently add generic behavior to project rules without human approval.
+The agent may identify and draft an improvement proposal during an issue, but it must not persist that proposal, append a durable learning record, modify canonical workflow behavior, or silently add generic behavior to project rules without explicit human approval.
+
+Persistence and adoption are distinct decisions:
+
+1. approval to persist the proposal/learning for future reference; and
+2. approval to adopt it into normative project knowledge, an adapter, or the canonical workflow.
+
+An approved-for-record learning is not automatically approved behavior.
 
 ## Gate E — material security/performance risk acceptance
 

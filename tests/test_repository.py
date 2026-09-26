@@ -3,24 +3,33 @@ import json
 import os
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-spec = importlib.util.spec_from_file_location("validator", ROOT / "scripts/validate_repo.py")
-validator = importlib.util.module_from_spec(spec)
-assert spec.loader
-spec.loader.exec_module(validator)
 
-spec2 = importlib.util.spec_from_file_location("installer", ROOT / "scripts/install.py")
-installer = importlib.util.module_from_spec(spec2)
-assert spec2.loader
-spec2.loader.exec_module(installer)
+def load_module(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader
+    spec.loader.exec_module(module)
+    return module
+
+
+validator = load_module("validator", ROOT / "scripts/validate_repo.py")
+installer = load_module("installer", ROOT / "scripts/install.py")
+contract_evals = load_module("contract_evals", ROOT / "scripts/run_evals.py")
+release_zip = load_module("release_zip", ROOT / "scripts/release_zip.py")
 
 
 class RepositoryTests(unittest.TestCase):
     def test_structural_validator(self):
         self.assertEqual([], validator.validate())
+
+    def test_contract_evals_execute_all_scenarios(self):
+        self.assertEqual(16, len(contract_evals.EVALS))
+        self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
         a = (ROOT / ".agents/skills/implement-issue/SKILL.md").read_text(encoding="utf-8")
@@ -61,57 +70,91 @@ class RepositoryTests(unittest.TestCase):
             state = target / ".implement-issue"
             state.mkdir()
             profile = state / "PROJECT_PROFILE.yaml"
+            learning = state / "LEARNINGS.md"
             profile.write_text("sentinel: keep\n", encoding="utf-8")
+            learning.write_text("learning: keep\n", encoding="utf-8")
 
             installer.install(target)
             self.assertEqual("sentinel: keep\n", profile.read_text(encoding="utf-8"))
+            self.assertEqual("learning: keep\n", learning.read_text(encoding="utf-8"))
             self.assertTrue((state / "system/core/WORKFLOW.md").is_file())
             self.assertTrue((state / "system/core/SECURITY.md").is_file())
             self.assertTrue((state / "system/core/PERFORMANCE.md").is_file())
             self.assertTrue((state / "system/core/TEST_STRATEGY.md").is_file())
-            self.assertTrue((target / ".agents/skills/implement-issue/SKILL.md").is_file())
-            self.assertTrue((target / ".claude/skills/implement-issue/SKILL.md").is_file())
+            self.assertTrue((state / "system/templates/LEARNINGS.md").is_file())
 
-    def test_install_does_not_create_profile_or_blueprint(self):
+    def test_install_does_not_create_project_owned_knowledge(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td)
             installer.install(target)
             state = target / ".implement-issue"
-            self.assertFalse((state / "PROJECT_PROFILE.yaml").exists())
-            self.assertFalse((state / "PROJECT_BLUEPRINT.yaml").exists())
+            for rel in ("PROJECT_PROFILE.yaml", "PROJECT_BLUEPRINT.yaml", "PROJECT_RULES.md", "LEARNINGS.md", "proposals"):
+                self.assertFalse((state / rel).exists(), rel)
 
     @unittest.skipUnless(hasattr(os, "symlink"), "symlink support required")
     def test_installer_refuses_managed_symlink(self):
         with tempfile.TemporaryDirectory() as td, tempfile.TemporaryDirectory() as outside_td:
             target = Path(td)
             outside = Path(outside_td)
-            (target / ".agents").symlink_to(outside, target_is_directory=True)
+            try:
+                (target / ".agents").symlink_to(outside, target_is_directory=True)
+            except OSError as exc:
+                self.skipTest(f"symlink creation unavailable: {exc}")
             with self.assertRaises(SystemExit):
                 installer.install(target)
             self.assertFalse((outside / "skills/implement-issue/SKILL.md").exists())
 
-    def test_readme_has_fast_onboarding_and_core_guarantees(self):
-        english = (ROOT / "README.md").read_text(encoding="utf-8")
-        portuguese = (ROOT / "README.pt-BR.md").read_text(encoding="utf-8")
+    def test_release_zip_is_clean_and_branded(self):
+        with tempfile.TemporaryDirectory() as td:
+            archive = release_zip.create_release_zip(Path(td))
+            self.assertTrue(archive.name.startswith("issuecraft-workflow-"))
+            with zipfile.ZipFile(archive) as zf:
+                names = zf.namelist()
+            self.assertTrue(names)
+            self.assertFalse(any("/.git/" in f"/{name}" or name.endswith("/.git") for name in names))
+            self.assertFalse(any("__pycache__" in name or name.endswith(".pyc") for name in names))
 
-        for readme in (english, portuguese):
-            self.assertIn("git clone", readme)
-            self.assertIn("scripts/install.py", readme)
-            self.assertIn("$implement-issue", readme)
-            self.assertIn("/implement-issue", readme)
-            self.assertIn("PROJECT_PROFILE", readme)
-            self.assertIn("PROJECT_BLUEPRINT", readme)
-            self.assertIn("In Review", readme)
-            self.assertIn("Done", readme)
-            self.assertIn("SECURITY.md", readme)
-            self.assertIn("PERFORMANCE.md", readme)
-            self.assertIn("TEST_STRATEGY.md", readme)
-            self.assertIn("--overwrite-system", readme)
+    def test_readmes_have_copy_paste_onboarding_and_core_guarantees(self):
+        for name in ("README.md", "README.pt-BR.md"):
+            readme = (ROOT / name).read_text(encoding="utf-8")
+            for required in (
+                "IssueCraft Workflow",
+                "git clone https://github.com/portoduque/issuecraft-workflow.git",
+                "cd issuecraft-workflow",
+                "scripts/install.py",
+                "$implement-issue",
+                "/implement-issue",
+                "PROJECT_PROFILE",
+                "PROJECT_BLUEPRINT",
+                "In Review",
+                "Done",
+                "SECURITY.md",
+                "PERFORMANCE.md",
+                "TEST_STRATEGY.md",
+                "LEARNINGS.md",
+                "--overwrite-system",
+            ):
+                self.assertIn(required, readme)
+            self.assertNotIn("<REPOSITORY_URL>", readme)
+            self.assertNotIn("<URL_DO_REPOSITORIO>", readme)
 
-    def test_quality_eval_scenarios_exist(self):
-        for n in range(11, 17):
-            matches = list((ROOT / "evals/scenarios").glob(f"{n:02d}-*.md"))
-            self.assertEqual(1, len(matches), f"missing or duplicate eval for {n:02d}")
+    def test_learning_is_persistent_but_human_gated(self):
+        learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
+        gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
+        self.assertIn(".implement-issue/proposals/", learning)
+        self.assertIn(".implement-issue/LEARNINGS.md", learning)
+        self.assertIn("explicit human approval", learning)
+        self.assertIn("Persistence and adoption are distinct decisions", gates)
+
+    def test_ci_is_cross_platform_and_hardened(self):
+        ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+        for os_name in ("ubuntu-latest", "macos-latest", "windows-latest"):
+            self.assertIn(os_name, ci)
+        self.assertIn("persist-credentials: false", ci)
+        self.assertIn("python scripts/run_evals.py", ci)
+        for line in ci.splitlines():
+            if line.strip().startswith("uses:"):
+                self.assertRegex(line.strip(), r"^uses:\s*[^@\s]+@[0-9a-f]{40}(?:\s+#.*)?$")
 
 
 if __name__ == "__main__":

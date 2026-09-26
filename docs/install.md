@@ -1,15 +1,17 @@
 # Installation
 
-For most users, installation is three steps.
+IssueCraft installs a reusable `implement-issue` workflow into another repository. It does not change that repository's application stack.
 
-## 1. Clone the workflow repository
+## Fastest path
+
+### 1. Clone IssueCraft
 
 ```bash
-git clone <REPOSITORY_URL>
-cd implement-issue-workflow
+git clone https://github.com/portoduque/issuecraft-workflow.git
+cd issuecraft-workflow
 ```
 
-## 2. Install it into the target repository
+### 2. Install it into the target repository
 
 ```bash
 python scripts/install.py /path/to/target-repository
@@ -25,15 +27,15 @@ python scripts/install.py ~/projects/my-app
 python scripts/install.py C:\dev\my-app
 ```
 
-The installer uses only the Python standard library. Python is needed only to copy the workflow files; the target application does not become a Python project and does not require Python after installation.
+The installer uses only the Python standard library. Python is needed only to copy IssueCraft's runtime; the target application does not become a Python project.
 
-## 3. Invoke the skill in the target repository
+### 3. Invoke the skill in the target repository
 
 - Codex: `$implement-issue`
 - Claude Code: `/implement-issue`
 - Antigravity: `/implement-issue`
 
-On first use, the workflow performs Project Discovery or Project Bootstrap before implementation.
+On first use, IssueCraft performs Project Discovery or Project Bootstrap before implementation.
 
 ## What gets installed
 
@@ -50,17 +52,17 @@ On first use, the workflow performs Project Discovery or Project Bootstrap befor
         └── VERSION
 ```
 
-The installer does not create `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, or `PROJECT_RULES.md`. Project-owned state is created only by the workflow after the appropriate evidence/decision process and human approval.
+The installer does not create `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, or persistent proposals. Project-owned state is created only after the relevant workflow process and human approval.
 
 ## Update
 
-After pulling/downloading a newer workflow version:
+After pulling/downloading a newer IssueCraft version:
 
 ```bash
 python scripts/install.py /path/to/target-repository --overwrite-system
 ```
 
-This updates only the installed runtime/adapters and preserves project-owned state.
+This replaces only the installed runtime/adapters. It preserves project-owned state under `.implement-issue/`.
 
 ## Installer help
 
@@ -80,4 +82,4 @@ If Python is unavailable, copy:
 - `.agents/skills/implement-issue/` → target `.agents/skills/implement-issue/`
 - `.claude/skills/implement-issue/` → target `.claude/skills/implement-issue/`
 
-Do not pre-create a Profile or Blueprint from templates to bypass onboarding.
+Do not pre-create a Profile, Blueprint, Rules file, learning ledger, or proposal merely to bypass human-gated onboarding.

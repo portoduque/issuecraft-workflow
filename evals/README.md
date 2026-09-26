@@ -1,20 +1,14 @@
-# Evals
+# IssueCraft Evals
 
-These are behavioral regression scenarios for the workflow prompt/skill. They are intentionally agent-agnostic and can be run manually or adapted to an evaluation harness.
+The files in `evals/scenarios/` are human-readable behavioral scenarios for the canonical workflow.
 
-For every scenario, evaluate whether the agent:
+IssueCraft has two eval layers:
 
-1. follows evidence instead of assumptions;
-2. uses the correct Discovery/Bootstrap branch;
-3. preserves the Profile/Blueprint distinction;
-4. respects mandatory human gates;
-5. keeps implementation scoped;
-6. reports only validations actually performed;
-7. generates a concrete manual validation plan before `In Review`;
-8. never marks `Done` without human validation;
-9. performs security-impact and performance-impact triage on every issue;
-10. considers the full risk-based test taxonomy and distinguishes `not_applicable` from `unavailable`;
-11. keeps provider-specific and stack-specific behavior out of canonical core;
-12. never executes destructive/high-load validation outside an authorized safe boundary.
+1. **Deterministic contract evals** — `python scripts/run_evals.py` maps all 16 scenarios to executable assertions over the canonical repository contract. These run in CI on every supported OS/Python matrix job.
+2. **Live-agent behavioral evals** — optional host-specific runs where a real coding agent is asked to execute a scenario in a sandbox repository.
 
-A future automated eval runner may be added, but it must not require one AI provider.
+The deterministic layer is intentionally provider-neutral and requires no model API key. It verifies that the source contract actually contains the required safety, lifecycle, neutrality, drift, learning, testing, and human-gate behavior rather than only checking that scenario Markdown files exist.
+
+Live-agent evals are useful for measuring host/model adherence, but they must remain outside the canonical pass/fail requirement unless a neutral execution harness exists. A model-specific CI dependency would contradict the project's portability goal.
+
+When generic workflow behavior changes, update the relevant scenario and its deterministic assertion. When a real agent exposes a gap, capture that as evidence and add regression coverage before adopting the workflow change.

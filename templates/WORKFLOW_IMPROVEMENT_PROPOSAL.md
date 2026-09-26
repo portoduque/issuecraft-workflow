@@ -1,5 +1,10 @@
 # Workflow Improvement Proposal
 
+## Identity
+
+- Proposal ID: WIP-
+- Status: proposed | approved_for_record | adopted | rejected | superseded
+
 ## Classification
 
 `generic_workflow | project_specific | agent_adapter | not_actionable`
@@ -18,10 +23,22 @@
 
 ## Regression / eval case
 
-## Files that would change if approved
+## Files or project knowledge that would change if adopted
 
-## Human decision
+## Duplicate / prior-learning check
 
-- [ ] Approve
-- [ ] Reject
-- [ ] Revise
+- Related proposal or learning:
+- Why this is not a duplicate:
+
+## Human decisions
+
+### Persist for future reference
+
+- [ ] Approve persistence
+- [ ] Reject persistence
+
+### Adopt behavior
+
+- [ ] Approve adoption
+- [ ] Reject adoption
+- [ ] Revise first

@@ -2,6 +2,23 @@
 
 All notable changes are documented here.
 
+## 0.3.0 - 2026-09-26
+
+Release-readiness and learning-persistence release.
+
+- Rebranded repository-facing documentation and release artifacts as IssueCraft Workflow.
+- Replaced placeholder clone instructions with the real public repository URL.
+- Added persistent, human-gated learning ledger and improvement-proposal lifecycle without silent self-modification.
+- Extended drift preflight to security tooling/policies, performance budgets/baselines/tooling, and observability evidence.
+- Added executable deterministic contract evals for all 16 behavioral scenarios.
+- Expanded CI to Linux, macOS, and Windows across two supported Python versions.
+- Pinned GitHub Actions to immutable commit SHAs and disabled checkout credential persistence.
+- Added Dependabot coverage for GitHub Actions dependencies.
+- Hardened release ZIP generation to exclude `.git` metadata and renamed archives to `issuecraft-workflow-<version>.zip`.
+- Added release-archive regression tests.
+- Improved private security-reporting guidance.
+- Fixed bootstrap interview numbering and stale issue-template version text.
+
 ## 0.2.1 - 2026-09-26
 
 Documentation/onboarding release.
