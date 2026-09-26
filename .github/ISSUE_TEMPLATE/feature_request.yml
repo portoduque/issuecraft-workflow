@@ -1,0 +1,40 @@
+name: Improvement proposal
+description: Propose a generic workflow or compatibility improvement
+title: "[Proposal] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What repeatable problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / scenario
+      description: Provide a concrete scenario or failed eval.
+    validations:
+      required: true
+  - type: dropdown
+    id: classification
+    attributes:
+      label: Classification
+      options:
+        - Generic workflow
+        - Project-specific (probably should not enter core)
+        - Agent adapter compatibility
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: regression
+    attributes:
+      label: Suggested regression/eval case

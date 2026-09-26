@@ -1,0 +1,43 @@
+name: Bug report
+description: Report behavior that violates the workflow contract
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Scenario
+      description: Describe the repository state, agent surface, invocation and issue/task.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Agent surface
+      options:
+        - Codex
+        - Claude Code
+        - Antigravity
+        - Other Agent Skills host
+        - Not surface-specific
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Workflow version
+      placeholder: 0.1.0
+    validations:
+      required: true

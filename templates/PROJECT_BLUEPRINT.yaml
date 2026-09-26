@@ -1,0 +1,39 @@
+schema_version: 1
+blueprint_version: 1
+project:
+  goal:
+    state: undecided
+    value: null
+    source: null
+    evidence: []
+  type:
+    state: undecided
+    value: null
+    source: null
+    evidence: []
+
+decisions:
+  languages: []
+  runtimes: []
+  frameworks: []
+  dependency_management: []
+  persistence: []
+  migrations: []
+  testing: []
+  quality: []
+  security: []
+  performance: []
+  reliability: []
+  accessibility: []
+  compatibility: []
+  observability: []
+  ci_cd: []
+  deployment: []
+  architecture: []
+  external_constraints: []
+
+unresolved: []
+metadata:
+  approved_by_human: false
+  created_at: null
+  last_reviewed_at: null

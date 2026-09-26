@@ -1,0 +1,50 @@
+schema_version: 1
+profile_version: 1
+project:
+  name: null
+  repository_shape:
+    status: unknown
+    value: null
+    confidence: null
+    evidence: []
+  components: []
+
+observed:
+  languages: []
+  runtimes: []
+  frameworks: []
+  dependency_managers: []
+  persistence: []
+  migration_systems: []
+  quality_tools: []
+  testing_tools: []
+  security_tools: []
+  performance_tools: []
+  observability_tools: []
+  ci_cd: []
+  architecture: []
+
+commands:
+  dev: []
+  build: []
+  test: []
+  lint: []
+  format_check: []
+  typecheck: []
+  migrate: []
+  smoke: []
+  security: []
+  benchmark: []
+  performance: []
+  load: []
+  stress: []
+  accessibility: []
+  compatibility: []
+  recovery: []
+
+unknowns: []
+conflicts: []
+metadata:
+  approved_by_human: false
+  created_at: null
+  last_verified_at: null
