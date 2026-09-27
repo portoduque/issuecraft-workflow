@@ -2,6 +2,21 @@
 
 All notable changes are documented here.
 
+## 0.4.0 - 2026-09-27
+
+Live-agent evaluation release.
+
+- Added an optional provider-neutral live-agent evaluation harness outside the installed workflow runtime.
+- Added disposable fixture repositories so real-agent tests never need to run against production or personal projects.
+- Added multi-turn live scenarios for the human-owned Done gate and continuous-learning persistence gate.
+- Added baseline vs candidate runs using the same scenario/fixture, with IssueCraft installed only for the candidate condition.
+- Added transcript plus workspace-diff capture so behavioral evaluation can inspect what the agent actually changed.
+- Added deterministic blind A/B export with the condition mapping stored separately.
+- Added a neutral runner-adapter protocol instead of embedding provider-specific CLIs into the core.
+- Added a qualitative rubric focused on correctness, evidence fidelity, safety/human gates, validation quality, scope discipline, and autonomy without premature synthetic weights.
+- Added deterministic repository tests for live scenario validation, disposable execution, baseline/candidate isolation, duplicate-run protection, multi-turn capability declarations, and blind pairing.
+- Kept real host compatibility smoke tests optional and outside canonical CI to avoid external CLI/auth/network instability in the core release gate.
+
 ## 0.3.0 - 2026-09-26
 
 Release-readiness and learning-persistence release.

@@ -10,5 +10,6 @@ This repository is the canonical source for the `implement-issue` workflow.
 - Continuous-learning persistence and adoption require explicit human approval.
 - Keep `core/SECURITY.md`, `core/PERFORMANCE.md`, and `core/TEST_STRATEGY.md` provider- and stack-neutral.
 - New generic behavior should be backed by a deterministic contract eval and, where practical, a repository test.
+- When a behavior depends on actual agent execution rather than source text alone, add/update a disposable fixture scenario under `evals/live/`; do not add provider-specific logic to `core/`.
 - GitHub Actions dependencies must stay pinned to immutable commit SHAs.
-- Run `python scripts/validate_repo.py`, `python scripts/run_evals.py`, and `python -m unittest discover tests -v` before considering a change complete.
+- Run `python scripts/validate_repo.py`, `python scripts/run_evals.py`, `python scripts/run_live_evals.py validate`, and `python -m unittest discover tests -v` before considering a change complete.

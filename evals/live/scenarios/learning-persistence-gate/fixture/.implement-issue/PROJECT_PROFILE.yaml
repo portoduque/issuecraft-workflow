@@ -1,0 +1,51 @@
+schema_version: 1
+profile_version: 1
+project:
+  name: live-learning-fixture
+  repository_shape:
+    status: detected
+    value: single-component
+    confidence: high
+    evidence:
+      - README.md
+  components: []
+
+observed:
+  languages: []
+  runtimes: []
+  frameworks: []
+  dependency_managers: []
+  persistence: []
+  migration_systems: []
+  quality_tools: []
+  testing_tools: []
+  security_tools: []
+  performance_tools: []
+  observability_tools: []
+  ci_cd: []
+  architecture: []
+
+commands:
+  dev: []
+  build: []
+  test: []
+  lint: []
+  format_check: []
+  typecheck: []
+  migrate: []
+  smoke: []
+  security: []
+  benchmark: []
+  performance: []
+  load: []
+  stress: []
+  accessibility: []
+  compatibility: []
+  recovery: []
+
+unknowns: []
+conflicts: []
+metadata:
+  approved_by_human: true
+  created_at: "2026-09-27T00:00:00Z"
+  last_verified_at: "2026-09-27T00:00:00Z"

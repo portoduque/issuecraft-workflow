@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.3.0  
+**Version:** 0.4.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 

@@ -10,12 +10,14 @@ Contributions are welcome. The main architectural constraint is that the canonic
 4. Prefer changing one canonical rule over adding provider-specific branches.
 5. Add or update a deterministic contract eval for generic behavioral changes.
 6. Add repository tests when the behavior can be verified deterministically.
+7. Add/update a live-agent fixture scenario when the behavior can only be validated by observing an actual agent across repository changes or multiple turns.
 
 Run:
 
 ```bash
 python scripts/validate_repo.py
 python scripts/run_evals.py
+python scripts/run_live_evals.py validate
 python -m unittest discover tests -v
 ```
 

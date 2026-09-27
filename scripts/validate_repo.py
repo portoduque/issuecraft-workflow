@@ -35,6 +35,10 @@ REQUIRED = [
     ".agents/skills/implement-issue/SKILL.md",
     ".claude/skills/implement-issue/SKILL.md",
     "scripts/run_evals.py",
+    "scripts/run_live_evals.py",
+    "evals/live/README.md",
+    "evals/live/rubric.md",
+    "evals/live/runners.example.json",
 ]
 VENDOR_TERMS = re.compile(r"\b(codex|claude|antigravity|openai|anthropic|gemini)\b", re.I)
 STACK_TERMS = re.compile(
@@ -140,6 +144,11 @@ def check_eval_coverage(errors: list[str]) -> None:
         errors.append(f"expected 16 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
+    live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))
+    if len(live_scenarios) < 2:
+        errors.append(f"expected at least 2 live-agent eval scenarios, found {len(live_scenarios)}")
+    if not (ROOT / "scripts/run_live_evals.py").is_file():
+        errors.append("live-agent eval runner missing")
 
 
 def check_human_gates(errors: list[str]) -> None:
@@ -183,6 +192,8 @@ def check_ci_hardening(errors: list[str]) -> None:
             errors.append(f"GitHub Action is not pinned to an immutable SHA: {line.strip()}")
     if "python scripts/run_evals.py" not in text:
         errors.append("CI must execute deterministic contract evals")
+    if "python scripts/run_live_evals.py validate" not in text:
+        errors.append("CI must validate live-agent eval scenarios offline")
 
 
 def check_release_hardening(errors: list[str]) -> None:

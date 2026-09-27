@@ -1,0 +1,10 @@
+{
+  "example-runner": {
+    "command": ["path/to/your/runner-adapter"],
+    "candidate_invocation": "/implement-issue",
+    "supports_multiturn": true,
+    "timeout_seconds": 600,
+    "environment": {},
+    "notes": "The adapter should isolate personal agent configuration and limit tool access to the provided temporary workspace."
+  }
+}
