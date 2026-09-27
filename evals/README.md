@@ -1,14 +1,40 @@
 # IssueCraft Evals
 
-The files in `evals/scenarios/` are human-readable behavioral scenarios for the canonical workflow.
+IssueCraft keeps evaluation in layers so stronger behavioral testing does not make the production workflow heavier or provider-specific.
 
-IssueCraft has two eval layers:
+## 1. Deterministic contract evals
 
-1. **Deterministic contract evals** — `python scripts/run_evals.py` maps all 16 scenarios to executable assertions over the canonical repository contract. These run in CI on every supported OS/Python matrix job.
-2. **Live-agent behavioral evals** — optional host-specific runs where a real coding agent is asked to execute a scenario in a sandbox repository.
+The files in `evals/scenarios/` are human-readable behavioral contracts.
 
-The deterministic layer is intentionally provider-neutral and requires no model API key. It verifies that the source contract actually contains the required safety, lifecycle, neutrality, drift, learning, testing, and human-gate behavior rather than only checking that scenario Markdown files exist.
+```bash
+python scripts/run_evals.py
+```
 
-Live-agent evals are useful for measuring host/model adherence, but they must remain outside the canonical pass/fail requirement unless a neutral execution harness exists. A model-specific CI dependency would contradict the project's portability goal.
+The runner maps all 16 scenarios to executable assertions over the canonical repository contract. These checks require no model/API key and run in CI on every supported OS/Python matrix job.
 
-When generic workflow behavior changes, update the relevant scenario and its deterministic assertion. When a real agent exposes a gap, capture that as evidence and add regression coverage before adopting the workflow change.
+They verify that source rules for safety, lifecycle, neutrality, drift, learning, testing, and human gates are actually present and regression-protected.
+
+## 2. Optional live-agent evals
+
+`evals/live/` contains a provider-neutral harness for exercising real agents in disposable fixture repositories.
+
+This layer can compare:
+
+- `baseline`: same task/fixture without IssueCraft installed;
+- `candidate`: same task/fixture with IssueCraft installed.
+
+The harness captures the transcript plus workspace changes, supports multi-turn scenarios through a runner-adapter protocol, and can export baseline/candidate pairs under blind labels.
+
+Live runs are intentionally **not** required by canonical CI because they can require external agent CLIs, authentication, network access, model spend, and host-specific isolation.
+
+See [live/README.md](live/README.md).
+
+## Regression rule
+
+When generic workflow behavior changes:
+
+1. update/add the deterministic contract eval;
+2. add repository tests when the invariant is machine-checkable;
+3. add or update a live scenario when the change depends on actual agent behavior rather than source text alone.
+
+When a real agent exposes a gap, capture the scenario before adopting the workflow change.

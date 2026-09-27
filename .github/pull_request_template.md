@@ -24,4 +24,5 @@
 
 - [ ] `python scripts/validate_repo.py`
 - [ ] `python scripts/run_evals.py`
+- [ ] `python scripts/run_live_evals.py validate`
 - [ ] `python -m unittest discover tests -v`

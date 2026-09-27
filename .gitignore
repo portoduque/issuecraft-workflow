@@ -6,3 +6,5 @@ Thumbs.db
 venv/
 dist/
 *.zip
+evals/live/results/
+evals/live/runners.local.json

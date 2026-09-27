@@ -30,5 +30,7 @@ jobs:
         run: python scripts/validate_repo.py
       - name: Run deterministic contract evals
         run: python scripts/run_evals.py
+      - name: Validate live-agent eval scenarios
+        run: python scripts/run_live_evals.py validate
       - name: Run repository tests
         run: python -m unittest discover tests -v
