@@ -19,7 +19,10 @@ Analyze deeply; report minimally. **Compress presentation, never evidence.** Out
 - Keep detailed evidence in the appropriate durable artifact when one exists; use the conversation for material deltas, decisions, blockers, risks, and the next required action.
 - Do not duplicate a generated Profile, Blueprint, drift report, validation plan, execution report, or improvement proposal in full in chat. Point to the artifact and summarize only what the human needs to decide or do.
 - Prefer delta-only progress updates. Restate state only when the semantic phase changed, work resumed after an interruption/human response, a gate is reached, or ambiguity would otherwise result.
+- A progress update must add **new decision-relevant information** such as a material finding, phase transition, failure, blocker, risk, gate, or meaningful correction. Do not narrate routine tool mechanics merely because another read/search/test/tool call is about to run.
+- State each material fact once. Repeat it only when its state changed, it is needed for the current decision, or omission would make the handoff ambiguous.
 - Omit ceremonial preambles, repeated plans, redundant recaps, and closing pleasantries. Start with the result/current state or required action.
+- Preserve the **semantic compression floor**: compact wording must not drop or alter material negation, exclusivity/exception/boundary qualifiers, identifiers, versions, numbers/units, states/statuses, commands, paths/locations, error/failure identifiers, or explicit human decisions. Do not invent opaque shorthand solely to save tokens; use established project/domain abbreviations only when they remain clear.
 - Group routine successful checks compactly. Group `not_applicable` checks when useful. Expand failures, `unavailable` checks, residual risks, unexpected regressions, and human decisions.
 - Keep secondary findings out of the main issue flow unless they block acceptance criteria, correctness, security, performance, reliability, or required validation. Record/report non-blocking findings separately without expanding scope.
 - End a handoff with one concrete next action when the workflow is waiting on the human. Do not invent work merely to provide a next action.
@@ -133,7 +136,7 @@ The implementation plan is a working hypothesis, not authority over the issue. I
 Retrieve context progressively rather than reading the repository exhaustively:
 
 1. Search broadly enough to identify candidate changed surfaces and existing tests/contracts.
-2. Inspect the highest-signal evidence first.
+2. Inspect the highest-signal evidence first. Prefer source-side narrowing/projection (targeted search, range, filter, field selection, or equivalent capability) when it can retrieve the needed evidence directly instead of loading a large payload only to summarize it afterward.
 3. Follow discovered terminology, callers/consumers, dependencies, interfaces, data flow, and related tests only when they can materially affect the implementation or validation decision.
 4. Track unresolved information gaps that could change scope, correctness, security, performance, compatibility, or test selection.
 5. Stop retrieval when no unresolved material gap remains. Do not keep reading merely to maximize repository coverage.

@@ -109,6 +109,19 @@ class ValidatorResistanceTests(unittest.TestCase):
                     "human-gate v0.11 approval-scope contract missing phrase",
                 )
 
+                mutate_text(
+                    "core/WORKFLOW.md",
+                    "semantic compression floor",
+                    "compact wording",
+                    "workflow v0.12 output-economy contract missing phrase",
+                )
+                mutate_text(
+                    "core/CONTINUOUS_IMPROVEMENT.md",
+                    "Token-economy admission",
+                    "Efficiency admission",
+                    "continuous-improvement v0.12 token-economy contract missing phrase",
+                )
+
                 manifest_path = sandbox / "manifest.json"
                 manifest_original = manifest_path.read_text(encoding="utf-8")
                 manifest = json.loads(manifest_original)
@@ -122,12 +135,12 @@ class ValidatorResistanceTests(unittest.TestCase):
                 manifest_path.write_text(manifest_original, encoding="utf-8")
                 self.assertEqual([], validator.validate())
 
-                scenario = sandbox / "evals/scenarios/47-approval-scope-integrity.md"
+                scenario = sandbox / "evals/scenarios/49-token-economy-evidence.md"
                 scenario_bytes = scenario.read_bytes()
                 scenario.unlink()
                 errors = validator.validate()
                 self.assertTrue(
-                    any("expected 47 behavioral eval scenarios" in error for error in errors),
+                    any("expected 49 behavioral eval scenarios" in error for error in errors),
                     f"scenario-count mutant survived; errors={errors}",
                 )
                 scenario.write_bytes(scenario_bytes)

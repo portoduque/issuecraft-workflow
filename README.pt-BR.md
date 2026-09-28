@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.11.0  
+**Versão:** 0.12.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -98,6 +98,10 @@ Os detalhes ficam nos artefatos duráveis do projeto, como Profile, relatório d
 Checks rotineiros que passaram podem ser agrupados; casos `not_applicable` podem ser resumidos. Falhas, validações indisponíveis, riscos de segurança/performance, incerteza e human gates nunca são escondidos para economizar tokens.
 
 Output compacto é uma **projeção do resultado completo da validação**, nunca um motivo para validar menos obrigações. Evidência parcial continua parcial: se membros materiais ainda não foram provados, a obrigação pai não vira `pass` integral.
+
+O IssueCraft também aplica um **piso semântico de compressão**: texto compacto deve preservar negações/limites materiais, identificadores, versões, números/unidades, estados/status, comandos/caminhos, identificadores de falha e decisões humanas explícitas. Fatos materiais são informados uma vez, salvo quando mudam ou são necessários para a decisão atual; mecânica rotineira de ferramentas não vira atualização de progresso. Quando busca, intervalo, filtro ou seleção de campos consegue recuperar diretamente a evidência necessária, o IssueCraft prefere esse narrowing na origem em vez de carregar um payload grande apenas para resumi-lo depois.
+
+Economia de tokens é avaliada de forma líquida. Uma resposta menor não justifica overhead recorrente de instrução/contexto, turns/retries extras ou evidência mais fraca. Mudanças propostas principalmente para economizar tokens devem demonstrar benefício marginal sobre o comportamento existente e, quando viável, sobre um controle mínimo de concisão.
 
 Assim o histórico da conversa fica menor sem reduzir testes ou profundidade técnica.
 
@@ -447,7 +451,7 @@ python -m unittest discover tests -v
 
 A CI executa isso em Linux, macOS e Windows.
 
-Os 47 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
+Os 49 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
 
 ---
 

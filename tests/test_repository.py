@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(47, len(contract_evals.EVALS))
+        self.assertEqual(49, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -330,6 +330,48 @@ class RepositoryTests(unittest.TestCase):
             self.assertIn(phrase.lower(), validation.lower())
 
         self.assertTrue((ROOT / "evals/scenarios/47-approval-scope-integrity.md").is_file())
+
+    def test_v012_semantic_output_economy_contracts(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
+        live_readme = (ROOT / "evals/live/README.md").read_text(encoding="utf-8")
+        live_rubric = (ROOT / "evals/live/rubric.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "new decision-relevant information",
+            "State each material fact once",
+            "semantic compression floor",
+            "Do not invent opaque shorthand solely to save tokens",
+            "source-side narrowing/projection",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "decisive result",
+            "shortest useful failure/error/location evidence",
+            "preserve material semantic qualifiers",
+            "a shorter statement that changes meaning is a validation/reporting defect",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        for phrase in (
+            "Token-economy admission",
+            "net benefit",
+            "recurring instruction/context overhead",
+            "minimal terse control",
+            "marginal benefit",
+            "Do not invent a numeric savings claim",
+        ):
+            self.assertIn(phrase.lower(), learning.lower())
+
+        for phrase in ("whole intervention", "minimal terse control", "not net-better"):
+            self.assertIn(phrase.lower(), live_readme.lower())
+        for phrase in ("semantic qualifiers", "narration of routine tool mechanics"):
+            self.assertIn(phrase.lower(), live_rubric.lower())
+
+        self.assertTrue((ROOT / "evals/scenarios/48-semantic-output-economy.md").is_file())
+        self.assertTrue((ROOT / "evals/scenarios/49-token-economy-evidence.md").is_file())
 
     def test_profile_schema_has_security_performance_and_test_discovery(self):
         schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))

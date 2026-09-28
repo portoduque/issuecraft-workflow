@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.11.0  
+**Version:** 0.12.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -98,6 +98,10 @@ Detailed evidence stays in durable project artifacts such as the Profile, drift 
 Routine successful checks may be grouped; `not_applicable` checks may be summarized. Failures, unavailable validation, security/performance risks, uncertainty, and human gates are never hidden to save tokens.
 
 Compact output is a **projection of the complete validation result**, never a reason to validate fewer obligations. Partial evidence stays partial: if some material members are not proven, the parent obligation is not reported as a full pass.
+
+IssueCraft also enforces a **semantic compression floor**: compact wording must preserve material negation/boundaries, identifiers, versions, numbers/units, states/statuses, commands/paths, failure identifiers, and explicit human decisions. Material facts are stated once unless their state changes or the current decision needs them; routine tool mechanics are not narrated as progress. When targeted search/range/filter/field selection can retrieve the needed evidence directly, IssueCraft prefers that source-side narrowing over loading a large payload only to summarize it afterward.
+
+Token economy is evaluated as a net property. A shorter answer does not justify recurring instruction/context overhead, extra turns/retries, or weaker evidence. Changes proposed mainly to save tokens should demonstrate marginal benefit over existing behavior and, when practical, a minimal terse control.
 
 This reduces repeated output and accumulated conversation context without reducing testing or engineering depth.
 
@@ -443,7 +447,7 @@ python -m unittest discover tests -v
 
 CI runs these on Linux, macOS and Windows.
 
-The 47 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 49 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 

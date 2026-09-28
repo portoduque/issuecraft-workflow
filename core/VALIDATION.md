@@ -58,12 +58,14 @@ Preserve complete validation evidence, but compress routine presentation. **Comp
 
 - Detailed command/action, rationale, result, and evidence belong in the execution/validation artifact or equivalent durable record when available.
 - In chat, group routine successful checks into a compact summary instead of narrating each one.
+- For verbose logs/test output, surface the decisive result, material counts/status, and the shortest useful failure/error/location evidence; preserve or reference the complete diagnostic artifact when available instead of dumping routine noise into chat.
 - Multiple `not_applicable` categories may be grouped with a shared rationale when accurate.
 - Never collapse `unavailable` into `not_applicable` or `pass`; surface each material unavailable capability/reason needed for risk decisions.
 - Expand failures, suspected flakes, security/performance regressions, unexpected results, residual risks, and checks that require human attention.
 - When a failed check produces diagnostic artifacts, preserve/reference the useful artifacts when safe instead of discarding them or replacing them with an unsupported textual guess.
 - Do not repeat the full manual validation plan in chat after saving it; provide its location plus the first human action or the specific decision required.
 - Token/output reduction is never a reason to omit material evidence, uncertainty, a release blocker, or a required human gate.
+- Compact presentation must preserve material semantic qualifiers and exact decision-bearing data; a shorter statement that changes meaning is a validation/reporting defect, not an efficiency gain.
 
 ## Evidence-backed diff review
 

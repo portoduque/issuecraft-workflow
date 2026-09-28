@@ -260,6 +260,24 @@ def check_quality_contracts(errors: list[str]) -> None:
 
 
     for phrase in (
+        "new decision-relevant information",
+        "State each material fact once",
+        "semantic compression floor",
+        "Do not invent opaque shorthand solely to save tokens",
+        "source-side narrowing/projection",
+    ):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.12 output-economy contract missing phrase: {phrase}")
+    for phrase in (
+        "decisive result",
+        "shortest useful failure/error/location evidence",
+        "preserve material semantic qualifiers",
+        "a shorter statement that changes meaning is a validation/reporting defect",
+    ):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"validation v0.12 output-economy contract missing phrase: {phrase}")
+
+    for phrase in (
         "approval scope integrity",
         "authorization is bound to the material action/decision and target",
         "prior approval is stale",
@@ -294,14 +312,24 @@ def check_learning_contract(errors: list[str]) -> None:
     for phrase in ("Generic-change admission check", "Merge first", "marginal benefit does not justify its ongoing complexity", "Procedure portability", "Recurrence strengthens evidence, not authority", "Failure to demonstrate benefit is valid evidence for non-adoption", "null result"):
         if phrase.lower() not in learning.lower():
             errors.append(f"anti-bloat learning contract missing phrase: {phrase}")
+    for phrase in (
+        "Token-economy admission",
+        "net benefit",
+        "recurring instruction/context overhead",
+        "minimal terse control",
+        "marginal benefit",
+        "Do not invent a numeric savings claim",
+    ):
+        if phrase.lower() not in learning.lower():
+            errors.append(f"continuous-improvement v0.12 token-economy contract missing phrase: {phrase}")
     if "Persistence and adoption are distinct decisions" not in gates:
         errors.append("human gate must separate learning persistence from adoption")
 
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 47:
-        errors.append(f"expected 47 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 49:
+        errors.append(f"expected 49 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))
@@ -327,6 +355,21 @@ def check_eval_coverage(errors: list[str]) -> None:
     ):
         if phrase.lower() not in live_runner.lower():
             errors.append(f"live-eval v0.10 isolation contract missing phrase: {phrase}")
+
+    live_rubric = (ROOT / "evals/live/rubric.md").read_text(encoding="utf-8")
+    for phrase in (
+        "whole intervention",
+        "minimal terse control",
+        "not net-better",
+    ):
+        if phrase.lower() not in live_readme.lower():
+            errors.append(f"live-eval v0.12 token-economy methodology missing phrase: {phrase}")
+    for phrase in (
+        "semantic qualifiers",
+        "narration of routine tool mechanics",
+    ):
+        if phrase.lower() not in live_rubric.lower():
+            errors.append(f"live-eval v0.12 communication rubric missing phrase: {phrase}")
 
 
 def check_human_gates(errors: list[str]) -> None:

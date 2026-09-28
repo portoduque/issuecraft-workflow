@@ -25,6 +25,7 @@ This repository is the canonical source for the `implement-issue` workflow.
 - Delegation is optional and cannot dilute issue/project constraints or human gates; the controlling workflow remains responsible for reconciliation and final validation.
 - Compact validation output must be a projection of the complete result rather than reduced validation scope. External/reference context is read-only unless mutation is separately authorized.
 - Output efficiency is a canonical invariant: compress presentation, never evidence; durable artifacts hold detail while chat handoffs surface material deltas, failures/risks, gates, and next action.
+- Semantic output economy is canonical: state material facts once, do not narrate routine tool mechanics, preserve decision-bearing qualifiers/identifiers/values/statuses/errors/human decisions, prefer source-side narrowing, and require net-benefit evidence before adding token-economy rules.
 - Continuous-learning persistence and adoption require explicit human approval; recurrence may strengthen evidence but never auto-adopts a rule.
 - Generic workflow growth must pass the anti-bloat admission check: concrete gap/evidence, overlap review, merge-first preference, generality, ongoing cost, regression proof, and procedure portability instead of implementation-specific workarounds.
 - Keep `core/SECURITY.md`, `core/PERFORMANCE.md`, and `core/TEST_STRATEGY.md` provider- and stack-neutral.
