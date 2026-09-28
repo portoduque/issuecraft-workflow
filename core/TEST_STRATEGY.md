@@ -169,9 +169,11 @@ These are verification gates even when they are not conventionally called tests:
 
 For a reproducible defect, prefer establishing a failing regression test or equivalent reproducible automated check before the fix when feasible. A reproducer counts as valid **RED evidence only when the failure is attributable to the targeted defect, missing behavior, or violated invariant**. Unrelated setup, syntax, dependency, environment, or pre-existing failures do not establish the defect.
 
+For difficult/intermittent/performance defects, first seek the **strongest feasible diagnostic feedback signal** for the actual symptom. A regression test at the correct seam is preferred when practical, but traces, replayable artifacts, targeted commands, differential checks, profiler/benchmark measurements, or scoped instrumentation may be stronger evidence when a local automated RED test cannot faithfully reproduce the failure. Tighten specificity, runtime, and reproduction rate when doing so materially improves diagnosis; do not require test-first ceremony merely to satisfy an ordering rule.
+
 After the fix:
 
-- demonstrate that the reproducer passes;
+- demonstrate that the reproducer or original diagnostic signal no longer shows the targeted failure when it can be rerun;
 - keep nearby relevant regression coverage green;
 - when the root cause can plausibly affect equivalent paths or sibling surfaces, inspect and test the risk-relevant siblings rather than patching only the reported example.
 

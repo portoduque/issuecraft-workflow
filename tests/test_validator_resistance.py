@@ -122,6 +122,25 @@ class ValidatorResistanceTests(unittest.TestCase):
                     "continuous-improvement v0.12 token-economy contract missing phrase",
                 )
 
+                mutate_text(
+                    "core/WORKFLOW.md",
+                    "project language authority for the relevant domain",
+                    "project terminology",
+                    "workflow v0.13 language/diagnostic contract missing phrase",
+                )
+                mutate_text(
+                    "core/CONTINUOUS_IMPROVEMENT.md",
+                    "Deterministic enforcement preference",
+                    "Project rule enforcement",
+                    "continuous-improvement v0.13 guardrail contract missing phrase",
+                )
+                mutate_text(
+                    "core/WORKFLOW.md",
+                    "Diagnostic feedback loop and reset",
+                    "Diagnostic reset",
+                    "workflow v0.13 language/diagnostic contract missing phrase",
+                )
+
                 manifest_path = sandbox / "manifest.json"
                 manifest_original = manifest_path.read_text(encoding="utf-8")
                 manifest = json.loads(manifest_original)
@@ -135,12 +154,12 @@ class ValidatorResistanceTests(unittest.TestCase):
                 manifest_path.write_text(manifest_original, encoding="utf-8")
                 self.assertEqual([], validator.validate())
 
-                scenario = sandbox / "evals/scenarios/49-token-economy-evidence.md"
+                scenario = sandbox / "evals/scenarios/52-tight-diagnostic-feedback.md"
                 scenario_bytes = scenario.read_bytes()
                 scenario.unlink()
                 errors = validator.validate()
                 self.assertTrue(
-                    any("expected 49 behavioral eval scenarios" in error for error in errors),
+                    any("expected 52 behavioral eval scenarios" in error for error in errors),
                     f"scenario-count mutant survived; errors={errors}",
                 )
                 scenario.write_bytes(scenario_bytes)

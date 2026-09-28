@@ -2,6 +2,19 @@
 
 All notable changes are documented here.
 
+## 0.13.0 - 2026-09-27
+
+Project-language, deterministic-guardrail, and diagnostic-feedback release.
+
+- Added project-language continuity: relevant project-owned glossary/ubiquitous-language/terminology sources are consumed on demand and treated as domain-language authority for new/changed material.
+- Added pointer-over-copy guidance for persistent vocabulary references, with terminology conflicts surfaced instead of silently normalized and no automatic glossary creation or unrelated mass renames.
+- Added deterministic-enforcement preference for mechanically decidable project rules when an existing proportionate project mechanism can enforce them.
+- Kept judgement-bearing rules in human-readable project guidance and prohibited silently installing new tooling or expanding unrelated issue scope merely to automate a rule.
+- Strengthened difficult/intermittent/performance diagnosis around the tightest feasible symptom-specific feedback signal before speculative fix loops.
+- Preserved non-dogmatic testing: a faithful failing test remains preferred when practical, while traces, replayable artifacts, differential checks, measurements, and scoped instrumentation remain valid when they better represent the failure.
+- Added deterministic scenarios 50-52 plus repository and validator-resistance coverage.
+- Deliberately avoided mandatory TDD, user-approved test seams, automatic CONTEXT/glossary creation, multi-skill/router architecture, mandatory subagents, and deep-module design doctrine.
+
 ## 0.12.0 - 2026-09-27
 
 Semantic-output-economy release.

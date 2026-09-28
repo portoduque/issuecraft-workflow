@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.12.0  
+**Versão:** 0.13.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -220,7 +220,9 @@ validação humana
 
 O IssueCraft pode preparar a issue para `In Review`, mas **Done pertence ao humano**. Testes automatizados, a própria IA exercitar a interface ou confiança no diff não substituem a validação humana final.
 
-Durante a implementação, o contexto é recuperado progressivamente: o IssueCraft segue código, contratos e testes de maior sinal até resolver as lacunas materiais, sem tentar ler o repositório inteiro. Se correções repetidas falharem sem nova evidência, ele faz um diagnostic reset antes de outra alteração.
+Durante a implementação, o contexto é recuperado progressivamente: o IssueCraft segue código, contratos e testes de maior sinal até resolver as lacunas materiais, sem tentar ler o repositório inteiro. Quando o projeto já define glossário de domínio ou fonte de terminologia canônica, o IssueCraft carrega essa fonte somente no trabalho relevante, usa os termos de forma consistente em material novo/alterado e prefere um pointer aprovado para a fonte em vez de copiar o glossário. Conflitos de terminologia são expostos, não usados como justificativa para renomeações amplas fora do escopo.
+
+Para defeitos difíceis, intermitentes, dependentes de ambiente ou de performance, o IssueCraft primeiro busca o feedback signal mais específico e viável para o sintoma antes de entrar em ciclos especulativos de correção. Um teste falhando e fiel é preferido quando prático, mas traces, artefatos reproduzíveis, checks diferenciais, medições de profiler/benchmark ou instrumentação focada continuam válidos quando representam melhor a falha real. Correções repetidas sem nova evidência continuam disparando diagnostic reset.
 
 Em trabalhos não triviais que atravessam várias superfícies, o IssueCraft prefere incrementos pequenos e verificáveis e resolve cedo incertezas capazes de invalidar o plano com slices risk-first. Quando a correção depende de comportamento externo sensível à versão que o repositório não consegue comprovar, ele confere a versão detectada em documentação oficial e marca como `unverified` o que não puder confirmar.
 
@@ -235,6 +237,8 @@ Para mudanças materiais de comportamento, o IssueCraft distingue o que foi **ad
 Antes de `In Review`, uma revisão de coerência confronta issue/acceptance criteria, contratos/regras do projeto, behavior delta, diff implementado, evidência automatizada e roteiro manual. Toda mudança material no diff precisa de justificativa rastreável. Se o plano estiver errado mas o resultado pretendido da issue continuar igual, o IssueCraft replana autonomamente; se a própria issue virar materialmente outro trabalho, o humano decide.
 
 Na retomada e em transições materiais de fase, o IssueCraft relê os inputs autoritativos e mutáveis necessários para a próxima decisão em vez de confiar na memória antiga do chat. Repositórios/specs externos podem servir de referência, mas permissão de leitura nunca implica autorização para modificar.
+
+O aprendizado específico do projeto também distingue **regras mecânicas** de **regras de julgamento**. Quando uma restrição mecânica autorizada pode ser aplicada proporcionalmente por um mecanismo já existente de lint/teste/arquitetura/pre-commit/CI, o IssueCraft prefere esse source of truth determinístico em vez de repetir a mesma regra em prosa para agentes. Ele não instala tooling novo nem amplia uma issue não relacionada apenas para automatizar uma regra.
 
 ---
 
@@ -451,7 +455,7 @@ python -m unittest discover tests -v
 
 A CI executa isso em Linux, macOS e Windows.
 
-Os 49 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
+Os 52 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
 
 ---
 

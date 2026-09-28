@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.12.0  
+**Version:** 0.13.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -218,7 +218,9 @@ human validation
 
 IssueCraft may prepare an issue for `In Review`, but **Done is human-owned**. Automated checks, an agent's own UI interaction, or confidence in the diff never substitute for the final human validation gate.
 
-During implementation, context is retrieved progressively: IssueCraft follows high-signal code/contracts/tests until material information gaps are resolved instead of reading the repository exhaustively. If repeated fixes fail without new evidence, it performs a diagnostic reset before another edit.
+During implementation, context is retrieved progressively: IssueCraft follows high-signal code/contracts/tests until material information gaps are resolved instead of reading the repository exhaustively. When the project already defines a domain glossary or canonical terminology source, IssueCraft loads it only for relevant work, uses those terms consistently in new/changed material, and prefers an approved pointer to that source over copied glossary text. Terminology conflicts are surfaced rather than triggering unrelated mass renames.
+
+For difficult, intermittent, environment-dependent, or performance defects, IssueCraft first seeks the tightest feasible symptom-specific feedback signal before entering speculative fix loops. A faithful failing test is preferred when practical, but traces, replayable artifacts, differential checks, profiler/benchmark measurements, or scoped instrumentation remain valid when they better represent the real failure. Repeated fixes without new evidence still trigger a diagnostic reset.
 
 For non-trivial multi-surface work, IssueCraft prefers thin verifiable increments and resolves plan-invalidating uncertainty early with risk-first slices. When correctness depends on version-sensitive external behavior that the repository cannot establish, it checks the detected version against narrow authoritative documentation and marks anything it cannot verify as unverified.
 
@@ -233,6 +235,8 @@ For material behavior changes, IssueCraft distinguishes what is **added, modifie
 Before `In Review`, a change-coherence review reconciles the issue and acceptance criteria, project/repository contracts, behavior delta, implementation diff, automated evidence, and manual validation plan. Every material diff change needs a traceable reason. If the implementation plan proves wrong but the issue's intended outcome is unchanged, IssueCraft replans autonomously; if the issue itself would become materially different work, the human decides.
 
 At resume and other material phase transitions, IssueCraft re-reads the mutable authoritative inputs needed for the next decision instead of trusting stale conversation memory. External/reference repositories or specification sources may inform the work, but read access never implies mutation authorization.
+
+Project-specific learning also distinguishes **mechanical rules** from **judgement rules**. When an authorized mechanical constraint can be enforced proportionately by an existing project lint/test/architecture/pre-commit/CI mechanism, IssueCraft prefers that deterministic source of truth over repeating the same rule in agent prose. It does not install new tooling or expand an unrelated issue merely to automate a rule.
 
 ---
 
@@ -447,7 +451,7 @@ python -m unittest discover tests -v
 
 CI runs these on Linux, macOS and Windows.
 
-The 49 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 52 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 

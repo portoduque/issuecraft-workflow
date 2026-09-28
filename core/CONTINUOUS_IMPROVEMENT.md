@@ -36,6 +36,18 @@ When practical, compare a candidate against both the existing baseline and a **m
 
 A useful portability test is: **could the rule still be justified without naming the model/host/tool that originally failed?** If not, it is not yet a canonical-core rule.
 
+### Deterministic enforcement preference
+
+When a reusable **project-specific** rule is proposed, classify whether compliance is mechanically decidable from repository state.
+
+- If the rule is mechanical and an existing project mechanism can enforce it proportionately (for example an established lint/static check, test, architecture check, pre-commit mechanism, or CI validation), prefer that deterministic guardrail over duplicating the same meaning as prose that every agent must remember.
+- If the rule requires judgement, contextual interpretation, or trade-off reasoning, keep it as approved project guidance rather than pretending a deterministic check can encode it.
+- Do not install a new framework, add a heavyweight dependency, or expand the current issue solely to automate a rule whose enforcement cost exceeds its demonstrated benefit.
+- A deterministic guardrail is still a project mutation: implement it only when the current request/scope authorizes the change. Otherwise capture it as an improvement proposal for later human adoption.
+- When prose remains useful as navigation, point to the executable source of truth instead of restating all of its mechanically encoded details.
+
+This preference reduces repeated prompt/context load and drift, but deterministic enforcement is not automatically superior when it would encode the wrong abstraction or hide a genuine judgement call.
+
 ## Proposal
 
 For an actionable case, prepare a proposal using `../templates/WORKFLOW_IMPROVEMENT_PROPOSAL.md`. Include:
