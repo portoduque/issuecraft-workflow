@@ -12,6 +12,7 @@ This repository is the canonical source for the `implement-issue` workflow.
 - Non-trivial multi-surface work should use thin verifiable increments, risk-first slices where uncertainty can invalidate the plan, and evidence freshness rather than redundant reruns.
 - Quality-bar integrity, compatibility-safe migrations/cutovers, resolved dependency evidence, and approved-baseline ratchets are canonical validation concerns.
 - Test quality is judged by behavior-to-evidence traceability and assertion strength, not raw test count or invented coverage thresholds.
+- Code coverage is a canonical quality signal: discover and honor project coverage tooling/policies, preserve established thresholds/baselines, directly cover materially changed executable behavior when viable, and never lower/exclude/narrow coverage merely to make a change pass. Do not impose IssueCraft's repository-specific 90% gate on target projects.
 - Material obligations use evidence-or-zero, compound obligations are decomposed, unavailable checks need proportionate probe evidence, and discrimination checks are risk-based rather than universal.
 - Interrupted work may use a compact `HANDOFF.md`, but resume state is always reconciled against current repository/VCS/tracker/evidence before editing.
 - Genuine hard-to-reverse one-way-door decisions require the human gate when not already determined by authoritative project/issue evidence; ordinary reversible choices remain autonomous.
@@ -35,4 +36,6 @@ This repository is the canonical source for the `implement-issue` workflow.
 - New generic behavior should be backed by a deterministic contract eval and, where practical, a repository test. Deterministic validators should have mutation/negative-control resistance tests so green output proves something.
 - When a behavior depends on actual agent execution rather than source text alone, add/update a disposable fixture scenario under `evals/live/`; do not add provider-specific logic to `core/`.
 - GitHub Actions dependencies must stay pinned to immutable commit SHAs.
+- This repository's Python scripts must maintain the branch-aware CI coverage gate documented in `.coveragerc`/README; changes that drop below the repository threshold require stronger tests rather than threshold reduction.
+- README files are onboarding surfaces, not mirrors of canonical core: keep clone/install/invoke/update/manual-Done steps concise and move advanced explanations into `docs/`.
 - Run `python scripts/validate_repo.py`, `python scripts/run_evals.py`, `python scripts/run_live_evals.py validate`, and `python -m unittest discover tests -v` before considering a change complete.
