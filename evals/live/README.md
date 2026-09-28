@@ -27,6 +27,8 @@ The harness:
 
 The external runner adapter remains responsible for provider-specific isolation such as disabling personal plugins/memory/config, selecting a model, constraining network/tool access, and enforcing provider spending limits.
 
+A baseline/candidate comparison is only causal evidence when **intervention isolation is verified**: the baseline must not receive IssueCraft through global/personal configuration, and the candidate must receive it only through the intended candidate path. Runner configuration records this under `isolation.verified` plus concrete `isolation.evidence`. Individual runs may remain exploratory with unverified isolation, but blind pairing refuses them.
+
 ## Runner protocol
 
 A runner is any executable that:
@@ -90,7 +92,16 @@ cp evals/live/runners.example.json evals/live/runners.local.json
 
 Then point `command` at a local adapter for the agent host you want to evaluate.
 
-The local runner file is gitignored.
+Also record runner isolation honestly:
+
+```json
+"isolation": {
+  "verified": true,
+  "evidence": "personal/global workflow plugins and instructions disabled; IssueCraft loaded only when workflow_installed=true"
+}
+```
+
+The evidence is host-specific maintainer evidence, not a universal recipe. Keep `verified: false` when the adapter cannot actually establish intervention exclusivity. The local runner file is gitignored.
 
 ## Run a condition
 
@@ -117,7 +128,7 @@ python scripts/run_live_evals.py blind \
   --mapping evals/live/results/blind-mapping.json
 ```
 
-The blind file exposes responses as `A` and `B`. The mapping is deliberately separate so the evaluator does not need to see which condition produced each result.
+The blind file exposes responses as `A` and `B`. The mapping is deliberately separate so the evaluator does not need to see which condition produced each result. Blind export requires verified isolation evidence for both conditions; this prevents a contaminated baseline from being presented as a clean comparison.
 
 Use [rubric.md](rubric.md) plus each scenario's criteria. IssueCraft intentionally does not assign global numeric weights yet.
 
@@ -128,6 +139,21 @@ When runner metadata exposes token usage/cost, retain it as a secondary efficien
 A scenario may contain multiple turns. A real runner adapter should preserve the native session when practical. If a host cannot resume sessions reliably, the adapter may provide the previous transcript explicitly, but it must record that limitation in result metadata.
 
 The harness itself stays provider-neutral.
+
+## Evaluation instrument calibration
+
+If a future scenario adds an automated scorer, judge, heuristic, or executable oracle, calibrate the instrument before trusting model results whenever practical:
+
+- a known-good/positive control should pass;
+- a known-bad/negative control representing the targeted failure should fail;
+- for an ordering judge, the deliberately worse reference should score worse than the acceptable reference;
+- if the instrument cannot discriminate those controls, do not use its result as evidence for adopting a workflow rule.
+
+Human blind review without an automated scorer does not need synthetic controls merely for ceremony.
+
+## Null and negative results
+
+A live eval is allowed to show that candidate and baseline are equivalent, that the candidate does not improve the targeted behavior, or that the candidate regresses another invariant. Do not tune instructions until the candidate "wins." A null/negative result is valid evidence for revising or rejecting the proposed workflow change.
 
 ## Runtime compatibility smoke tests
 
