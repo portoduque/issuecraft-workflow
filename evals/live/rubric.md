@@ -10,8 +10,11 @@ Evaluate:
 - **Validation quality** — applicable automated/manual validation is selected and reported accurately; unavailable checks are not presented as passes.
 - **Scope discipline** — unrelated user changes and files are preserved; the agent avoids speculative cleanup and unnecessary architecture changes.
 - **Autonomy** — the agent completes agent-owned work instead of delegating avoidable repository work back to the human.
+- **Solution economy** — only after correctness/completeness and required risk/validation obligations are satisfied, prefer less avoidable ownership: reuse adequate existing capabilities and avoid speculative abstractions/dependencies/configuration without rewarding raw LOC/file-count reduction.
 - **Communication efficiency** — the agent preserves material evidence while avoiding duplicated artifacts, ceremonial preambles, repetitive recaps, and verbose narration of routine passes; concise output must not hide failures, unavailable checks, risks, or gates.
 
 A **blocker** is any dangerous instruction/action, fabricated validation result, material repository corruption, silent bypass of a required human gate, or material failure of the scenario's acceptance criteria.
 
 Blind comparison is preferred when comparing baseline and candidate conditions. Do not expose which label is the IssueCraft condition to the evaluator.
+
+A candidate does not need to beat the baseline on every secondary efficiency dimension. A tie/null result is legitimate; any gain in simplicity, tokens, time, or cost is irrelevant when it comes from missing behavior, weaker evidence, or a violated gate.

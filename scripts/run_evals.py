@@ -62,6 +62,12 @@ EXPECTED_SCENARIOS = [
     "38-partial-evidence-projection.md",
     "39-mutable-authority-reference-scope.md",
     "40-progressive-planning-overlap.md",
+    "41-solution-economy.md",
+    "42-root-cause-placement.md",
+    "43-proof-floor-before-economy.md",
+    "44-solution-economy-review.md",
+    "45-delegation-constraint-continuity.md",
+    "46-live-eval-methodology.md",
 ]
 
 
@@ -529,6 +535,105 @@ def eval_progressive_planning_overlap() -> None:
     )
 
 
+def eval_solution_economy() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "Solution economy and root-cause placement",
+        "No new implementation",
+        "Existing project capability",
+        "Runtime/platform capability",
+        "Already-approved dependency",
+        "ownership and justified complexity",
+        "not raw line count, file count",
+        "speculative abstractions",
+    )
+
+
+def eval_root_cause_placement() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "smallest common correct enforcement point",
+        "callers/sibling paths",
+        "shared cause",
+        "broadens blast radius",
+        "broader contract",
+    )
+
+
+def eval_proof_floor_before_economy() -> None:
+    require(
+        read("core/TEST_STRATEGY.md"),
+        "Proof floor before solution economy",
+        "correctness/completeness",
+        "proof obligations, not bloat metrics",
+        "Fewer lines, files, dependencies, abstractions, turns, tokens, or lower cost never compensate",
+        "both satisfy the proof floor",
+    )
+
+
+def eval_solution_economy_review() -> None:
+    validation = read("core/VALIDATION.md")
+    report = read("templates/ISSUE_EXECUTION_REPORT.md")
+    require(
+        validation,
+        "Solution-economy / ownership review",
+        "avoidable ownership or speculative complexity",
+        "Do **not** use raw LOC, file count, deletion count, or dependency count as quality scores",
+        "material known operational ceiling",
+        "evidence-based revisit trigger",
+    )
+    require(
+        report,
+        "Solution economy / known limits",
+        "Known operational ceiling",
+        "Evidence-based revisit trigger",
+    )
+
+
+def eval_delegation_constraint_continuity() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "Delegation constraint continuity",
+        "Delegation is optional",
+        "do not assume project rules, issue intent, human gates",
+        "cannot approve a human gate",
+        "parent/controlling workflow remains responsible",
+        "delegation must not become a way to bypass",
+    )
+
+
+def eval_live_eval_methodology() -> None:
+    live = read("evals/live/README.md")
+    rubric = read("evals/live/rubric.md")
+    learning = read("core/CONTINUOUS_IMPROVEMENT.md")
+    runner = read("scripts/run_live_evals.py")
+    require(
+        live,
+        "intervention isolation is verified",
+        "Blind pairing refuses",
+        "Evaluation instrument calibration",
+        "known-good/positive control",
+        "known-bad/negative control",
+        "Null and negative results",
+    )
+    require(
+        runner,
+        "verified runner isolation evidence",
+        "verified isolation requires concrete evidence",
+    )
+    require(
+        rubric,
+        "Solution economy",
+        "tie/null result is legitimate",
+        "irrelevant when it comes from missing behavior",
+    )
+    require(
+        learning,
+        "Failure to demonstrate benefit is valid evidence for non-adoption",
+        "null result",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -570,6 +675,12 @@ EVALS = [
     eval_partial_evidence_projection,
     eval_mutable_authority_reference_scope,
     eval_progressive_planning_overlap,
+    eval_solution_economy,
+    eval_root_cause_placement,
+    eval_proof_floor_before_economy,
+    eval_solution_economy_review,
+    eval_delegation_constraint_continuity,
+    eval_live_eval_methodology,
 ]
 
 

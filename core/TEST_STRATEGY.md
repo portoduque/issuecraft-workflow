@@ -28,6 +28,16 @@ A passing test is useful evidence only when its assertions materially discrimina
 
 Unless the issue or an established project contract explicitly mandates an implementation choice, test the **observable behavior/contract**, not the agent's chosen internal structure. Internal symbol names, file names, helper boundaries, or library choices are not acceptance criteria merely because the implementation used them.
 
+### Proof floor before solution economy
+
+Implementation economy is evaluated only **after** correctness/completeness and applicable risk obligations are proven.
+
+- Fewer lines, files, dependencies, abstractions, turns, tokens, or lower cost never compensate for missing required behavior, preservation, validation, security, accessibility, compatibility, data integrity, or reliability evidence.
+- Do not delete, weaken, collapse, or skip an applicable check merely to make the implementation appear simpler.
+- Tests and other required validation are **proof obligations, not bloat metrics**.
+- A smaller implementation that passes only the happy path is not preferable to a larger implementation that faithfully proves the complete applicable contract.
+- When comparing two implementations that both satisfy the proof floor, prefer the one with less justified ownership/complexity consistent with project conventions.
+
 ### Behavior-delta test semantics
 
 When planning establishes a material behavior delta, test semantics must match the operation instead of treating every requirement as "something that should exist":

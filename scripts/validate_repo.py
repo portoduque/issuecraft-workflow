@@ -229,6 +229,35 @@ def check_quality_contracts(errors: list[str]) -> None:
         if phrase.lower() not in lifecycle.lower():
             errors.append(f"lifecycle v0.9 contract missing phrase: {phrase}")
 
+    for phrase in (
+        "Solution economy and root-cause placement",
+        "Existing project capability",
+        "Runtime/platform capability",
+        "Already-approved dependency",
+        "ownership and justified complexity",
+        "smallest common correct enforcement point",
+        "Delegation constraint continuity",
+        "Delegation is optional",
+        "cannot approve a human gate",
+    ):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.10 solution-economy contract missing phrase: {phrase}")
+    for phrase in (
+        "Proof floor before solution economy",
+        "proof obligations, not bloat metrics",
+        "Fewer lines, files, dependencies, abstractions, turns, tokens, or lower cost never compensate",
+    ):
+        if phrase.lower() not in tests.lower():
+            errors.append(f"test v0.10 proof-floor contract missing phrase: {phrase}")
+    for phrase in (
+        "Solution-economy / ownership review",
+        "Do **not** use raw LOC, file count, deletion count, or dependency count as quality scores",
+        "material known operational ceiling",
+        "evidence-based revisit trigger",
+    ):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"validation v0.10 solution-economy contract missing phrase: {phrase}")
+
 
 def check_learning_contract(errors: list[str]) -> None:
     learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
@@ -236,7 +265,7 @@ def check_learning_contract(errors: list[str]) -> None:
     for phrase in (".implement-issue/proposals/", ".implement-issue/LEARNINGS.md", "explicit human approval"):
         if phrase not in learning:
             errors.append(f"persistent learning contract missing phrase: {phrase}")
-    for phrase in ("Generic-change admission check", "Merge first", "marginal benefit does not justify its ongoing complexity", "Procedure portability", "Recurrence strengthens evidence, not authority"):
+    for phrase in ("Generic-change admission check", "Merge first", "marginal benefit does not justify its ongoing complexity", "Procedure portability", "Recurrence strengthens evidence, not authority", "Failure to demonstrate benefit is valid evidence for non-adoption", "null result"):
         if phrase.lower() not in learning.lower():
             errors.append(f"anti-bloat learning contract missing phrase: {phrase}")
     if "Persistence and adoption are distinct decisions" not in gates:
@@ -245,15 +274,33 @@ def check_learning_contract(errors: list[str]) -> None:
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 40:
-        errors.append(f"expected 40 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 46:
+        errors.append(f"expected 46 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))
-    if len(live_scenarios) < 2:
-        errors.append(f"expected at least 2 live-agent eval scenarios, found {len(live_scenarios)}")
+    if len(live_scenarios) < 6:
+        errors.append(f"expected at least 6 live-agent eval scenarios, found {len(live_scenarios)}")
     if not (ROOT / "scripts/run_live_evals.py").is_file():
         errors.append("live-agent eval runner missing")
+
+    live_readme = (ROOT / "evals/live/README.md").read_text(encoding="utf-8")
+    live_runner = (ROOT / "scripts/run_live_evals.py").read_text(encoding="utf-8")
+    for phrase in (
+        "intervention isolation is verified",
+        "Evaluation instrument calibration",
+        "known-good/positive control",
+        "known-bad/negative control",
+        "Null and negative results",
+    ):
+        if phrase.lower() not in live_readme.lower():
+            errors.append(f"live-eval v0.10 methodology missing phrase: {phrase}")
+    for phrase in (
+        "verified runner isolation evidence",
+        "verified isolation requires concrete evidence",
+    ):
+        if phrase.lower() not in live_runner.lower():
+            errors.append(f"live-eval v0.10 isolation contract missing phrase: {phrase}")
 
 
 def check_human_gates(errors: list[str]) -> None:

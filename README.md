@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.9.0  
+**Version:** 0.10.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -72,10 +72,12 @@ IssueCraft provides one canonical `implement-issue` workflow that:
 - detects project drift on later runs;
 - plans and implements the smallest coherent issue change;
 - models material behavior changes as current contract → requested delta → resulting contract, preserving unspecified existing obligations;
+- applies solution economy after understanding the real flow: reuse adequate existing project/runtime/platform/approved-dependency capabilities before creating new ownership;
 - performs mandatory security-impact and performance-impact triage;
 - selects tests by risk instead of assuming one framework or one test command;
 - requires evidence-or-zero for material obligations, decomposes compound requirements, and uses targeted discrimination checks when test strength is materially uncertain;
 - keeps scope integrity: local/reversible replanning stays autonomous, while material issue intent/scope drift requires a human decision;
+- keeps a proof floor above simplicity: correctness/completeness, security, accessibility, compatibility, preservation, reliability and applicable validation cannot be traded for fewer lines/files/tokens;
 - moves work through `In Progress → In Review → human validation → Done`;
 - generates an issue-specific manual validation plan before `In Review`;
 - learns from real usage while keeping persistence and adoption human-controlled.
@@ -97,6 +99,34 @@ Routine successful checks may be grouped; `not_applicable` checks may be summari
 Compact output is a **projection of the complete validation result**, never a reason to validate fewer obligations. Partial evidence stays partial: if some material members are not proven, the parent obligation is not reported as a full pass.
 
 This reduces repeated output and accumulated conversation context without reducing testing or engineering depth.
+
+---
+
+## Solution economy without code golf
+
+IssueCraft now separates **implementation economy** from raw code-size optimization.
+
+After the affected flow and contract are understood, it prefers:
+
+```text
+no new implementation when none is needed
+  ↓
+reuse an adequate capability already in the project
+  ↓
+use an adequate runtime/platform capability
+  ↓
+reuse an already-approved dependency
+  ↓
+only then add the smallest coherent new implementation
+```
+
+The goal is **less ownership and less unjustified complexity**, not the fewest lines or files. A larger implementation is preferred when the smaller one would drop required behavior, validation, security, accessibility, compatibility, observability, data integrity or reliability.
+
+For bug fixes, IssueCraft also checks whether the named symptom is only one path to a shared root cause. When repository evidence shows a common invariant, it prefers the smallest common correct enforcement point and validates the broader blast radius rather than duplicating the same guard across callers.
+
+Before `In Review`, the diff is checked for avoidable ownership such as speculative abstractions, wrappers, dependencies, configuration layers or duplicated project capability. Legitimate boundaries are not treated as bloat merely because they add code.
+
+Delegation/subagents remain optional. If they are used, IssueCraft does not assume that another context inherited project rules or human gates; the controlling workflow remains responsible for reconciliation and final validation.
 
 ---
 
@@ -412,7 +442,7 @@ python -m unittest discover tests -v
 
 CI runs these on Linux, macOS and Windows.
 
-The 40 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 46 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 

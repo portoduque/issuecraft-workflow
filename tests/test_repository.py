@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(40, len(contract_evals.EVALS))
+        self.assertEqual(46, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -234,6 +234,70 @@ class RepositoryTests(unittest.TestCase):
         manual = (ROOT / "templates/MANUAL_VALIDATION_PLAN.md").read_text(encoding="utf-8")
         self.assertIn("Behavior delta / preservation", report)
         self.assertIn("Regression / preservation checks", manual)
+
+    def test_v010_solution_economy_and_eval_rigor_contracts(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
+        live_readme = (ROOT / "evals/live/README.md").read_text(encoding="utf-8")
+        live_rubric = (ROOT / "evals/live/rubric.md").read_text(encoding="utf-8")
+        live_runner = (ROOT / "scripts/run_live_evals.py").read_text(encoding="utf-8")
+
+        for phrase in (
+            "Solution economy and root-cause placement",
+            "Existing project capability",
+            "Runtime/platform capability",
+            "Already-approved dependency",
+            "ownership and justified complexity",
+            "smallest common correct enforcement point",
+            "Delegation constraint continuity",
+            "Delegation is optional",
+            "cannot approve a human gate",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "Proof floor before solution economy",
+            "proof obligations, not bloat metrics",
+            "Fewer lines, files, dependencies, abstractions, turns, tokens, or lower cost never compensate",
+        ):
+            self.assertIn(phrase.lower(), tests.lower())
+
+        for phrase in (
+            "Solution-economy / ownership review",
+            "Do **not** use raw LOC, file count, deletion count, or dependency count as quality scores",
+            "material known operational ceiling",
+            "evidence-based revisit trigger",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        self.assertIn(
+            "Failure to demonstrate benefit is valid evidence for non-adoption".lower(),
+            learning.lower(),
+        )
+        self.assertIn("null result", learning.lower())
+
+        for phrase in (
+            "intervention isolation is verified",
+            "Evaluation instrument calibration",
+            "known-good/positive control",
+            "known-bad/negative control",
+            "Null and negative results",
+        ):
+            self.assertIn(phrase.lower(), live_readme.lower())
+
+        self.assertIn("Solution economy".lower(), live_rubric.lower())
+        self.assertIn("tie/null result is legitimate".lower(), live_rubric.lower())
+        self.assertIn("verified runner isolation evidence".lower(), live_runner.lower())
+
+        report = (ROOT / "templates/ISSUE_EXECUTION_REPORT.md").read_text(encoding="utf-8")
+        self.assertIn("Solution economy / known limits", report)
+        self.assertIn("Evidence-based revisit trigger", report)
+
+        self.assertTrue(
+            (ROOT / "evals/live/scenarios/root-cause-shared-path/scenario.json").is_file()
+        )
 
     def test_profile_schema_has_security_performance_and_test_discovery(self):
         schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))

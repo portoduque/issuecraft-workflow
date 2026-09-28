@@ -140,6 +140,26 @@ Before editing a materially coupled surface, perform **risk-based impact reconna
 
 If current tracker/VCS/repository evidence reveals another active change touching the same public contract, migration, persistence boundary, or other high-collision surface, treat the overlap as a coordination risk. Overlap alone is not an implicit dependency and must not fabricate ordering; only an explicit/evidenced dependency blocks or constrains execution.
 
+### Solution economy and root-cause placement
+
+After understanding the issue and the affected flow, choose the least ownership/complexity that still satisfies the complete contract. This is **solution economy**, not code golf.
+
+Use this order when it is relevant to the change:
+
+1. **No new implementation** — if the requested outcome is already satisfied by existing behavior/configuration/data and the issue can be completed truthfully without adding code, do not manufacture work.
+2. **Existing project capability** — prefer an established helper, component, service, domain abstraction, validation, constraint, pattern, or other repository capability when it faithfully covers the need. Search the relevant surface before duplicating a capability.
+3. **Runtime/platform capability** — prefer a standard/runtime/platform primitive when repository and version evidence show it satisfies the required behavior, compatibility, security, accessibility, and operational constraints.
+4. **Already-approved dependency** — prefer an already-installed/approved dependency when its existing contract cleanly covers the need and does not create a worse ownership or risk boundary.
+5. **New implementation** — only then introduce the smallest coherent new code/abstraction/dependency needed for the complete requirement.
+
+Economy is judged by **ownership and justified complexity**, not raw line count, file count, cleverness, or deletion volume. A longer implementation is preferable when the shorter one drops correctness, data integrity, security, accessibility, compatibility, observability, performance/reliability controls, maintainability needed by the project, or any explicit requirement.
+
+Do not introduce speculative abstractions, extension points, wrappers, configuration, dependencies, or files for hypothetical future needs. Conversely, do not collapse meaningful boundaries merely to reduce files or lines.
+
+For bug fixes, prefer the **smallest common correct enforcement point** supported by evidence. Trace materially relevant callers/sibling paths when the same invariant can fail through more than the named symptom. Fix the shared cause when that actually restores the invariant across affected paths; if the shared surface broadens blast radius, validate that broader contract rather than assuming the common location is automatically safer.
+
+When a deliberately simpler design has a **material known ceiling**, record the ceiling and an evidence-based revisit trigger in the execution report or equivalent durable artifact. Do not create synthetic debt or TODOs for harmless simplicity.
+
 ### Version-aware authoritative-source verification
 
 Use external sources only when correctness materially depends on version-sensitive technology behavior, a public interface, a deprecation/migration rule, or another technical fact that repository evidence cannot establish alone.
@@ -163,14 +183,25 @@ When implementation is actually ready to begin, transition the issue to the sema
 
 1. Make scoped changes that follow observed project conventions and approved local rules.
 2. Preserve **scope integrity**: do not silently narrow, defer, waive, or redefine a required behavior merely because implementation is harder than expected. If additional local/reversible work is necessary to satisfy the same authorized intent, replan and perform it coherently; use a human gate only when the work crosses an existing gate or materially changes issue identity/scope.
-3. Reuse the project's existing dependency/build/test/migration mechanisms when supported by evidence.
-4. Add or update the applicable tests identified by `TEST_STRATEGY.md`; for bug fixes, add a durable regression reproducer when feasible.
-5. Apply `SECURITY.md` throughout implementation, preserving trust boundaries, least privilege, secrets handling, and security controls.
-6. Apply `PERFORMANCE.md` throughout implementation; avoid unbounded work/resource growth and measure performance-sensitive changes when feasible.
-7. If no applicable test infrastructure exists, do not silently invent a framework. Validate through available mechanisms and surface the gap. Adding foundational test tooling is a project decision unless clearly required by already-approved rules/issue scope.
-8. Preserve backward/forward compatibility when required by the issue, repository conventions, contracts, or rules.
-9. Do not hide failures by deleting/weakening tests, bypassing quality/security/performance gates, suppressing errors, or narrowing assertions without a justified project-specific reason.
-10. Do not commit, push, merge, deploy, run destructive/high-load operations, or mutate production systems unless explicitly requested or established by approved project rules and within the current capability/security boundary.
+3. Apply **solution economy** only after the real flow and contract are understood: reuse an adequate existing capability before creating ownership, but never trade away completeness or required proof obligations for fewer lines/files.
+4. Reuse the project's existing dependency/build/test/migration mechanisms when supported by evidence.
+5. Add or update the applicable tests identified by `TEST_STRATEGY.md`; for bug fixes, add a durable regression reproducer when feasible.
+6. Apply `SECURITY.md` throughout implementation, preserving trust boundaries, least privilege, secrets handling, and security controls.
+7. Apply `PERFORMANCE.md` throughout implementation; avoid unbounded work/resource growth and measure performance-sensitive changes when feasible.
+8. If no applicable test infrastructure exists, do not silently invent a framework. Validate through available mechanisms and surface the gap. Adding foundational test tooling is a project decision unless clearly required by already-approved rules/issue scope.
+9. Preserve backward/forward compatibility when required by the issue, repository conventions, contracts, or rules.
+10. Do not hide failures by deleting/weakening tests, bypassing quality/security/performance gates, suppressing errors, or narrowing assertions without a justified project-specific reason.
+11. Do not commit, push, merge, deploy, run destructive/high-load operations, or mutate production systems unless explicitly requested or established by approved project rules and within the current capability/security boundary.
+
+### Delegation constraint continuity
+
+Delegation is optional; IssueCraft never requires a subagent. When a host or agent delegates repository work:
+
+- provide only the minimum authoritative context and capability needed for the delegated task;
+- do not assume project rules, issue intent, human gates, security/performance constraints, or validation obligations are inherited implicitly by another agent/context;
+- a delegate may produce implementation/evidence, but it cannot approve a human gate or make its output authoritative merely by returning confidently;
+- the parent/controlling workflow remains responsible for reconciling delegated output against current issue/project contracts, inspecting resulting changes, and validating the final state;
+- delegation must not become a way to bypass scope, mutation, authorization, or final-human-validation boundaries.
 
 ### Incremental execution for non-trivial changes
 

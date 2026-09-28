@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.9.0  
+**Versão:** 0.10.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -72,10 +72,12 @@ Existe um único workflow canônico `implement-issue` que:
 - detecta drift nas execuções futuras;
 - planeja e implementa a menor mudança coerente que atende a issue;
 - modela mudanças materiais como contrato atual → delta solicitado → contrato resultante, preservando obrigações existentes não alteradas;
+- aplica solution economy depois de entender o fluxo real: reutiliza capacidades adequadas já existentes no projeto/runtime/plataforma/dependências aprovadas antes de criar novo ownership;
 - faz triagem obrigatória de segurança e performance;
 - escolhe testes conforme o risco, sem depender de framework específico;
 - exige evidence-or-zero para obrigações materiais, decompõe requisitos compostos e usa discrimination checks direcionados quando a força do teste é materialmente incerta;
 - preserva integridade de escopo: replanning local/reversível continua autônomo, mas drift material de intenção/escopo da issue exige decisão humana;
+- mantém um proof floor acima da simplicidade: correção/completude, segurança, acessibilidade, compatibilidade, preservação, confiabilidade e validação aplicável não podem ser trocadas por menos linhas/arquivos/tokens;
 - conduz `In Progress → In Review → validação humana → Done`;
 - gera um roteiro manual específico da issue ao entrar em `In Review`;
 - aprende com o uso real, mas mantém persistência e adoção sob controle humano.
@@ -97,6 +99,34 @@ Checks rotineiros que passaram podem ser agrupados; casos `not_applicable` podem
 Output compacto é uma **projeção do resultado completo da validação**, nunca um motivo para validar menos obrigações. Evidência parcial continua parcial: se membros materiais ainda não foram provados, a obrigação pai não vira `pass` integral.
 
 Assim o histórico da conversa fica menor sem reduzir testes ou profundidade técnica.
+
+---
+
+## Solution economy sem code golf
+
+O IssueCraft separa **economia de implementação** de simplesmente escrever menos código.
+
+Depois de entender o fluxo afetado e o contrato, ele prefere:
+
+```text
+não criar implementação nova quando não é necessária
+  ↓
+reutilizar capacidade adequada já existente no projeto
+  ↓
+usar capacidade adequada do runtime/plataforma
+  ↓
+reutilizar dependência já aprovada/instalada
+  ↓
+só então criar a menor implementação nova coerente
+```
+
+O objetivo é **menos ownership e menos complexidade sem justificativa**, não o menor número de linhas ou arquivos. Uma solução maior é preferível quando a menor perderia comportamento obrigatório, validação, segurança, acessibilidade, compatibilidade, observabilidade, integridade de dados ou confiabilidade.
+
+Em correções de bug, o IssueCraft também verifica se o sintoma citado na issue é apenas um dos caminhos até uma causa compartilhada. Quando a evidência do repositório mostra um invariante comum, ele prefere o menor ponto comum correto de enforcement e valida o blast radius mais amplo, em vez de duplicar guards entre callers.
+
+Antes de `In Review`, o diff passa por uma revisão de ownership/complexidade para detectar abstrações, wrappers, dependências, configurações ou capacidades duplicadas sem necessidade comprovada. Boundaries legítimos não são tratados como bloat só porque adicionam código.
+
+Delegação/subagents continuam opcionais. Se forem usados, o IssueCraft não presume que outro contexto herdou regras do projeto ou human gates; o workflow controlador continua responsável por reconciliar o resultado e validar o estado final.
 
 ---
 
@@ -416,7 +446,7 @@ python -m unittest discover tests -v
 
 A CI executa isso em Linux, macOS e Windows.
 
-Os 40 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
+Os 46 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
 
 ---
 

@@ -81,6 +81,21 @@ Only report a review finding when there is enough evidence to state:
 
 A clean review may legitimately produce zero findings. Do not invent nits or inflate severity to make the review look productive.
 
+### Solution-economy / ownership review
+
+After correctness/completeness and applicable proof obligations are satisfied, inspect whether the diff introduces avoidable ownership or speculative complexity.
+
+Look for evidence-backed cases such as:
+
+- a new abstraction, wrapper, extension point, configuration layer, dependency, file/module, or custom implementation when an adequate established project/runtime/platform capability already covers the requirement;
+- duplicated project behavior or validation that should reuse an existing source of truth;
+- indirection that adds no material contract, isolation, reuse, compatibility, or risk-control value;
+- future-proofing for hypothetical variants with no issue/project evidence.
+
+Do **not** use raw LOC, file count, deletion count, or dependency count as quality scores. Necessary boundaries and explicit requirements are not over-engineering merely because they add code. Solution economy is secondary to the proof floor: correctness, completeness, preservation, security, performance/reliability, accessibility, compatibility, and required validation remain controlling.
+
+When a simpler design is chosen with a material known operational ceiling, ensure the ceiling and evidence-based revisit trigger are recorded. Do not manufacture debt records for ordinary simple code.
+
 ### Behavior-delta verification
 
 When the issue materially changes behavior or a contract, verify the resulting state according to the delta semantics established during planning:

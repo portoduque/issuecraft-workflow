@@ -22,6 +22,13 @@
 
 -
 
+## Solution economy / known limits
+
+- Existing capability reused / why new ownership was necessary:
+- Material avoidable-complexity review:
+- Known operational ceiling (if any):
+- Evidence-based revisit trigger (if any):
+
 ## Quality/risk assessment
 
 - Correctness/data integrity risk:
