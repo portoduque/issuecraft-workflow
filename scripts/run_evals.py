@@ -38,6 +38,7 @@ EXPECTED_SCENARIOS = [
     "14-agent-neutrality.md",
     "15-stack-neutrality.md",
     "16-safe-expensive-tests.md",
+    "17-output-efficiency.md",
 ]
 
 
@@ -132,6 +133,26 @@ def eval_safe_expensive_tests() -> None:
     require(read("core/CAPABILITIES.md"), "High-load, destructive, production-impacting")
 
 
+def eval_output_efficiency() -> None:
+    workflow = read("core/WORKFLOW.md")
+    validation = read("core/VALIDATION.md")
+    require(
+        workflow,
+        "Compress presentation, never evidence",
+        "delta-only progress updates",
+        "Do not duplicate",
+        "Group routine successful checks",
+        "one concrete next action",
+    )
+    require(
+        validation,
+        "Preserve complete validation evidence",
+        "group routine successful checks",
+        "Never collapse `unavailable`",
+        "Token/output reduction is never a reason to omit material evidence",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -149,6 +170,7 @@ EVALS = [
     eval_agent_neutrality,
     eval_stack_neutrality,
     eval_safe_expensive_tests,
+    eval_output_efficiency,
 ]
 
 

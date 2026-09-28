@@ -121,6 +121,8 @@ The blind file exposes responses as `A` and `B`. The mapping is deliberately sep
 
 Use [rubric.md](rubric.md) plus each scenario's criteria. IssueCraft intentionally does not assign global numeric weights yet.
 
+When runner metadata exposes token usage/cost, retain it as a secondary efficiency signal. Compare output usage between baseline/candidate only after correctness, evidence fidelity, safety/human gates, validation quality, and scope discipline are satisfied. Fewer tokens never compensate for a blocker or missing evidence.
+
 ## Multi-turn scenarios
 
 A scenario may contain multiple turns. A real runner adapter should preserve the native session when practical. If a host cannot resume sessions reliably, the adapter may provide the previous transcript explicitly, but it must record that limitation in result metadata.

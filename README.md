@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.4.0  
+**Version:** 0.5.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -76,6 +76,22 @@ IssueCraft provides one canonical `implement-issue` workflow that:
 - moves work through `In Progress → In Review → human validation → Done`;
 - generates an issue-specific manual validation plan before `In Review`;
 - learns from real usage while keeping persistence and adoption human-controlled.
+
+---
+
+## Compact output, full evidence
+
+IssueCraft keeps the analysis and validation deep while keeping chat handoffs short.
+
+The rule is:
+
+> **Compress presentation, never evidence.**
+
+Detailed evidence stays in durable project artifacts such as the Profile, drift report, validation plan, execution report, or improvement proposal. In chat, IssueCraft focuses on the current state, material changes, failures/unavailable checks, residual risks, required human decision, and the next action.
+
+Routine successful checks may be grouped; `not_applicable` checks may be summarized. Failures, unavailable validation, security/performance risks, uncertainty, and human gates are never hidden to save tokens.
+
+This reduces repeated output and accumulated conversation context without reducing testing or engineering depth.
 
 ---
 
@@ -364,7 +380,7 @@ python -m unittest discover tests -v
 
 CI runs these on Linux, macOS and Windows.
 
-The 16 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 17 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 

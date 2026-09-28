@@ -126,6 +126,12 @@ def check_quality_contracts(errors: list[str]) -> None:
         errors.append("performance budget contract missing")
     if "not_applicable" not in validation or "unavailable" not in validation:
         errors.append("validation must distinguish not_applicable from unavailable")
+    for phrase in ("Compress presentation, never evidence", "delta-only progress updates", "Group routine successful checks"):
+        if phrase not in workflow:
+            errors.append(f"output efficiency contract missing phrase: {phrase}")
+    for phrase in ("Preserve complete validation evidence", "Token/output reduction is never a reason to omit material evidence"):
+        if phrase not in validation:
+            errors.append(f"validation output-efficiency contract missing phrase: {phrase}")
 
 
 def check_learning_contract(errors: list[str]) -> None:
@@ -140,8 +146,8 @@ def check_learning_contract(errors: list[str]) -> None:
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 16:
-        errors.append(f"expected 16 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 17:
+        errors.append(f"expected 17 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))

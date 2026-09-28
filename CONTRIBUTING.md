@@ -37,6 +37,7 @@ Changes that affect the canonical workflow must preserve:
 - stack/framework/language neutrality in `core/`;
 - mandatory security-impact and performance-impact triage;
 - comprehensive risk-based test selection with `pass/fail/unavailable/not_applicable` semantics;
+- compact user-facing handoffs without loss of material evidence, failures, unavailable checks, risks, or human gates;
 - human ownership of persistent learning, material risk acceptance, and final `Done`;
 - installer protection against managed symlink redirection;
 - release archives free from VCS metadata and local caches;

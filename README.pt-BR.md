@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.4.0  
+**Versão:** 0.5.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -76,6 +76,22 @@ Existe um único workflow canônico `implement-issue` que:
 - conduz `In Progress → In Review → validação humana → Done`;
 - gera um roteiro manual específico da issue ao entrar em `In Review`;
 - aprende com o uso real, mas mantém persistência e adoção sob controle humano.
+
+---
+
+## Output compacto, evidência completa
+
+O IssueCraft mantém análise e validação profundas, mas evita transformar cada handoff no chat em um relatório enorme.
+
+A regra é:
+
+> **Compactar a apresentação, nunca a evidência.**
+
+Os detalhes ficam nos artefatos duráveis do projeto, como Profile, relatório de drift, plano de validação, relatório de execução ou proposta de melhoria. No chat, o IssueCraft prioriza estado atual, mudanças materiais, falhas/checks indisponíveis, riscos residuais, decisão humana necessária e próxima ação.
+
+Checks rotineiros que passaram podem ser agrupados; casos `not_applicable` podem ser resumidos. Falhas, validações indisponíveis, riscos de segurança/performance, incerteza e human gates nunca são escondidos para economizar tokens.
+
+Assim o histórico da conversa fica menor sem reduzir testes ou profundidade técnica.
 
 ---
 
@@ -366,7 +382,7 @@ python -m unittest discover tests -v
 
 A CI executa isso em Linux, macOS e Windows.
 
-Os 16 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
+Os 17 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
 
 ---
 
