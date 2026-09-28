@@ -41,6 +41,19 @@ When evidence conflicts:
 3. Lower confidence or mark the fact `conflict`.
 4. Surface material conflicts before they drive implementation.
 
+## Partial evidence
+
+Partial evidence supports only the conclusion it actually proves.
+
+- Evidence for some members of a compound obligation does not prove the unobserved members.
+- Evidence from one path, role, environment, mode, or scenario does not automatically generalize to another materially distinct one.
+- Continue using valid partial evidence, but mark the unsupported remainder unverified/unknown as appropriate.
+- Do not convert "no contradictory evidence found" into positive proof.
+
+## Mutable evidence and conversation memory
+
+Conversation memory, a prior plan, or an earlier handoff can point to evidence but is not a substitute for the current authoritative source when that source is mutable. At resume and material phase transitions, re-read the specific live issue/project/rule/configuration/code/validation inputs on which the next decision depends.
+
 ## No invented commands
 
 A command belongs in the Profile only when supported by a manifest/script/docs/CI/runtime evidence. Do not transform a generic convention into a project fact.

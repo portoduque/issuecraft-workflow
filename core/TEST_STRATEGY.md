@@ -26,6 +26,20 @@ Prefer the **lowest-cost test layer that can faithfully prove the behavior**. Es
 
 A passing test is useful evidence only when its assertions materially discriminate correct behavior from the relevant failure. Prefer observable behavior, contracts, and invariants over implementation-detail assertions. A no-throw check or broad snapshot is not automatically meaningful evidence.
 
+Unless the issue or an established project contract explicitly mandates an implementation choice, test the **observable behavior/contract**, not the agent's chosen internal structure. Internal symbol names, file names, helper boundaries, or library choices are not acceptance criteria merely because the implementation used them.
+
+### Behavior-delta test semantics
+
+When planning establishes a material behavior delta, test semantics must match the operation instead of treating every requirement as "something that should exist":
+
+- **added** — require evidence that the new behavior exists;
+- **modified** — require evidence for the new behavior plus preservation coverage for material prior obligations not explicitly superseded;
+- **removed** — require evidence that the removed behavior is absent/inaccessible where required; do not create a "missing requirement" test that would reward reintroducing it;
+- **renamed/preserved** — prove the behavior remains semantically equivalent; do not require unrelated internal renames;
+- **unchanged-but-at-risk** — add/retain proportionate regression evidence for behavior exposed by the same changed surface.
+
+For a modified contract, **scenario/obligation loss is a regression** unless the issue explicitly removes or replaces that scenario/obligation. When current behavior contains multiple independently material cases, a new test for the changed case does not excuse silently dropping the unchanged cases.
+
 ### Evidence-or-zero
 
 Treat coverage as a proof claim, not a proximity claim. A materially changed behavior, acceptance criterion, invariant, or risk obligation counts as covered only when the evidence identifies the concrete check/test and the assertion, observation, or measured condition that proves the required outcome.
@@ -164,6 +178,8 @@ When available, preserve useful failure artifacts such as traces, logs, screensh
 ## Coverage
 
 Respect existing coverage requirements if present. Do not invent a global coverage percentage. Coverage is evidence about exercised code, not proof of correctness; prioritize risk-relevant assertions and behavior.
+
+A related green suite does not prove preservation when the changed contract can silently lose an existing scenario/field/state/path. Prefer explicit preservation evidence where that loss is materially plausible.
 
 ## Test doubles and boundary fidelity
 

@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.8.0  
+**Version:** 0.9.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -71,9 +71,11 @@ IssueCraft provides one canonical `implement-issue` workflow that:
 - requires human approval before persisting important project knowledge;
 - detects project drift on later runs;
 - plans and implements the smallest coherent issue change;
+- models material behavior changes as current contract → requested delta → resulting contract, preserving unspecified existing obligations;
 - performs mandatory security-impact and performance-impact triage;
 - selects tests by risk instead of assuming one framework or one test command;
 - requires evidence-or-zero for material obligations, decomposes compound requirements, and uses targeted discrimination checks when test strength is materially uncertain;
+- keeps scope integrity: local/reversible replanning stays autonomous, while material issue intent/scope drift requires a human decision;
 - moves work through `In Progress → In Review → human validation → Done`;
 - generates an issue-specific manual validation plan before `In Review`;
 - learns from real usage while keeping persistence and adoption human-controlled.
@@ -91,6 +93,8 @@ The rule is:
 Detailed evidence stays in durable project artifacts such as the Profile, drift report, validation plan, execution report, or improvement proposal. In chat, IssueCraft focuses on the current state, material changes, failures/unavailable checks, residual risks, required human decision, and the next action.
 
 Routine successful checks may be grouped; `not_applicable` checks may be summarized. Failures, unavailable validation, security/performance risks, uncertainty, and human gates are never hidden to save tokens.
+
+Compact output is a **projection of the complete validation result**, never a reason to validate fewer obligations. Partial evidence stays partial: if some material members are not proven, the parent obligation is not reported as a full pass.
 
 This reduces repeated output and accumulated conversation context without reducing testing or engineering depth.
 
@@ -188,6 +192,12 @@ Validation is evidence-aware: a prior green result is reused only while its rele
 If work is interrupted, IssueCraft can write a compact `.implement-issue/HANDOFF.md`. The handoff is only a resume hypothesis: on the next session it is reconciled against current repository/VCS state, tracker state when available, and durable validation evidence before any edit. Current evidence wins over stale narrative.
 
 Materially hard-to-reverse implementation choices that are not already determined by the issue, approved project knowledge, existing contracts, or unavoidable constraints are treated as one-way doors and require an explicit human decision. Ordinary reversible implementation choices remain autonomous.
+
+For material behavior changes, IssueCraft distinguishes what is **added, modified, removed, renamed/preserved, and unchanged-but-at-risk**. Modified behavior carries preservation obligations for existing scenarios/fields/states/paths the issue did not explicitly remove; removed behavior is verified as absent rather than treated as something to restore.
+
+Before `In Review`, a change-coherence review reconciles the issue and acceptance criteria, project/repository contracts, behavior delta, implementation diff, automated evidence, and manual validation plan. Every material diff change needs a traceable reason. If the implementation plan proves wrong but the issue's intended outcome is unchanged, IssueCraft replans autonomously; if the issue itself would become materially different work, the human decides.
+
+At resume and other material phase transitions, IssueCraft re-reads the mutable authoritative inputs needed for the next decision instead of trusting stale conversation memory. External/reference repositories or specification sources may inform the work, but read access never implies mutation authorization.
 
 ---
 
@@ -402,7 +412,7 @@ python -m unittest discover tests -v
 
 CI runs these on Linux, macOS and Windows.
 
-The 33 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 40 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 

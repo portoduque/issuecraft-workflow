@@ -31,9 +31,10 @@ State exactly what this validation proves.
 1.
    - Expected:
 
-## Regression checks
+## Regression / preservation checks
 
-- [ ]
+- [ ] Confirm nearby behavior most exposed by the diff still works.
+- [ ] Confirm material behavior on a modified surface that was not explicitly removed remains preserved.
 
 ## Security-sensitive checks (when applicable)
 
