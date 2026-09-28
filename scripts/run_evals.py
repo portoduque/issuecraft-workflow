@@ -71,6 +71,9 @@ EXPECTED_SCENARIOS = [
     "47-approval-scope-integrity.md",
     "48-semantic-output-economy.md",
     "49-token-economy-evidence.md",
+    "50-project-language-continuity.md",
+    "51-deterministic-guardrail-preference.md",
+    "52-tight-diagnostic-feedback.md",
 ]
 
 
@@ -714,6 +717,69 @@ def eval_token_economy_evidence() -> None:
     )
 
 
+def eval_project_language_continuity() -> None:
+    workflow = read("core/WORKFLOW.md")
+    discovery = read("core/PROJECT_DISCOVERY.md")
+    rules = read("templates/PROJECT_RULES.md")
+    require(
+        workflow,
+        "project language authority for the relevant domain",
+        "Prefer pointers to the source over copied glossary text",
+        "surface the conflict instead of silently normalizing it",
+        "Do not rename unaffected code, interfaces, data, or external contracts",
+    )
+    require(
+        discovery,
+        "project rules, architecture and domain language",
+        "propose only the source pointer and its scope",
+        "do not copy the glossary",
+        "record the conflict rather than silently choosing a synonym",
+    )
+    require(
+        rules,
+        "Domain vocabulary sources",
+        "Store pointers and scope here, not copied glossary content",
+    )
+
+
+def eval_deterministic_guardrail_preference() -> None:
+    learning = read("core/CONTINUOUS_IMPROVEMENT.md")
+    rules = read("templates/PROJECT_RULES.md")
+    require(
+        learning,
+        "Deterministic enforcement preference",
+        "mechanically decidable",
+        "prefer that deterministic guardrail over duplicating the same meaning as prose",
+        "implement it only when the current request/scope authorizes the change",
+        "capture it as an improvement proposal",
+    )
+    require(
+        rules,
+        "mechanically decidable constraint",
+        "executable project guardrail",
+        "source of truth",
+    )
+
+
+def eval_tight_diagnostic_feedback() -> None:
+    workflow = read("core/WORKFLOW.md")
+    tests = read("core/TEST_STRATEGY.md")
+    require(
+        workflow,
+        "Diagnostic feedback loop and reset",
+        "tightest feasible feedback signal",
+        "not a universal prerequisite",
+        "re-run the original diagnostic signal/reproducer",
+    )
+    require(
+        tests,
+        "strongest feasible diagnostic feedback signal",
+        "A regression test at the correct seam is preferred when practical",
+        "do not require test-first ceremony",
+        "original diagnostic signal",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -764,6 +830,9 @@ EVALS = [
     eval_approval_scope_integrity,
     eval_semantic_output_economy,
     eval_token_economy_evidence,
+    eval_project_language_continuity,
+    eval_deterministic_guardrail_preference,
+    eval_tight_diagnostic_feedback,
 ]
 
 
