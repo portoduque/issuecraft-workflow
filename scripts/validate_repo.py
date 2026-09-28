@@ -116,6 +116,8 @@ def check_quality_contracts(errors: list[str]) -> None:
     tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8")
     security = (ROOT / "core/SECURITY.md").read_text(encoding="utf-8")
     performance = (ROOT / "core/PERFORMANCE.md").read_text(encoding="utf-8")
+    discovery = (ROOT / "core/PROJECT_DISCOVERY.md").read_text(encoding="utf-8")
+    project_rules = (ROOT / "templates/PROJECT_RULES.md").read_text(encoding="utf-8")
     for phrase in ("TEST_STRATEGY.md", "SECURITY.md", "PERFORMANCE.md", "security-impact triage", "performance-impact triage"):
         if phrase not in workflow:
             errors.append(f"workflow quality contract missing phrase: {phrase}")
@@ -278,6 +280,43 @@ def check_quality_contracts(errors: list[str]) -> None:
             errors.append(f"validation v0.12 output-economy contract missing phrase: {phrase}")
 
     for phrase in (
+        "project language authority for the relevant domain",
+        "Prefer pointers to the source over copied glossary text",
+        "surface the conflict instead of silently normalizing it",
+        "Do not rename unaffected code, interfaces, data, or external contracts",
+        "Diagnostic feedback loop and reset",
+        "tightest feasible feedback signal",
+        "not a universal prerequisite",
+        "re-run the original diagnostic signal/reproducer",
+    ):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.13 language/diagnostic contract missing phrase: {phrase}")
+    for phrase in (
+        "project rules, architecture and domain language",
+        "propose only the source pointer and its scope",
+        "do not copy the glossary",
+        "record the conflict rather than silently choosing a synonym",
+    ):
+        if phrase.lower() not in discovery.lower():
+            errors.append(f"discovery v0.13 project-language contract missing phrase: {phrase}")
+    for phrase in (
+        "Domain vocabulary sources",
+        "Store pointers and scope here, not copied glossary content",
+        "mechanically decidable constraint",
+        "executable project guardrail",
+    ):
+        if phrase.lower() not in project_rules.lower():
+            errors.append(f"project-rules v0.13 contract missing phrase: {phrase}")
+    for phrase in (
+        "strongest feasible diagnostic feedback signal",
+        "A regression test at the correct seam is preferred when practical",
+        "do not require test-first ceremony",
+        "original diagnostic signal",
+    ):
+        if phrase.lower() not in tests.lower():
+            errors.append(f"test v0.13 diagnostic contract missing phrase: {phrase}")
+
+    for phrase in (
         "approval scope integrity",
         "authorization is bound to the material action/decision and target",
         "prior approval is stale",
@@ -322,14 +361,23 @@ def check_learning_contract(errors: list[str]) -> None:
     ):
         if phrase.lower() not in learning.lower():
             errors.append(f"continuous-improvement v0.12 token-economy contract missing phrase: {phrase}")
+    for phrase in (
+        "Deterministic enforcement preference",
+        "mechanically decidable",
+        "prefer that deterministic guardrail over duplicating the same meaning as prose",
+        "implement it only when the current request/scope authorizes the change",
+        "capture it as an improvement proposal",
+    ):
+        if phrase.lower() not in learning.lower():
+            errors.append(f"continuous-improvement v0.13 guardrail contract missing phrase: {phrase}")
     if "Persistence and adoption are distinct decisions" not in gates:
         errors.append("human gate must separate learning persistence from adoption")
 
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 49:
-        errors.append(f"expected 49 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 52:
+        errors.append(f"expected 52 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))
