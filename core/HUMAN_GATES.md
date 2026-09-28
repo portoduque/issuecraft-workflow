@@ -41,9 +41,9 @@ Persistence and adoption are distinct decisions:
 
 An approved-for-record learning is not automatically approved behavior.
 
-### Shared project-state write freshness
+### Project-scoped state write freshness
 
-Before writing approved shared project state such as `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, or `LEARNINGS.md`, re-read the current target state when concurrent modification is plausible. If it changed since the proposal/approval baseline, reconcile rather than overwriting the newer state. Compatible independent additions may be merged when evidence makes that safe; a material conflict or materially changed proposed result makes the prior approval stale under approval-scope integrity. This is optimistic concurrency, not a lock service or new approval gate.
+Before writing approved project-scoped state such as `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, or `LEARNINGS.md`, re-read the current target state visible from the current workspace/integration point when concurrent modification is plausible. If it changed since the proposal/approval baseline, reconcile rather than overwriting the newer state. Compatible independent additions may be merged when evidence makes that safe; a material conflict or materially changed proposed result makes the prior approval stale under approval-scope integrity. This is optimistic concurrency over visible project state, not a guarantee that uncommitted files in another isolated workspace are shared, and not a lock service or new approval gate.
 
 ## Gate E — material security/performance risk acceptance
 
