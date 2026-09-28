@@ -121,9 +121,11 @@ After automated validation, IssueCraft generates:
 .implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md
 ```
 
+IssueCraft resolves `<issue-key>` from the current issue/reference and reports the exact artifact path in the handoff.
+
 The final human step is:
 
-1. Open `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md`.
+1. Open the reported `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md`.
 2. Confirm the listed prerequisites/setup.
 3. Execute each numbered scenario in order.
 4. Compare each action with its expected result.
