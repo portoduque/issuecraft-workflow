@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.10.0  
+**Version:** 0.11.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -69,6 +69,7 @@ IssueCraft provides one canonical `implement-issue` workflow that:
 - bootstraps empty projects through a short adaptive interview instead of inventing a stack;
 - creates a proposed `PROJECT_PROFILE` for observed reality or `PROJECT_BLUEPRINT` for planned architecture;
 - requires human approval before persisting important project knowledge;
+- keeps human-gated approval bound to the reviewed material action and target; material drift makes approval stale instead of silently widening authorization;
 - detects project drift on later runs;
 - plans and implements the smallest coherent issue change;
 - models material behavior changes as current contract → requested delta → resulting contract, preserving unspecified existing obligations;
@@ -442,7 +443,7 @@ python -m unittest discover tests -v
 
 CI runs these on Linux, macOS and Windows.
 
-The 46 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 47 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 
