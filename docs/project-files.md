@@ -31,7 +31,13 @@ After installation, the target repository receives `.implement-issue/system/` co
 - Issue execution artifacts are scoped under `issues/<issue-key>/`; one issue must not overwrite another issue's handoff/validation/report state.
 - Validation plans may be replaced by later validation for the **same issue**, not by unrelated issues.
 - Handoff is operational resume state, not project knowledge or ground truth; reconcile it against current repository/VCS/tracker/evidence before acting and replace/clear it when superseded.
-- Profile, Blueprint, Rules, Learnings, and proposals remain shared project state; re-read before approved writes when concurrent modification is plausible.
+- Profile, Blueprint, Rules, Learnings, and proposals remain project-scoped state; re-read the current visible/integrated target before approved writes when concurrent modification is plausible. Separate worktrees do not automatically share untracked or uncommitted state.
+
+## Managed-path safety
+
+Every IssueCraft-managed write must remain inside the authorized repository's `.implement-issue/` tree. Treat existing repository paths as untrusted: do not traverse `.`/`..`, absolute issue-derived paths, or symlink/junction/reparse-point redirections that can escape the managed tree.
+
+`<issue-key>` is one conservative path segment, not arbitrary issue text. Keep it stable for the issue and disambiguate normalized identifiers when collision is possible.
 
 ## Secrets
 
