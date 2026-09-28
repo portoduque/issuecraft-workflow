@@ -55,6 +55,13 @@ EXPECTED_SCENARIOS = [
     "31-risk-based-discrimination.md",
     "32-resumable-handoff.md",
     "33-one-way-door-gate.md",
+    "34-behavior-delta-semantics.md",
+    "35-modified-preservation.md",
+    "36-intent-scope-integrity.md",
+    "37-change-coherence-review.md",
+    "38-partial-evidence-projection.md",
+    "39-mutable-authority-reference-scope.md",
+    "40-progressive-planning-overlap.md",
 ]
 
 
@@ -385,6 +392,143 @@ def eval_one_way_door_gate() -> None:
     )
 
 
+def eval_behavior_delta_semantics() -> None:
+    workflow = read("core/WORKFLOW.md")
+    tests = read("core/TEST_STRATEGY.md")
+    require(
+        workflow,
+        "behavior delta model",
+        "current contract -> requested delta -> intended resulting contract",
+        "added",
+        "modified",
+        "removed",
+        "renamed/preserved",
+        "unchanged-but-at-risk",
+        "current contract",
+        "requested delta",
+        "resulting contract",
+    )
+    require(
+        tests,
+        "Behavior-delta test semantics",
+        "observable behavior/contract",
+        "removed behavior is absent/inaccessible",
+        "renamed/preserved",
+    )
+
+
+def eval_modified_preservation() -> None:
+    workflow = read("core/WORKFLOW.md")
+    tests = read("core/TEST_STRATEGY.md")
+    validation = read("core/VALIDATION.md")
+    require(
+        workflow,
+        "preservation obligations",
+        "A modification is not permission to drop unspecified behavior",
+    )
+    require(
+        tests,
+        "scenario/obligation loss is a regression",
+        "silently dropping the unchanged cases",
+    )
+    require(
+        validation,
+        "preservation obligations remain intact",
+        "do not let a partial rewrite silently erase",
+        "baseline cannot be established",
+    )
+
+
+def eval_intent_scope_integrity() -> None:
+    workflow = read("core/WORKFLOW.md")
+    lifecycle = read("core/ISSUE_LIFECYCLE.md")
+    gates = read("core/HUMAN_GATES.md")
+    require(
+        workflow,
+        "implementation plan is a working hypothesis",
+        "issue intent/scope drift",
+        "Preserve **scope integrity**",
+        "do not silently narrow, defer, waive, or redefine",
+    )
+    require(lifecycle, "intent and scope identity", "replan autonomously")
+    require(
+        gates,
+        "Gate H — material issue intent/scope drift",
+        "core problem",
+        "externally observable outcome",
+        "Do **not** gate ordinary replanning",
+    )
+
+
+def eval_change_coherence_review() -> None:
+    require(
+        read("core/VALIDATION.md"),
+        "Change coherence review",
+        "material diff change needs justification traceability",
+        "issue intent and acceptance criteria",
+        "implementation diff",
+        "automated test/validation evidence",
+        "manual validation plan",
+        "specific corrective action when the evidence makes one known",
+    )
+
+
+def eval_partial_evidence_projection() -> None:
+    evidence = read("core/EVIDENCE_MODEL.md")
+    validation = read("core/VALIDATION.md")
+    require(
+        evidence,
+        "Partial evidence",
+        "does not prove the unobserved members",
+        "unsupported remainder unverified/unknown",
+        "no contradictory evidence found",
+    )
+    require(
+        validation,
+        "Partial evidence is not full verification",
+        "only four are proven, report four proven and two unverified",
+        "overall `pass` requires evidence for every material applicable member",
+        "Compact output must be a projection of the complete validation result",
+        "never a reduced validation scope",
+    )
+
+
+def eval_mutable_authority_reference_scope() -> None:
+    workflow = read("core/WORKFLOW.md")
+    evidence = read("core/EVIDENCE_MODEL.md")
+    require(
+        workflow,
+        "mutable authoritative inputs",
+        "instead of relying on conversation memory",
+        "Reference scope is not mutation scope",
+        "does not authorize modifying it",
+    )
+    require(
+        evidence,
+        "Mutable evidence and conversation memory",
+        "is not a substitute for the current authoritative source",
+        "re-read the specific live issue/project/rule/configuration/code/validation inputs",
+    )
+
+
+def eval_progressive_planning_overlap() -> None:
+    workflow = read("core/WORKFLOW.md")
+    lifecycle = read("core/ISSUE_LIFECYCLE.md")
+    require(
+        workflow,
+        "Scale planning depth to risk and ambiguity",
+        "trivial local reversible edit needs no artificial ceremony",
+        "public-contract, data, security, migration, cross-surface",
+        "active change touching the same public contract",
+        "Overlap alone is not an implicit dependency",
+    )
+    require(
+        lifecycle,
+        "coordination risk",
+        "Do not infer a dependency or execution order",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -419,6 +563,13 @@ EVALS = [
     eval_risk_based_discrimination,
     eval_resumable_handoff,
     eval_one_way_door_gate,
+    eval_behavior_delta_semantics,
+    eval_modified_preservation,
+    eval_intent_scope_integrity,
+    eval_change_coherence_review,
+    eval_partial_evidence_projection,
+    eval_mutable_authority_reference_scope,
+    eval_progressive_planning_overlap,
 ]
 
 
