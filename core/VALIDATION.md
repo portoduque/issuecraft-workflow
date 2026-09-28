@@ -18,6 +18,21 @@ For each check record:
 
 Never report `pass` without actual execution/observation.
 
+## Validation cadence and evidence freshness
+
+Order validation by information value, risk, and cost rather than running every check after every edit.
+
+- During implementation, prefer the cheapest focused checks that can detect a regression in the changed slice.
+- After a material increment, run the related checks whose inputs changed.
+- Before `In Review`, run the full set of applicable release/review checks required by project evidence and the issue risk.
+- Expensive integration, system, end-to-end, security, performance, load, or recovery checks belong at the earliest point where their additional fidelity is justified; do not run them repeatedly as reassurance.
+- A previous green result remains reusable only while the command/check definition and its materially relevant inputs (code, configuration, dependencies, environment assumptions, test data/contracts) have not changed enough to invalidate it.
+- When relevant inputs change, the prior result is stale and must not be presented as current evidence.
+- Do not repeat an unchanged green command solely to increase confidence; repeated execution without new inputs usually adds no information.
+- Failures and suspected flakes are different: investigate them according to their evidence rather than suppressing reruns categorically.
+
+This cadence optimizes feedback without reducing final validation depth.
+
 ## Reporting validation evidence
 
 Preserve complete validation evidence, but compress routine presentation:
@@ -45,6 +60,28 @@ Only report a review finding when there is enough evidence to state:
 A clean review may legitimately produce zero findings. Do not invent nits or inflate severity to make the review look productive.
 
 For tests specifically, verify that materially changed behaviors/acceptance criteria have meaningful proof, that assertions could detect the relevant regression, and that risk-relevant equivalent paths were not silently left inconsistent.
+
+## Quality-bar integrity review
+
+If the diff changes the mechanisms that decide whether work is acceptable, review the **quality bar itself**, not only the application code.
+
+Look for evidence such as:
+
+- an established threshold/budget/severity being weakened;
+- a required check being removed from the lifecycle or CI path;
+- tests being skipped/deleted or materially weakened;
+- assertions being removed/narrowed so the relevant defect could pass;
+- new suppression, exclusion, ignore, allowlist, or bypass directives;
+- unfinished stubs, placeholder implementations, or failure paths converted into silent success;
+- new exceptions/waivers without the project-required rationale, owner, scope, or expiry.
+
+These are findings only when the change actually reduces an established/required control or hides incomplete work. Do not flag legitimate project-rule changes merely because the configuration changed. When weakening is intentional and material, require explicit issue/project evidence and use the applicable human decision/risk gate rather than letting a failing implementation redefine its own bar.
+
+### Baseline ratchets without invented targets
+
+When trustworthy project evidence already establishes a measured baseline as a quality/performance guardrail but no future target is defined, a non-regression **ratchet** may preserve the current line: do not get materially worse, and accept improvement.
+
+Do not silently turn an incidental measurement into a new standing project policy. A ratchet is valid only when the repository, approved project rules, issue requirement, or explicit human decision makes that baseline normative. Record measurement noise/tolerance only from project evidence; never invent a universal tolerance.
 
 ## Failure handling
 
