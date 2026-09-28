@@ -291,7 +291,7 @@ When implementation is complete enough for human review:
 
 1. Generate the issue-specific manual validation plan defined in `VALIDATION.md`.
 2. Include exact prerequisites, steps, expected results, regression checks, edge cases, security-sensitive checks, performance-sensitive checks, accessibility/compatibility checks, data/migration checks, and cleanup when relevant to the change.
-3. Save/update `.implement-issue/MANUAL_VALIDATION_PLAN.md` when filesystem writes are available.
+3. Save/update `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md` when filesystem writes are available.
 4. Transition to semantic `In Review` if possible; otherwise report the requested transition.
 5. Present a compact handoff: semantic state, material implementation delta, validation summary, unresolved risks/unavailable checks, artifact path, and one concrete human next action. Do not duplicate the full manual validation artifact in chat.
 
