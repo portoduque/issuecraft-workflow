@@ -469,7 +469,7 @@ class RepositoryTests(unittest.TestCase):
             target = Path(td)
             installer.install(target)
             state = target / ".implement-issue"
-            for rel in ("PROJECT_PROFILE.yaml", "PROJECT_BLUEPRINT.yaml", "PROJECT_RULES.md", "LEARNINGS.md", "HANDOFF.md", "proposals"):
+            for rel in ("PROJECT_PROFILE.yaml", "PROJECT_BLUEPRINT.yaml", "PROJECT_RULES.md", "LEARNINGS.md", "HANDOFF.md", "proposals", "issues"):
                 self.assertFalse((state / rel).exists(), rel)
 
     @unittest.skipUnless(hasattr(os, "symlink"), "symlink support required")
