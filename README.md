@@ -5,7 +5,7 @@
 
 AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation.
 
-**Version:** 0.14.0  
+**Version:** 0.15.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -118,12 +118,12 @@ Security and performance remain mandatory impact analyses; see [core/SECURITY.md
 After automated validation, IssueCraft generates:
 
 ```text
-.implement-issue/MANUAL_VALIDATION_PLAN.md
+.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md
 ```
 
 The final human step is:
 
-1. Open `.implement-issue/MANUAL_VALIDATION_PLAN.md`.
+1. Open `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md`.
 2. Confirm the listed prerequisites/setup.
 3. Execute each numbered scenario in order.
 4. Compare each action with its expected result.
@@ -156,6 +156,14 @@ Provider-specific behavior must not leak into `core/`. Compatibility details are
 IssueCraft discovers the target project instead of assuming Python, JavaScript, Java, a database, a framework or a test runner.
 
 Commands and tools come from repository evidence and approved project context. Monorepos and multi-service repositories are handled per component when needed.
+
+## Parallel work
+
+Multiple agents/issues may run in parallel, but mutating executions should use isolated physical workspaces/checkouts when the environment supports them.
+
+IssueCraft does **not** run a lock server, scheduler, heartbeat, agent registry, auto-worktree, auto-rebase or auto-merge. It keeps operational artifacts per issue, re-reads shared project state before approved concurrent writes, treats overlap as risk rather than automatic dependency, and selectively invalidates stale validation when the integration base changes.
+
+See [docs/parallel-work.md](docs/parallel-work.md).
 
 ## Controlled learning
 
@@ -194,7 +202,7 @@ your-project/
         └── VERSION
 ```
 
-Project-owned state such as `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, proposals and `HANDOFF.md` is created only when the workflow actually needs it and the relevant gate is satisfied.
+Shared project knowledge such as `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md` and proposals remains project-scoped. Handoff, manual validation and execution-report artifacts are issue-scoped under `.implement-issue/issues/<issue-key>/`.
 
 ## Update IssueCraft in a project
 
@@ -240,6 +248,7 @@ CI runs the main suite across Linux, macOS and Windows and enforces the coverage
 - [Release compatibility smoke checks](docs/compatibility-release.md)
 - [Testing and coverage](docs/testing.md)
 - [Manual validation and Done gate](docs/validation.md)
+- [Parallel work safety](docs/parallel-work.md)
 - [Controlled learning](docs/learning.md)
 - [Project runtime files](docs/project-files.md)
 
