@@ -2,6 +2,24 @@
 
 All notable changes are documented here.
 
+## 0.10.0 - 2026-09-27
+
+Solution-economy and evaluation-rigor release.
+
+- Added a provider/stack-neutral solution-economy ladder: no new implementation when unnecessary -> existing project capability -> runtime/platform capability -> already-approved dependency -> smallest coherent new implementation.
+- Defined solution economy as reducing justified ownership/complexity, not raw LOC, file count, deletion count, cleverness, token count, or dependency count.
+- Added evidence-backed root-cause placement: bug fixes prefer the smallest common correct enforcement point when sibling paths share the same invariant, with broader validation for broader shared surfaces.
+- Added a proof floor before simplicity: correctness/completeness and applicable security, accessibility, compatibility, preservation, data-integrity, reliability, and validation obligations cannot be traded for implementation economy.
+- Added a solution-economy/ownership review before In Review for speculative abstractions, wrappers, dependencies, configuration, duplicated project capability, and unjustified future-proofing.
+- Added durable reporting for material known operational ceilings and evidence-based revisit triggers without introducing a source-code debt marker or new ledger.
+- Added provider-neutral delegation constraint continuity: delegation is optional, inherited constraints are never assumed, delegates cannot approve human gates, and the controlling workflow remains responsible for reconciliation/validation.
+- Strengthened continuous-improvement admission so null/negative eval results are valid evidence for non-adoption rather than a reason to keep adding prompt text.
+- Hardened live-agent comparison methodology: blind baseline/candidate pairing now requires verified runner isolation evidence to reduce intervention contamination risk.
+- Added calibration guidance for future automated live-eval scorers/judges using known-good positive and known-bad negative controls when practical.
+- Added a live root-cause-shared-path fixture and expanded deterministic contract coverage from 40 to 46 scenarios.
+- Extended repository tests and validator mutation-resistance coverage for the v0.10 contracts.
+- Preserved the anti-bloat boundary: no always-on hooks, modes/personas, LOC scoring, platform-native catalog, debt-comment convention, new canonical core file, mandatory subagent, or new runtime dependency.
+
 ## 0.9.0 - 2026-09-27
 
 Behavior-delta, preservation, and change-coherence release.
