@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(21, len(contract_evals.EVALS))
+        self.assertEqual(28, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -106,6 +106,35 @@ class RepositoryTests(unittest.TestCase):
             "Generic-change admission check",
             "Merge first",
             "marginal benefit does not justify its ongoing complexity",
+        ):
+            self.assertIn(phrase.lower(), learning.lower())
+
+    def test_v07_execution_validation_and_portability_contracts(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "Version-aware authoritative-source verification",
+            "Incremental execution for non-trivial changes",
+            "risk-first slice",
+            "Compatibility-safe migrations and cutovers",
+            "Dependency and toolchain changes",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "Validation cadence and evidence freshness",
+            "Quality-bar integrity review",
+            "Baseline ratchets without invented targets",
+            "Do not repeat an unchanged green command",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        for phrase in (
+            "Procedure portability",
+            "generic engineering procedure",
+            "could the rule still be justified without naming the model/host/tool",
         ):
             self.assertIn(phrase.lower(), learning.lower())
 
