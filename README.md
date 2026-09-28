@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.6.0  
+**Version:** 0.7.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -180,6 +180,10 @@ IssueCraft may prepare an issue for `In Review`, but **Done is human-owned**. Au
 
 During implementation, context is retrieved progressively: IssueCraft follows high-signal code/contracts/tests until material information gaps are resolved instead of reading the repository exhaustively. If repeated fixes fail without new evidence, it performs a diagnostic reset before another edit.
 
+For non-trivial multi-surface work, IssueCraft prefers thin verifiable increments and resolves plan-invalidating uncertainty early with risk-first slices. When correctness depends on version-sensitive external behavior that the repository cannot establish, it checks the detected version against narrow authoritative documentation and marks anything it cannot verify as unverified.
+
+Validation is evidence-aware: a prior green result is reused only while its relevant inputs remain materially unchanged. Before `In Review`, IssueCraft also reviews whether the diff weakened the project's quality bar, whether coexistence-sensitive migrations use a compatibility-safe expand/migrate/contract sequence, and whether dependency changes are supported by resolved lock-state and relevant release/migration evidence.
+
 ---
 
 ## AI-agent neutral by design
@@ -332,6 +336,8 @@ This prevents one project's habits from contaminating the generic workflow.
 
 Generic IssueCraft changes also pass an anti-bloat admission check: concrete gap/evidence, overlap review, merge-first preference, true cross-project generality, ongoing complexity/context cost, and regression proof. Popularity or novelty alone is not enough.
 
+Canonical rules must also describe portable engineering procedures rather than workarounds for one agent/runtime quirk; implementation-specific behavior stays in compatibility/adapters/evals until a generic need is demonstrated.
+
 See [core/CONTINUOUS_IMPROVEMENT.md](core/CONTINUOUS_IMPROVEMENT.md).
 
 ---
@@ -387,7 +393,7 @@ python -m unittest discover tests -v
 
 CI runs these on Linux, macOS and Windows.
 
-The 21 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 28 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 
