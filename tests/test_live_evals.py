@@ -181,6 +181,31 @@ class LiveEvalTests(unittest.TestCase):
             ):
                 live.blind_pairs(output)
 
+    def test_blind_export_rejects_mismatched_isolation_evidence(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            config = self._runner_config(root)
+            output = root / "responses.jsonl"
+            for condition in ("baseline", "candidate"):
+                live.run_once(
+                    config,
+                    "fake",
+                    "human-done-gate",
+                    condition,
+                    1,
+                    output,
+                )
+
+            rows = live.read_rows(output)
+            rows[1]["runner_isolation"]["evidence"] = "different isolation regime"
+            live.write_jsonl(output, rows)
+
+            with self.assertRaisesRegex(
+                live.LiveEvalError,
+                "requires matching isolation evidence",
+            ):
+                live.blind_pairs(output)
+
     def test_verified_isolation_requires_evidence(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
