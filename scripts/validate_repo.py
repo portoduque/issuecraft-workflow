@@ -187,6 +187,48 @@ def check_quality_contracts(errors: list[str]) -> None:
         if phrase.lower() not in gates.lower():
             errors.append(f"human-gate v0.8 contract missing phrase: {phrase}")
 
+    evidence = (ROOT / "core/EVIDENCE_MODEL.md").read_text(encoding="utf-8")
+    lifecycle = (ROOT / "core/ISSUE_LIFECYCLE.md").read_text(encoding="utf-8")
+    for phrase in (
+        "behavior delta model",
+        "current contract -> requested delta -> intended resulting contract",
+        "preservation obligations",
+        "A modification is not permission to drop unspecified behavior",
+        "issue intent/scope drift",
+        "Preserve **scope integrity**",
+        "Reference scope is not mutation scope",
+        "Scale planning depth to risk and ambiguity",
+        "Overlap alone is not an implicit dependency",
+    ):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.9 delta/coherence contract missing phrase: {phrase}")
+    for phrase in (
+        "Behavior-delta test semantics",
+        "observable behavior/contract",
+        "scenario/obligation loss is a regression",
+    ):
+        if phrase.lower() not in tests.lower():
+            errors.append(f"test v0.9 delta contract missing phrase: {phrase}")
+    for phrase in (
+        "Partial evidence is not full verification",
+        "Compact output must be a projection of the complete validation result",
+        "material diff change needs justification traceability",
+        "Behavior-delta verification",
+        "Change coherence review",
+        "preservation obligations remain intact",
+    ):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"validation v0.9 coherence contract missing phrase: {phrase}")
+    for phrase in ("Partial evidence", "Mutable evidence and conversation memory"):
+        if phrase.lower() not in evidence.lower():
+            errors.append(f"evidence v0.9 contract missing phrase: {phrase}")
+    for phrase in ("Gate H — material issue intent/scope drift", "Do **not** gate ordinary replanning"):
+        if phrase.lower() not in gates.lower():
+            errors.append(f"human-gate v0.9 contract missing phrase: {phrase}")
+    for phrase in ("intent and scope identity", "coordination risk", "Do not infer a dependency or execution order"):
+        if phrase.lower() not in lifecycle.lower():
+            errors.append(f"lifecycle v0.9 contract missing phrase: {phrase}")
+
 
 def check_learning_contract(errors: list[str]) -> None:
     learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
@@ -203,8 +245,8 @@ def check_learning_contract(errors: list[str]) -> None:
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 33:
-        errors.append(f"expected 33 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 40:
+        errors.append(f"expected 40 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))
