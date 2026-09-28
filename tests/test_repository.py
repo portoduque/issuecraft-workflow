@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(16, len(contract_evals.EVALS))
+        self.assertEqual(17, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -51,6 +51,24 @@ class RepositoryTests(unittest.TestCase):
         tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8").lower()
         for category in ("unit", "integration", "contract", "end-to-end", "regression", "property-based", "fuzz", "mutation", "concurrency", "accessibility", "load", "stress", "soak", "compatibility", "migration"):
             self.assertIn(category, tests)
+
+    def test_output_efficiency_preserves_evidence(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        for phrase in (
+            "Compress presentation, never evidence",
+            "delta-only progress updates",
+            "Do not duplicate",
+            "Group routine successful checks",
+            "one concrete next action",
+        ):
+            self.assertIn(phrase, workflow)
+        for phrase in (
+            "Preserve complete validation evidence",
+            "Never collapse `unavailable`",
+            "Token/output reduction is never a reason to omit material evidence",
+        ):
+            self.assertIn(phrase, validation)
 
     def test_profile_schema_has_security_performance_and_test_discovery(self):
         schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))

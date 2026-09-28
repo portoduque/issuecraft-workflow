@@ -18,6 +18,18 @@ For each check record:
 
 Never report `pass` without actual execution/observation.
 
+## Reporting validation evidence
+
+Preserve complete validation evidence, but compress routine presentation:
+
+- Detailed command/action, rationale, result, and evidence belong in the execution/validation artifact or equivalent durable record when available.
+- In chat, group routine successful checks into a compact summary instead of narrating each one.
+- Multiple `not_applicable` categories may be grouped with a shared rationale when accurate.
+- Never collapse `unavailable` into `not_applicable` or `pass`; surface each material unavailable capability/reason needed for risk decisions.
+- Expand failures, suspected flakes, security/performance regressions, unexpected results, residual risks, and checks that require human attention.
+- Do not repeat the full manual validation plan in chat after saving it; provide its location plus the first human action or the specific decision required.
+- Token/output reduction is never a reason to omit material evidence, uncertainty, a release blocker, or a required human gate.
+
 ## Failure handling
 
 - Fix failures introduced by the change before review.

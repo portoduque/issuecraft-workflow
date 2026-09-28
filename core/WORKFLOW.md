@@ -10,6 +10,18 @@ Never fabricate project facts, commands, requirements, issue content, acceptance
 
 Engineering priority is: preserve correctness and data integrity; prevent security regressions; prevent material performance/reliability regressions; satisfy the issue with the smallest coherent change; preserve maintainability and compatibility. Do not trade a higher-priority property for a lower-priority one without an explicit project requirement and, when risk is material, human acceptance.
 
+### Communication/output contract
+
+Analyze deeply; report minimally. **Compress presentation, never evidence.** Output efficiency must not weaken correctness, security, performance, validation, traceability, or human gates.
+
+- Keep detailed evidence in the appropriate durable artifact when one exists; use the conversation for material deltas, decisions, blockers, risks, and the next required action.
+- Do not duplicate a generated Profile, Blueprint, drift report, validation plan, execution report, or improvement proposal in full in chat. Point to the artifact and summarize only what the human needs to decide or do.
+- Prefer delta-only progress updates. Restate state only when the semantic phase changed, work resumed after an interruption/human response, a gate is reached, or ambiguity would otherwise result.
+- Omit ceremonial preambles, repeated plans, redundant recaps, and closing pleasantries. Start with the result/current state or required action.
+- Group routine successful checks compactly. Group `not_applicable` checks when useful. Expand failures, `unavailable` checks, residual risks, unexpected regressions, and human decisions.
+- Keep secondary findings out of the main issue flow unless they block acceptance criteria, correctness, security, performance, reliability, or required validation. Record/report non-blocking findings separately without expanding scope.
+- End a handoff with one concrete next action when the workflow is waiting on the human. Do not invent work merely to provide a next action.
+
 Use these supporting documents when their phase is reached:
 
 - `CAPABILITIES.md` — capability detection and graceful degradation.
@@ -113,7 +125,7 @@ When implementation is complete enough for human review:
 2. Include exact prerequisites, steps, expected results, regression checks, edge cases, security-sensitive checks, performance-sensitive checks, accessibility/compatibility checks, data/migration checks, and cleanup when relevant to the change.
 3. Save/update `.implement-issue/MANUAL_VALIDATION_PLAN.md` when filesystem writes are available.
 4. Transition to semantic `In Review` if possible; otherwise report the requested transition.
-5. Present the human with a concise implementation/automated-validation summary and the manual validation plan.
+5. Present a compact handoff: semantic state, material implementation delta, validation summary, unresolved risks/unavailable checks, artifact path, and one concrete human next action. Do not duplicate the full manual validation artifact in chat.
 
 Treat generation of the manual plan and entry into `In Review` as one handoff.
 
@@ -121,7 +133,7 @@ Treat generation of the manual plan and entry into `In Review` as one handoff.
 
 Stop before `Done`. The human must report whether manual validation passed.
 
-- **Passed:** transition to `Done` if possible and provide the final execution report.
+- **Passed:** transition to `Done` if possible. Keep the chat completion terse; place detailed evidence in the execution report/artifacts when required.
 - **Failed:** capture the observed failure, transition back to `In Progress` if possible, investigate, repair, rerun automated validation, regenerate the manual plan as needed, and return to `In Review`.
 - **Partial/unclear:** remain `In Review`; do not infer success.
 

@@ -2,6 +2,20 @@
 
 All notable changes are documented here.
 
+## 0.5.0 - 2026-09-27
+
+Output-efficiency release.
+
+- Added a canonical communication contract: analyze deeply, report minimally, and compress presentation without losing evidence.
+- Made durable artifacts the detailed source of truth while chat handoffs focus on material deltas, decisions, blockers, risks, and next action.
+- Added delta-only progress guidance to avoid repeatedly restating unchanged project/workflow state.
+- Added compact grouping for routine passes and not-applicable validation while keeping failures, unavailable checks, residual risks, and human gates explicit.
+- Prevented generated manual-validation and other durable artifacts from being duplicated in full in normal chat handoffs.
+- Kept non-blocking secondary findings separate from the active issue to reduce tangents and scope creep.
+- Added deterministic contract regression coverage for output efficiency (scenario 17).
+- Extended live-agent evaluation guidance with communication-efficiency review and token/cost comparison as a secondary metric only after quality/safety requirements are met.
+
+
 ## 0.4.0 - 2026-09-27
 
 Live-agent evaluation release.
