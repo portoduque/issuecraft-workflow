@@ -46,3 +46,11 @@ Require an explicit human decision before crossing a materially hard-to-reverse 
 Examples can include a new durable public contract, a persistence/data shape with expensive future migration, irreversible ownership/boundary changes, or material technology/integration lock-in.
 
 Do not escalate ordinary local implementation choices, names, reversible refactors, or repository-conventional patterns. The gate exists for genuine one-way doors with real alternatives and meaningful reversal cost, not for routine engineering judgment.
+
+## Gate H — material issue intent/scope drift
+
+Require an explicit human decision when implementation evidence shows that completing the work would materially change the issue's identity rather than merely refine its execution.
+
+Use this gate when the proposed path changes the core problem being solved, externally observable outcome, acceptance criteria, or scope boundary enough that a reasonable reviewer could consider it different work. Do not use a fixed percentage or task-count threshold.
+
+Do **not** gate ordinary replanning, additional reversible work needed to satisfy the already-authorized intent, or implementation details that preserve the same acceptance criteria. The workflow should remain autonomous while the issue remains the same work.
