@@ -567,7 +567,7 @@ def eval_proof_floor_before_economy() -> None:
         "correctness/completeness",
         "proof obligations, not bloat metrics",
         "Fewer lines, files, dependencies, abstractions, turns, tokens, or lower cost never compensate",
-        "same required proof floor",
+        "both satisfy the proof floor",
     )
 
 
@@ -577,7 +577,7 @@ def eval_solution_economy_review() -> None:
     require(
         validation,
         "Solution-economy / ownership review",
-        "avoid avoidable ownership or speculative complexity",
+        "avoidable ownership or speculative complexity",
         "Do **not** use raw LOC, file count, deletion count, or dependency count as quality scores",
         "material known operational ceiling",
         "evidence-based revisit trigger",
