@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(46, len(contract_evals.EVALS))
+        self.assertEqual(47, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -298,6 +298,38 @@ class RepositoryTests(unittest.TestCase):
         self.assertTrue(
             (ROOT / "evals/live/scenarios/root-cause-shared-path/scenario.json").is_file()
         )
+
+    def test_v011_approval_scope_integrity_contracts(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "approval scope integrity",
+            "authorization is bound to the material action/decision and target",
+            "prior approval is stale",
+            "Equivalent local/reversible execution details do not create a new gate",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "Approval scope integrity",
+            "material action or decision actually presented for review",
+            "treat the approval as **stale**",
+            "ordinary reversible implementation details",
+            "materially distinct rollback, recovery, cleanup",
+        ):
+            self.assertIn(phrase.lower(), gates.lower())
+
+        for phrase in (
+            "Approval freshness for gated actions",
+            "validate approval freshness immediately before execution",
+            "mark the prior approval stale",
+            "not a requirement for hashes",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        self.assertTrue((ROOT / "evals/scenarios/47-approval-scope-integrity.md").is_file())
 
     def test_profile_schema_has_security_performance_and_test_discovery(self):
         schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))

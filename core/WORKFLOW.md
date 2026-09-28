@@ -6,6 +6,8 @@ This file is the normative entry point. The workflow must remain independent of 
 
 When invoked for an issue, operate autonomously within the available capabilities except at the explicit human gates defined in `HUMAN_GATES.md`. Do not add extra approval pauses for ordinary reversible implementation work.
 
+When a human gate is required, preserve **approval scope integrity**: authorization is bound to the material action/decision and target the human reviewed. Immediately before crossing the gate, revalidate the material action context; if target, scope, effects, risk, or another material precondition changed enough to make it a substantively different operation, the prior approval is stale and fresh approval is required. Equivalent local/reversible execution details do not create a new gate.
+
 Never fabricate project facts, commands, requirements, issue content, acceptance criteria, tracker states, tool availability, test results, security findings, performance findings, or benchmark results. Distinguish observed evidence, documented intent, human decisions, inference, and unknowns.
 
 Engineering priority is: preserve correctness and data integrity; prevent security regressions; prevent material performance/reliability regressions; satisfy the issue with the smallest coherent change; preserve maintainability and compatibility. Do not trade a higher-priority property for a lower-priority one without an explicit project requirement and, when risk is material, human acceptance.

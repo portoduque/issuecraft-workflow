@@ -2,6 +2,18 @@
 
 All notable changes are documented here.
 
+## 0.11.0 - 2026-09-27
+
+Approval-scope integrity release.
+
+- Added a provider/stack-neutral approval-scope invariant: human authorization is bound to the material action/decision and target actually reviewed.
+- Added pre-execution approval freshness checks for target/environment, material scope/effects, known risk, and gate-relevant preconditions.
+- Material post-approval drift now invalidates stale authorization and requires the changed delta to be presented for fresh approval.
+- Preserved autonomy for equivalent local/reversible implementation mechanics so the new invariant does not create approval ceremony.
+- Clarified that authorization does not implicitly transfer across targets/environments or to materially distinct rollback, recovery, cleanup, destructive correction, or production-impacting follow-up work.
+- Added deterministic scenario 47 plus repository and validator-resistance coverage for the new contract.
+- Deliberately avoided plan digests, cross-artifact hash graphs, new schemas, persistent approval artifacts, or a new canonical core file.
+
 ## 0.10.0 - 2026-09-27
 
 Solution-economy and evaluation-rigor release.
