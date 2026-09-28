@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(33, len(contract_evals.EVALS))
+        self.assertEqual(40, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -178,6 +178,62 @@ class RepositoryTests(unittest.TestCase):
 
         self.assertIn("Recurrence strengthens evidence, not authority".lower(), learning.lower())
         self.assertTrue((ROOT / "templates/HANDOFF.md").is_file())
+
+    def test_v09_behavior_delta_scope_and_coherence_contracts(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        evidence = (ROOT / "core/EVIDENCE_MODEL.md").read_text(encoding="utf-8")
+        gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
+        lifecycle = (ROOT / "core/ISSUE_LIFECYCLE.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "behavior delta model",
+            "current contract -> requested delta -> intended resulting contract",
+            "preservation obligations",
+            "A modification is not permission to drop unspecified behavior",
+            "issue intent/scope drift",
+            "Preserve **scope integrity**",
+            "Reference scope is not mutation scope",
+            "Scale planning depth to risk and ambiguity",
+            "Overlap alone is not an implicit dependency",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "Behavior-delta test semantics",
+            "observable behavior/contract",
+            "scenario/obligation loss is a regression",
+            "removed behavior is absent/inaccessible",
+        ):
+            self.assertIn(phrase.lower(), tests.lower())
+
+        for phrase in (
+            "Partial evidence is not full verification",
+            "Compact output must be a projection of the complete validation result",
+            "material diff change needs justification traceability",
+            "Behavior-delta verification",
+            "Change coherence review",
+            "specific corrective action when the evidence makes one known",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        for phrase in (
+            "Partial evidence",
+            "Mutable evidence and conversation memory",
+            "unsupported remainder unverified/unknown",
+        ):
+            self.assertIn(phrase.lower(), evidence.lower())
+
+        self.assertIn("Gate H — material issue intent/scope drift".lower(), gates.lower())
+        self.assertIn("Do **not** gate ordinary replanning".lower(), gates.lower())
+        self.assertIn("intent and scope identity".lower(), lifecycle.lower())
+        self.assertIn("Do not infer a dependency or execution order".lower(), lifecycle.lower())
+
+        report = (ROOT / "templates/ISSUE_EXECUTION_REPORT.md").read_text(encoding="utf-8")
+        manual = (ROOT / "templates/MANUAL_VALIDATION_PLAN.md").read_text(encoding="utf-8")
+        self.assertIn("Behavior delta / preservation", report)
+        self.assertIn("Regression / preservation checks", manual)
 
     def test_profile_schema_has_security_performance_and_test_discovery(self):
         schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))
