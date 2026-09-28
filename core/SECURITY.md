@@ -37,6 +37,23 @@ This list describes risk categories, not a stack-specific checklist. Add project
 9. Do not perform active security testing against production or third-party systems without explicit authorization and an understood safe scope.
 10. Do not claim that a change is "secure" in the absolute. Report what was assessed, what was tested, and what remains unverified.
 
+## Managed IssueCraft state path safety
+
+IssueCraft-managed state is repository-owned data, but repository contents are still untrusted input for filesystem operations.
+
+Before creating or updating any path under `.implement-issue/`:
+
+1. Resolve the authorized repository/workspace root first.
+2. Treat every managed destination as a relative path beneath that root; never accept an absolute issue-derived path.
+3. Refuse path traversal or path segments that can escape the intended managed directory, including `.` and `..` semantics.
+4. Do not write through an existing symlink/junction/reparse-point or another redirecting filesystem object in a managed path ancestor or destination when that can redirect the write outside the intended repository state tree.
+5. Re-check containment immediately before a managed write when repository state may have changed.
+6. If safe containment cannot be established with available capabilities, report the managed write as unavailable rather than guessing or writing outside the intended tree.
+
+For `issues/<issue-key>/`, the issue key is a **single conservative path segment**, not arbitrary issue text. Prefer an existing stable identifier when it already fits a portable safe segment. Otherwise normalize unsafe characters to a stable separator, reject empty/`.`/`..`/platform-reserved outcomes, and add a stable disambiguator when normalization could collide. Once established for an issue, reuse the same key across resumes.
+
+These rules apply to Profile/Blueprint/Rules/Learnings/proposals, issue-scoped handoff/validation/report artifacts, and any future IssueCraft-managed state. They do not authorize changing unrelated project paths.
+
 ## Security validation
 
 Select applicable security checks from project evidence and `TEST_STRATEGY.md`. Examples of semantic categories include:
