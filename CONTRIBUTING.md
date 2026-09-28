@@ -51,10 +51,16 @@ Changes that affect the canonical workflow must preserve:
 - behavior-delta semantics for added/modified/removed/renamed-preserved behavior, including preservation of existing obligations not explicitly superseded;
 - autonomous local replanning with scope integrity, plus a human gate only when the issue's intent/outcome/acceptance/scope identity materially changes;
 - change-coherence review tying material diff changes to issue/project/risk evidence and reconciling implementation, tests, and manual validation;
+- solution economy after comprehension: reuse adequate existing project/runtime/platform/approved-dependency capability before creating ownership, without raw LOC/file-count scoring;
+- root-cause placement at the smallest common correct enforcement point when evidence supports it, with broader validation for broader shared surfaces;
+- a proof floor where correctness/completeness and applicable security/accessibility/compatibility/preservation/reliability/validation obligations outrank simplicity metrics;
+- evidence-backed ownership/complexity review that rejects speculative architecture without treating legitimate boundaries as bloat;
+- delegation constraint continuity: optional delegation never inherits authority implicitly, cannot cross human gates, and remains parent-reconciled;
 - partial-evidence honesty and compact validation as a projection of complete scope rather than a reduced validation run;
 - mutable-authority rereads at resume/material transitions and reference-scope != mutation-scope discipline;
 - proportional planning rigor and advisory active-change overlap unless a dependency is explicitly evidenced;
 - anti-bloat admission for generic workflow growth, including procedure portability instead of implementation-specific workarounds;
+- live-eval causal comparisons only with verified intervention isolation; automated scorers/judges need positive/negative calibration controls when practical, and null results are valid non-adoption evidence;
 - compact user-facing handoffs without loss of material evidence, failures, unavailable checks, risks, or human gates;
 - human ownership of persistent learning, material risk acceptance, and final `Done`; recurrence may strengthen evidence but never auto-adopt behavior;
 - installer protection against managed symlink redirection;
