@@ -205,8 +205,8 @@ class ValidatorResistanceTests(unittest.TestCase):
                 )
                 mutate_text(
                     "scripts/release_zip.py",
-                    "evals/live/runners.local.json",
-                    "evals/live/runner.json",
+                    "runners.local.json",
+                    "runner.local.json",
                     "release ZIP local-artifact exclusion missing",
                 )
                 mutate_text(
