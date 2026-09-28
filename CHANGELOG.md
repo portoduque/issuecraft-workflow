@@ -2,6 +2,20 @@
 
 All notable changes are documented here.
 
+## 0.15.0 - 2026-09-27
+
+Parallel-work safety release.
+
+- Added a lightweight parallel-work preflight: intentional concurrent mutation should prefer isolated physical workspaces/checkouts when available, while known concurrent mutation in the same physical working tree is treated as unsafe.
+- Kept overlap advisory by default: isolated issues with disjoint surfaces continue concurrently; overlapping files/contracts increase integration risk but do not fabricate a dependency or execution order.
+- Split project knowledge from issue execution state. `PROJECT_PROFILE`, `PROJECT_BLUEPRINT`, `PROJECT_RULES`, `LEARNINGS`, and proposals remain project-scoped, while handoff/manual-validation/execution-report artifacts now live under `.implement-issue/issues/<issue-key>/`.
+- Added backward-compatible reads for unambiguous legacy root-level handoff/manual-validation artifacts without deleting ambiguous legacy state.
+- Added optimistic concurrency for approved shared project-state writes: re-read current state before writing when concurrent modification is plausible, reconcile compatible changes, and treat material conflicts as stale approval under the existing approval-scope rule.
+- Added integration-freshness validation before `In Review`: unrelated base movement preserves unaffected evidence, while materially relevant base changes invalidate and rerun only dependent checks.
+- Added `docs/parallel-work.md` with an optional Git worktree example while keeping the canonical workflow VCS/provider/stack neutral.
+- Deliberately did not add a daemon, lock server, database, heartbeat, agent registry, scheduler, file locks, automatic worktree creation, automatic rebase/merge, or direct agent-to-agent messaging.
+- Added deterministic scenarios 56-59 plus repository and validator-resistance coverage.
+
 ## 0.14.0 - 2026-09-27
 
 Quality and documentation integrity release.
