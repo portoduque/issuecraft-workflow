@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(28, len(contract_evals.EVALS))
+        self.assertEqual(33, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -138,6 +138,47 @@ class RepositoryTests(unittest.TestCase):
         ):
             self.assertIn(phrase.lower(), learning.lower())
 
+    def test_v08_evidence_handoff_and_one_way_door_contracts(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
+        learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "Evidence-or-zero",
+            "Compound obligation decomposition",
+            "Verification precision gaps",
+            "Risk-based discrimination checks",
+            "isolated disposable state",
+        ):
+            self.assertIn(phrase.lower(), tests.lower())
+
+        for phrase in (
+            "Probe before `unavailable`",
+            "safe prerequisite/capability probe",
+            "decompose compound/enumerated requirements",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        for phrase in (
+            "Session handoff and resume",
+            ".implement-issue/HANDOFF.md",
+            "resume hypothesis",
+            "current evidence win over stale narrative",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "Gate G — hard-to-reverse implementation decisions",
+            "genuine one-way doors",
+            "ordinary local implementation choices",
+        ):
+            self.assertIn(phrase.lower(), gates.lower())
+
+        self.assertIn("Recurrence strengthens evidence, not authority".lower(), learning.lower())
+        self.assertTrue((ROOT / "templates/HANDOFF.md").is_file())
+
     def test_profile_schema_has_security_performance_and_test_discovery(self):
         schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))
         observed = schema["properties"]["observed"]["properties"]
@@ -174,7 +215,7 @@ class RepositoryTests(unittest.TestCase):
             target = Path(td)
             installer.install(target)
             state = target / ".implement-issue"
-            for rel in ("PROJECT_PROFILE.yaml", "PROJECT_BLUEPRINT.yaml", "PROJECT_RULES.md", "LEARNINGS.md", "proposals"):
+            for rel in ("PROJECT_PROFILE.yaml", "PROJECT_BLUEPRINT.yaml", "PROJECT_RULES.md", "LEARNINGS.md", "HANDOFF.md", "proposals"):
                 self.assertFalse((state / rel).exists(), rel)
 
     @unittest.skipUnless(hasattr(os, "symlink"), "symlink support required")
