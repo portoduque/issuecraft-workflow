@@ -2,6 +2,20 @@
 
 All notable changes are documented here.
 
+## 0.14.0 - 2026-09-27
+
+Quality and documentation integrity release.
+
+- Added stack-neutral code-coverage discovery and policy: respect project tooling/thresholds/baselines, directly cover materially changed executable behavior when viable, and never lower/exclude/narrow coverage merely to make a change pass.
+- Added canonical `coverage_policy` and `commands.coverage` fields to the Project Profile template/schema.
+- Added IssueCraft-specific branch-aware Python code coverage using pinned `coverage==7.16.1` and a 90% CI gate without imposing that percentage on target projects.
+- Simplified both READMEs from roughly 520 lines to roughly 260 lines while preserving clone/install/invoke/update/verification onboarding.
+- Added an explicit eight-step human manual-validation procedure before `Done`.
+- Moved advanced testing, validation, learning, and compatibility-release guidance into focused `docs/` pages.
+- Corrected project-file documentation drift from `improvements/` to the canonical `proposals/` path.
+- Added provider-neutral release smoke guidance for Codex, Claude Code, and Antigravity using disposable workspaces and the existing live-eval runner-adapter boundary.
+- Added deterministic scenarios 53-54 plus repository/validator-resistance coverage for coverage policy and documentation integrity.
+
 ## 0.13.0 - 2026-09-27
 
 Project-language, deterministic-guardrail, and diagnostic-feedback release.
