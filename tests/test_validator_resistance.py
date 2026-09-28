@@ -73,8 +73,8 @@ class ValidatorResistanceTests(unittest.TestCase):
                 )
                 mutate_text(
                     "core/WORKFLOW.md",
-                    "behavior delta model",
-                    "change model",
+                    "current contract -> requested delta -> intended resulting contract",
+                    "current contract -> change -> intended result",
                     "workflow v0.9 delta/coherence contract missing phrase",
                 )
                 mutate_text(
