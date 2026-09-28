@@ -10,7 +10,7 @@ After applicable automated validation is complete, IssueCraft generates:
 .implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md
 ```
 
-The plan is issue-specific and derived from the issue, acceptance criteria, actual diff, affected code, project rules and automated evidence.
+IssueCraft resolves `<issue-key>` from the strongest stable issue/reference available and reports the exact path to the human. The plan is issue-specific and derived from the issue, acceptance criteria, actual diff, affected code, project rules and automated evidence.
 
 It can contain prerequisites/setup, happy path, edge/error cases, regression/preservation, security, performance/reliability, accessibility/compatibility, migration/recovery, observability and cleanup steps when relevant.
 
