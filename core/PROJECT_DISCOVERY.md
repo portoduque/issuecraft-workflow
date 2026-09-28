@@ -34,7 +34,7 @@ Discover commands/config/evidence for:
 
 - development/run and build/package;
 - all test types that actually exist in the project, classifying them by the semantic taxonomy in `TEST_STRATEGY.md`;
-- lint, formatting verification, type/static analysis, code generation, architecture checks, and coverage policy;
+- lint, formatting verification, type/static analysis, code generation, architecture checks, and code-coverage tooling/policy, including the executable coverage command, measured scope, and existing threshold/baseline when discoverable;
 - security tooling/policies such as static checks, dependency/supply-chain checks, secret checks, security test suites, or repository security guidance;
 - performance/reliability tooling such as benchmarks, load/stress/endurance checks, profiling, performance budgets, capacity tests, or historical baselines;
 - migration/schema/data validation;
