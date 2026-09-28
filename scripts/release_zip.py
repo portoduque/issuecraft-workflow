@@ -23,6 +23,12 @@ IGNORE = shutil.ignore_patterns(
     ".venv",
     "venv",
     "dist",
+    "htmlcov",
+    ".coverage",
+    ".coverage.*",
+    "coverage.xml",
+    "evals/live/runners.local.json",
+    "evals/live/results",
     "*.zip",
 )
 
