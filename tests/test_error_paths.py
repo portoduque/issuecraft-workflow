@@ -565,14 +565,14 @@ class ValidatorErrorPathTests(unittest.TestCase):
 
                 mutate(
                     "core/WORKFLOW.md",
-                    "# Implement Issue Workflow",
+                    "# Canonical Implement-Issue Workflow",
                     "# Implement Issue Workflow\nCodex",
                     validator.check_core_neutrality,
                     "provider term",
                 )
                 mutate(
                     "core/WORKFLOW.md",
-                    "# Implement Issue Workflow",
+                    "# Canonical Implement-Issue Workflow",
                     "# Implement Issue Workflow\nPython",
                     validator.check_core_neutrality,
                     "stack-specific term",
