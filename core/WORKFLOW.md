@@ -78,6 +78,20 @@ Capture only supported facts: identifier, title, description, acceptance criteri
 
 If the task is sufficiently defined without a tracker, proceed. Do not require a tracker integration.
 
+### Session handoff and resume
+
+Use `.implement-issue/HANDOFF.md` only for work that is likely to continue later: an explicit pause, a blocker/human gate with unfinished work, or an interrupted in-progress issue. Do not continuously rewrite it during normal uninterrupted execution.
+
+A handoff is a **resume hypothesis**, never a source of truth. Keep it compact and operational: issue/reference, semantic state, current workspace/branch when known, validated completed work, in-progress/uncommitted surfaces, next concrete action, blockers/human decision, and pointers to relevant validation/evidence artifacts. Never store secrets.
+
+On resume, before editing:
+
+1. Read the handoff if present.
+2. Reconcile it against current repository/VCS state when available: workspace/branch, status/uncommitted changes, recent relevant history, issue/tracker state, and durable IssueCraft artifacts.
+3. Let current evidence win over stale narrative. Do not redo work already proven complete, and do not discard partial/unexplained user changes.
+4. If the handoff and current evidence conflict materially and safe reconciliation is not possible, surface the smallest necessary question/decision.
+5. Replace or clear the handoff when its resume state is superseded or the issue is truly complete.
+
 ## 4. Plan from evidence
 
 Before editing:
@@ -89,7 +103,9 @@ Before editing:
 5. Perform the mandatory security-impact triage from `SECURITY.md`.
 6. Perform the mandatory performance-impact triage from `PERFORMANCE.md`.
 7. Identify correctness, data/migration, compatibility, operability, security, performance, reliability, and regression risks specific to the change.
-8. Do not introduce a new framework/tool solely because it is familiar. If a new foundational tool is necessary and not already an approved decision, use the appropriate human gate.
+8. For each materially relevant risk/implicit-requirement dimension, resolve it as an existing control/behavior, required work, `not_applicable` with a reason, or an explicit unresolved risk/decision. Do not silently omit a relevant dimension merely because the issue did not spell it out.
+9. Identify any **hard-to-reverse implementation decision** that is not already fixed by the issue, approved project knowledge, repository contract, or unavoidable technical constraint. Use the applicable human gate before crossing that one-way door.
+10. Do not introduce a new framework/tool solely because it is familiar. If a new foundational tool is necessary and not already an approved decision, use the appropriate human gate.
 
 ### Issue-specific context retrieval
 
@@ -179,7 +195,7 @@ Do not use a fixed retry count as a substitute for judgment. The trigger is repe
 
 Apply `TEST_STRATEGY.md`, `SECURITY.md`, `PERFORMANCE.md`, and `VALIDATION.md` using commands/mechanisms discovered from the Profile/repository. Run all applicable risk-based checks and explicitly distinguish `not_applicable` from `unavailable`. Categories are semantic and never hardcoded to a language, framework, test library, database, or agent.
 
-A command counts as successful only from actual execution evidence. If execution is unavailable, mark it unverified.
+A command counts as successful only from actual execution evidence. If execution is unavailable, mark it unverified and apply the safe probe-before-`unavailable` rule from `VALIDATION.md`. Material behavior/acceptance obligations use evidence-or-zero rather than inferred coverage.
 
 Fix failures caused by the implementation. Separate pre-existing failures from introduced failures with evidence whenever possible. A known material security regression, violation of an established performance budget, or other unresolved release-blocking regression prevents `In Review` unless the specific residual risk is explicitly accepted by a human.
 
