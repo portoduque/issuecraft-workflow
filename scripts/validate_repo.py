@@ -32,6 +32,7 @@ REQUIRED = [
     "templates/PROJECT_BLUEPRINT.yaml",
     "templates/LEARNINGS.md",
     "templates/WORKFLOW_IMPROVEMENT_PROPOSAL.md",
+    "templates/HANDOFF.md",
     ".agents/skills/implement-issue/SKILL.md",
     ".claude/skills/implement-issue/SKILL.md",
     "scripts/run_evals.py",
@@ -39,6 +40,7 @@ REQUIRED = [
     "evals/live/README.md",
     "evals/live/rubric.md",
     "evals/live/runners.example.json",
+    "tests/test_validator_resistance.py",
 ]
 VENDOR_TERMS = re.compile(r"\b(codex|claude|antigravity|openai|anthropic|gemini)\b", re.I)
 STACK_TERMS = re.compile(
@@ -162,6 +164,28 @@ def check_quality_contracts(errors: list[str]) -> None:
     ):
         if phrase.lower() not in validation.lower():
             errors.append(f"validation v0.7 contract missing phrase: {phrase}")
+    for phrase in (
+        "Evidence-or-zero",
+        "Compound obligation decomposition",
+        "Verification precision gaps",
+        "Risk-based discrimination checks",
+    ):
+        if phrase.lower() not in tests.lower():
+            errors.append(f"test v0.8 evidence contract missing phrase: {phrase}")
+    for phrase in (
+        "Probe before `unavailable`",
+        "evidence-or-zero",
+        "decompose compound/enumerated requirements",
+    ):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"validation v0.8 evidence contract missing phrase: {phrase}")
+    for phrase in ("Session handoff and resume", ".implement-issue/HANDOFF.md", "resume hypothesis"):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.8 handoff contract missing phrase: {phrase}")
+    gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
+    for phrase in ("hard-to-reverse implementation decisions", "genuine one-way doors"):
+        if phrase.lower() not in gates.lower():
+            errors.append(f"human-gate v0.8 contract missing phrase: {phrase}")
 
 
 def check_learning_contract(errors: list[str]) -> None:
@@ -170,7 +194,7 @@ def check_learning_contract(errors: list[str]) -> None:
     for phrase in (".implement-issue/proposals/", ".implement-issue/LEARNINGS.md", "explicit human approval"):
         if phrase not in learning:
             errors.append(f"persistent learning contract missing phrase: {phrase}")
-    for phrase in ("Generic-change admission check", "Merge first", "marginal benefit does not justify its ongoing complexity", "Procedure portability"):
+    for phrase in ("Generic-change admission check", "Merge first", "marginal benefit does not justify its ongoing complexity", "Procedure portability", "Recurrence strengthens evidence, not authority"):
         if phrase.lower() not in learning.lower():
             errors.append(f"anti-bloat learning contract missing phrase: {phrase}")
     if "Persistence and adoption are distinct decisions" not in gates:
@@ -179,8 +203,8 @@ def check_learning_contract(errors: list[str]) -> None:
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 28:
-        errors.append(f"expected 28 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 33:
+        errors.append(f"expected 33 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))

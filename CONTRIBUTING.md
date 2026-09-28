@@ -39,15 +39,22 @@ Changes that affect the canonical workflow must preserve:
 - stack/framework/language neutrality in `core/`;
 - mandatory security-impact and performance-impact triage;
 - comprehensive risk-based test selection with `pass/fail/unavailable/not_applicable` semantics;
-- behavior-to-evidence test traceability, meaningful assertions, lowest sufficient test fidelity, and evidence-backed diff review;
+- behavior-to-evidence test traceability, evidence-or-zero for material obligations, compound-obligation decomposition, meaningful assertions, lowest sufficient test fidelity, and evidence-backed diff review;
 - diagnostic reset instead of repeated speculative fixes without new evidence;
 - progressive issue-context retrieval and risk-based impact reconnaissance without exhaustive repository reading;
 - version-aware authoritative-source verification when correctness depends on external/version-sensitive behavior;
 - thin verifiable increments, risk-first slices, and evidence freshness for non-trivial work;
-- quality-bar integrity review, compatibility-safe migrations/cutovers, dependency lock-state evidence, and approved-baseline ratchets;
+- quality-bar integrity review, compatibility-safe migrations/cutovers, dependency lock-state evidence, approved-baseline ratchets, and probe-before-unavailable evidence;
+- risk-based isolated discrimination/fault checks when test effectiveness is materially uncertain;
+- resumable handoff snapshots that are reconciled against current repository/VCS/tracker evidence before edits;
+- human gating for genuine hard-to-reverse one-way-door choices without turning ordinary reversible engineering into approval ceremony;
 - anti-bloat admission for generic workflow growth, including procedure portability instead of implementation-specific workarounds;
 - compact user-facing handoffs without loss of material evidence, failures, unavailable checks, risks, or human gates;
-- human ownership of persistent learning, material risk acceptance, and final `Done`;
+- human ownership of persistent learning, material risk acceptance, and final `Done`; recurrence may strengthen evidence but never auto-adopt behavior;
 - installer protection against managed symlink redirection;
 - release archives free from VCS metadata and local caches;
 - immutable-SHA pinning for GitHub Actions dependencies.
+
+## Validator resistance
+
+When changing a deterministic validator or its contract, add/update a resistance test that mutates a known-good fixture/repository copy and proves the validator rejects the broken invariant. Include a negative control where practical so the validator is also proven not to reject harmless changes.

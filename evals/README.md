@@ -10,7 +10,7 @@ The files in `evals/scenarios/` are human-readable behavioral contracts.
 python scripts/run_evals.py
 ```
 
-The runner maps all 28 scenarios to executable assertions over the canonical repository contract. These checks require no model/API key and run in CI on every supported OS/Python matrix job.
+The runner maps all 33 scenarios to executable assertions over the canonical repository contract. These checks require no model/API key and run in CI on every supported OS/Python matrix job.
 
 They verify that source rules for safety, lifecycle, neutrality, drift, learning, testing, and human gates are actually present and regression-protected.
 

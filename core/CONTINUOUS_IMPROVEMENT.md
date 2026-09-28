@@ -45,6 +45,12 @@ For an actionable case, prepare a proposal using `../templates/WORKFLOW_IMPROVEM
 
 Preparing a proposal in the current conversation does not change future behavior.
 
+### Recurrence strengthens evidence, not authority
+
+The same independently grounded failure/pattern recurring across separate issues or features may strengthen the evidence for a proposal and help distinguish a reusable rule from a one-off. Record the separate grounding when it matters.
+
+Recurrence never auto-promotes a lesson, proposal, or observation into persistent or normative behavior. Candidate/confirmed counters, frequency, or agent confidence cannot replace the human persistence/adoption gates.
+
 ## Persistence gate
 
 Persistent learning requires explicit human approval.

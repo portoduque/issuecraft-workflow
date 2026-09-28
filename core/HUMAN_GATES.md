@@ -38,3 +38,11 @@ If the implementation would proceed to review with a known material security reg
 Only a human can satisfy final manual validation. The agent must not infer that manual validation passed because automated tests passed, the diff looks correct, or the agent itself exercised a UI.
 
 Explicit confirmation such as “passed”, “approved”, “validated”, or an equivalent clear statement can authorize the `Done` transition. Ambiguous feedback does not.
+
+## Gate G — hard-to-reverse implementation decisions
+
+Require an explicit human decision before crossing a materially hard-to-reverse implementation boundary when the choice is not already determined by the issue, approved project knowledge, an existing public/persistence contract, or an unavoidable technical constraint.
+
+Examples can include a new durable public contract, a persistence/data shape with expensive future migration, irreversible ownership/boundary changes, or material technology/integration lock-in.
+
+Do not escalate ordinary local implementation choices, names, reversible refactors, or repository-conventional patterns. The gate exists for genuine one-way doors with real alternatives and meaningful reversal cost, not for routine engineering judgment.
