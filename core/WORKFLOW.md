@@ -138,8 +138,10 @@ Retrieve context progressively rather than reading the repository exhaustively:
 1. Search broadly enough to identify candidate changed surfaces and existing tests/contracts.
 2. Inspect the highest-signal evidence first. Prefer source-side narrowing/projection (targeted search, range, filter, field selection, or equivalent capability) when it can retrieve the needed evidence directly instead of loading a large payload only to summarize it afterward.
 3. Follow discovered terminology, callers/consumers, dependencies, interfaces, data flow, and related tests only when they can materially affect the implementation or validation decision.
-4. Track unresolved information gaps that could change scope, correctness, security, performance, compatibility, or test selection.
-5. Stop retrieval when no unresolved material gap remains. Do not keep reading merely to maximize repository coverage.
+4. When the project has an explicit glossary, ubiquitous-language document, domain vocabulary source, terminology guide, or an approved pointer to one, treat it as **project language authority for the relevant domain**. Load it only when the current issue touches that domain, and use its canonical terms consistently in new/changed names, tests, documentation, and handoffs. Prefer pointers to the source over copied glossary text.
+5. If project language authority conflicts with live code, public contracts, issue wording, or another authoritative source, surface the conflict instead of silently normalizing it. Do not rename unaffected code, interfaces, data, or external contracts merely to make terminology uniform.
+6. Track unresolved information gaps that could change scope, correctness, security, performance, compatibility, or test selection.
+7. Stop retrieval when no unresolved material gap remains. Do not keep reading merely to maximize repository coverage.
 
 Before editing a materially coupled surface, perform **risk-based impact reconnaissance**. Establish the relevant upstream consumers/callers, downstream dependencies, public contracts/interfaces, persistence/data effects, analogous implementation, and existing tests to the extent required by the change. Trivial isolated edits do not require artificial call-graph work.
 
@@ -237,18 +239,22 @@ Treat dependency/toolchain changes as behavioral and supply-chain changes, not b
 - Consider transitive changes, platform/runtime compatibility, build/release effects, license/security evidence available to the project, and tests that exercise the dependency's actual contract.
 - Do not require one dependency per change as a universal rule; isolate changes only to the extent needed to keep cause, evidence, review, and rollback understandable.
 
-### Diagnostic reset
+### Diagnostic feedback loop and reset
+
+For a difficult, intermittent, environment-dependent, or performance-related defect, establish the **tightest feasible feedback signal** before entering a sequence of speculative fixes. The signal should target the user's actual symptom and, when feasible, be fast, repeatable/high-reproduction, and runnable without manual interpretation. Depending on the project and failure, valid signals can include an existing/failing test, targeted script/command, differential check, trace replay, benchmark/profiler measurement, captured runtime artifact, or narrowly scoped instrumentation.
+
+Tighten the signal when useful: remove unrelated setup, sharpen the observed failure condition, reduce runtime, pin nondeterministic inputs, or minimize the reproducer without changing the symptom being diagnosed. A local automated RED test is valuable when a correct seam exists, but it is not a universal prerequisite; production-only, hardware-specific, load-sensitive, or externally stateful defects may require the strongest available trace/measurement/instrumentation evidence instead.
 
 Repeated failed fixes without new evidence must trigger a **diagnostic reset** instead of another speculative edit:
 
 1. Capture the exact current failure/symptom and distinguish it from prior symptoms.
 2. Re-check actual repository/environment state rather than relying on the agent's earlier mental model.
 3. State the current hypothesis and the evidence for/against it; mark the cause unknown when evidence is insufficient.
-4. Shrink to the smallest failing surface that can discriminate between plausible hypotheses.
+4. Shrink to the smallest failing surface or strongest feasible signal that can discriminate between plausible hypotheses.
 5. Run one safe, discriminating diagnostic/check.
 6. Revise the hypothesis from the result before editing again.
 
-Do not use a fixed retry count as a substitute for judgment. The trigger is repeated unsuccessful change without materially new evidence.
+After the fix, re-run the original diagnostic signal/reproducer when feasible so success is measured against the symptom that motivated the change, not only a nearby test. Do not use a fixed retry count as a substitute for judgment. The reset trigger is repeated unsuccessful change without materially new evidence.
 
 ## 7. Automated validation
 
