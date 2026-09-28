@@ -420,6 +420,14 @@ def blind_pairs(responses: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
                     f"isolation evidence for {key} / {condition}"
                 )
 
+        baseline_isolation = pair["baseline"]["runner_isolation"]
+        candidate_isolation = pair["candidate"]["runner_isolation"]
+        if baseline_isolation != candidate_isolation:
+            raise LiveEvalError(
+                "blind baseline/candidate comparison requires matching isolation "
+                f"evidence for both conditions: {key}"
+            )
+
         digest = hashlib.sha256("\x00".join(map(str, key)).encode("utf-8")).digest()
         labels = (
             {"A": "baseline", "B": "candidate"}
@@ -435,6 +443,7 @@ def blind_pairs(responses: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
                 "description": sample.get("description"),
                 "risk": sample.get("risk"),
                 "criteria": sample.get("criteria"),
+                "isolation_evidence": baseline_isolation.get("evidence"),
                 "responses": {
                     label: {
                         "transcript": pair[condition]["transcript"],
