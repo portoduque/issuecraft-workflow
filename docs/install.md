@@ -52,7 +52,7 @@ On first use, IssueCraft performs Project Discovery or Project Bootstrap before 
         └── VERSION
 ```
 
-The installer does not create `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, or persistent proposals. Project-owned state is created only after the relevant workflow process and human approval.
+The installer does not create `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, persistent proposals, or issue-execution artifacts. Project-owned state is created only after the relevant workflow process and human approval. Issue-specific `HANDOFF.md`, `MANUAL_VALIDATION_PLAN.md`, and `ISSUE_EXECUTION_REPORT.md` live under `.implement-issue/issues/<issue-key>/` when needed.
 
 ## Update
 
@@ -82,4 +82,4 @@ If Python is unavailable, copy:
 - `.agents/skills/implement-issue/` → target `.agents/skills/implement-issue/`
 - `.claude/skills/implement-issue/` → target `.claude/skills/implement-issue/`
 
-Do not pre-create a Profile, Blueprint, Rules file, learning ledger, proposal, or HANDOFF snapshot merely to bypass human-gated onboarding or simulate interrupted work. `HANDOFF.md` is created only when unfinished work actually needs resumable state.
+Do not pre-create a Profile, Blueprint, Rules file, learning ledger, proposal, or HANDOFF snapshot merely to bypass human-gated onboarding or simulate interrupted work. `HANDOFF.md` is created under the current issue key only when unfinished work actually needs resumable state.
