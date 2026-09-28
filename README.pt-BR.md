@@ -5,7 +5,7 @@
 
 Workflow agnóstico de agente de IA e de stack para implementar issues desde a descoberta do projeto até a validação humana.
 
-**Versão:** 0.15.0  
+**Versão:** 0.16.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
