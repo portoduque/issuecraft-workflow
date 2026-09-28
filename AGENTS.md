@@ -18,6 +18,10 @@ This repository is the canonical source for the `implement-issue` workflow.
 - Material behavior changes use current-contract -> requested-delta -> resulting-contract reasoning when useful; modified behavior preserves unspecified existing obligations, removals are proven absent, and renamed/preserved behavior is verified semantically rather than by incidental internal names.
 - The implementation plan is a hypothesis. Local/reversible replanning stays autonomous, but material issue intent/scope drift uses the human gate and required behavior must never be silently narrowed/deferred to make implementation easier.
 - Before In Review, change coherence must reconcile issue/project contracts, behavior delta, diff, automated evidence, and manual validation; partial evidence never upgrades the unverified remainder to pass.
+- Solution economy is a canonical invariant: understand the real flow first, reuse adequate existing project/runtime/platform/approved-dependency capabilities before creating ownership, and optimize justified complexity rather than LOC/file count.
+- Root-cause fixes should prefer the smallest common correct enforcement point when evidence shows sibling paths share the invariant; broader shared changes require broader validation.
+- Proof obligations are never bloat: correctness/completeness, security, accessibility, compatibility, preservation, reliability, and applicable validation outrank implementation economy.
+- Delegation is optional and cannot dilute issue/project constraints or human gates; the controlling workflow remains responsible for reconciliation and final validation.
 - Compact validation output must be a projection of the complete result rather than reduced validation scope. External/reference context is read-only unless mutation is separately authorized.
 - Output efficiency is a canonical invariant: compress presentation, never evidence; durable artifacts hold detail while chat handoffs surface material deltas, failures/risks, gates, and next action.
 - Continuous-learning persistence and adoption require explicit human approval; recurrence may strengthen evidence but never auto-adopts a rule.
