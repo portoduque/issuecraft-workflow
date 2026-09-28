@@ -40,6 +40,7 @@ REQUIRED = [
     "evals/live/README.md",
     "evals/live/rubric.md",
     "evals/live/runners.example.json",
+    "tests/test_validator_resistance.py",
 ]
 VENDOR_TERMS = re.compile(r"\b(codex|claude|antigravity|openai|anthropic|gemini)\b", re.I)
 STACK_TERMS = re.compile(
