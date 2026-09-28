@@ -50,9 +50,13 @@ Identify project-defined security constraints, threat-model/security docs, sensi
 
 Inspect pipeline/workflow definitions, hooks, release automation, deployment configuration, and required checks when available. Separate CI evidence from local commands.
 
-### Pass H — project rules and architecture
+### Pass H — project rules, architecture and domain language
 
-Read existing repository instruction files, architecture docs, contributing guides, ADRs, and conventions that materially constrain implementation. Do not silently copy all prose into the Profile; keep project-specific behavioral constraints in `PROJECT_RULES.md` after approval when needed.
+Read existing repository instruction files, architecture docs, contributing guides, ADRs, conventions, and explicit glossary/ubiquitous-language/domain-terminology sources that materially constrain implementation. Treat an existing domain vocabulary source as project-owned evidence, not as text to duplicate into the Profile.
+
+When a persistent IssueCraft pointer to a vocabulary source would reduce rediscovery, propose only the source pointer and its scope in `PROJECT_RULES.md`; do not copy the glossary, create a new glossary automatically, or persist the pointer without the normal project-rule approval gate. If terminology sources disagree with live code/contracts or each other, record the conflict rather than silently choosing a synonym.
+
+Do not silently copy all project prose into the Profile; keep project-specific behavioral constraints in `PROJECT_RULES.md` after approval when needed.
 
 ### Pass I — executable verification
 
