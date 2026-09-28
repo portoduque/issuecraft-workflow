@@ -32,6 +32,10 @@ class LiveEvalTests(unittest.TestCase):
                         "supports_multiturn": True,
                         "timeout_seconds": 30,
                         "environment": {},
+                        "isolation": {
+                            "verified": True,
+                            "evidence": "fake runner has no global agent/plugin state",
+                        },
                     }
                 }
             ),
@@ -63,6 +67,7 @@ class LiveEvalTests(unittest.TestCase):
 
             self.assertEqual("candidate", row["condition"])
             self.assertTrue(row["runner_metadata"]["workflow_present"])
+            self.assertTrue(row["runner_isolation"]["verified"])
             paths = {item["path"] for item in row["workspace_changes"]}
             self.assertIn("message.txt", paths)
             self.assertNotIn(".implement-issue/system/core/WORKFLOW.md", paths)
@@ -134,6 +139,73 @@ class LiveEvalTests(unittest.TestCase):
                 set(mapping[0]["labels"].values()),
             )
             self.assertNotIn("condition", json.dumps(blind[0]))
+
+    def test_blind_export_rejects_unverified_isolation(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            config = root / "runners.json"
+            config.write_text(
+                json.dumps(
+                    {
+                        "fake": {
+                            "command": [sys.executable, str(FAKE_RUNNER)],
+                            "candidate_invocation": "/implement-issue",
+                            "supports_multiturn": True,
+                            "timeout_seconds": 30,
+                            "environment": {},
+                            "isolation": {
+                                "verified": False,
+                                "evidence": "global agent state not checked",
+                            },
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            output = root / "responses.jsonl"
+            for condition in ("baseline", "candidate"):
+                live.run_once(
+                    config,
+                    "fake",
+                    "human-done-gate",
+                    condition,
+                    1,
+                    output,
+                )
+
+            with self.assertRaisesRegex(
+                live.LiveEvalError,
+                "requires verified runner isolation evidence",
+            ):
+                live.blind_pairs(output)
+
+    def test_verified_isolation_requires_evidence(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            config = root / "runners.json"
+            config.write_text(
+                json.dumps(
+                    {
+                        "fake": {
+                            "command": [sys.executable, str(FAKE_RUNNER)],
+                            "supports_multiturn": True,
+                            "isolation": {"verified": True, "evidence": ""},
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                live.LiveEvalError,
+                "verified isolation requires concrete evidence",
+            ):
+                live.run_once(
+                    config,
+                    "fake",
+                    "human-done-gate",
+                    "baseline",
+                    1,
+                )
 
     def test_multiturn_scenario_rejects_runner_without_multiturn_support(self):
         with tempfile.TemporaryDirectory() as td:
