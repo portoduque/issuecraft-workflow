@@ -32,7 +32,7 @@ Transition when project onboarding/drift checks are resolved enough to start imp
 
 Transition only after:
 
-- the intended implementation is complete without silently narrowing/defering required behavior;
+- the intended implementation is complete without silently narrowing/deferring required behavior;
 - behavior-delta/preservation obligations are reconciled when applicable;
 - applicable automated validation has run or any unavailable checks are explicitly documented;
 - change coherence review finds no unresolved release-blocking contradiction;
