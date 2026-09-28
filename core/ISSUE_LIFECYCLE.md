@@ -22,6 +22,10 @@ Treat the issue's **intent and scope identity** as distinct from the implementat
 
 When repository/tracker evidence reveals another active change on the same high-collision contract/surface, report the coordination risk. Do not infer a dependency or execution order unless it is explicitly documented or otherwise evidenced.
 
+Parallel issue work should remain concurrent when safely isolated. Separate workspaces/checkouts with disjoint surfaces need no extra ceremony. Overlap across isolated workspaces increases integration risk but does not itself create a dependency. Known concurrent mutation inside the same physical working tree is an unsafe execution condition: pause application mutation until one execution stops or the work is moved to an isolated workspace.
+
+Keep execution state issue-scoped under `.implement-issue/issues/<issue-key>/` so one issue's handoff/validation artifacts cannot overwrite another's.
+
 ## State transitions
 
 ### → In Progress
