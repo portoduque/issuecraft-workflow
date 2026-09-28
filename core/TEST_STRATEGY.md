@@ -26,6 +26,38 @@ Prefer the **lowest-cost test layer that can faithfully prove the behavior**. Es
 
 A passing test is useful evidence only when its assertions materially discriminate correct behavior from the relevant failure. Prefer observable behavior, contracts, and invariants over implementation-detail assertions. A no-throw check or broad snapshot is not automatically meaningful evidence.
 
+### Evidence-or-zero
+
+Treat coverage as a proof claim, not a proximity claim. A materially changed behavior, acceptance criterion, invariant, or risk obligation counts as covered only when the evidence identifies the concrete check/test and the assertion, observation, or measured condition that proves the required outcome.
+
+- "Related tests exist", "the suite passed", or "the path is exercised" is not sufficient by itself.
+- When useful and available, cite a stable test/check identifier plus its repository location and the relevant assertion/observation.
+- If concrete evidence cannot be located, record the obligation as unproven/unverified rather than inferring coverage.
+- Search the relevant test/check surfaces before concluding that evidence is absent.
+
+### Compound obligation decomposition
+
+When one requirement explicitly names multiple independently falsifiable clauses, fields, states, roles, cases, outputs, or members of an enumerated set, decompose it into the material obligations needed to prove the whole requirement.
+
+A broad parent assertion must not stand in for a missing child obligation. Each material member needs direct evidence, shared evidence that demonstrably covers every member, or an explicit reason it is not applicable.
+
+Do not turn this into speculative scope. Verification may also be justified by established security, data-integrity, compatibility, reliability, regression, or approved project invariants even when the issue text does not enumerate them.
+
+### Verification precision gaps
+
+If a requirement is too vague to define an observable expected outcome, do not invent a numeric threshold, exact value, error contract, or other precision merely to make it testable. Record a **verification precision gap** and use the strongest non-invented evidence available. Ask for a human decision only when the missing precision materially blocks safe implementation or validation.
+
+### Risk-based discrimination checks
+
+When ordinary assertions may be too weak to prove a high-risk behavior, or when the effectiveness of a regression test is materially uncertain, consider a targeted **discrimination check**: safely alter the behavior in an isolated disposable state and confirm that the relevant test/check fails for the intended reason.
+
+- Prefer existing project mutation/fault-injection mechanisms when available; do not silently install a new framework.
+- Manual fault injection may be used when it is small, behavior-level, reversible, and safe.
+- Never inject the fault into the user's real working state when an isolated copy/workspace can be used.
+- Capture the real workspace baseline before the check and verify it is unchanged after cleanup.
+- A surviving fault means the verification is insufficient for that behavior; strengthen the evidence or report the gap.
+- Do not require mutation/fault injection for every issue and do not invent a universal number of mutations. Depth is proportional to risk and uncertainty.
+
 ## Functional and behavioral tests
 
 - **Unit** — isolated behavior of a small unit.
