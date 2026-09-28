@@ -2,6 +2,19 @@
 
 All notable changes are documented here.
 
+## 0.12.0 - 2026-09-27
+
+Semantic-output-economy release.
+
+- Strengthened compact communication with a semantic compression floor that preserves material negation/boundaries, identifiers, versions, values/units, states/statuses, commands/locations, failure identifiers, and explicit human decisions.
+- Added a state-once rule so established material facts are repeated only when state changes, the current decision needs them, or omission would be ambiguous.
+- Made progress updates information-bearing: routine tool mechanics are not narrated unless they carry a material finding, transition, failure, blocker, risk, gate, or correction.
+- Added source-side narrowing/projection preference so targeted search/range/filter/field selection is preferred over retrieving large payloads only to summarize them afterward.
+- Strengthened validation reporting for noisy logs/test output: surface decisive status/count/location/error evidence while preserving or referencing the complete diagnostic artifact.
+- Added token-economy admission rules that require net-benefit evidence including recurring instruction/context overhead, extra turns/retries, and evidence/clarity effects.
+- Added minimal-terse-control guidance for evaluating the marginal value of token-economy rules instead of crediting them for generic concision.
+- Added deterministic scenarios 48-49 and regression coverage while deliberately avoiding caveman-style grammar, output caps, proxy/runtime compression, new modes/personas, or a new canonical core file.
+
 ## 0.11.0 - 2026-09-27
 
 Approval-scope integrity release.
