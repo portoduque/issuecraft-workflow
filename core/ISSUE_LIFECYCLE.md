@@ -18,6 +18,10 @@ Use the strongest available source and preserve traceability. If tracker access 
 
 Do not invent missing acceptance criteria. You may derive an implementation interpretation from the described outcome, but label it as an interpretation and avoid expanding scope.
 
+Treat the issue's **intent and scope identity** as distinct from the implementation plan. If evidence only changes how the same accepted outcome should be implemented, replan autonomously. If the core problem, externally observable outcome, acceptance criteria, or material scope boundary would change, use the material issue intent/scope drift human gate before proceeding.
+
+When repository/tracker evidence reveals another active change on the same high-collision contract/surface, report the coordination risk. Do not infer a dependency or execution order unless it is explicitly documented or otherwise evidenced.
+
 ## State transitions
 
 ### → In Progress
@@ -28,8 +32,10 @@ Transition when project onboarding/drift checks are resolved enough to start imp
 
 Transition only after:
 
-- the intended implementation is complete;
+- the intended implementation is complete without silently narrowing/defering required behavior;
+- behavior-delta/preservation obligations are reconciled when applicable;
 - applicable automated validation has run or any unavailable checks are explicitly documented;
+- change coherence review finds no unresolved release-blocking contradiction;
 - the issue-specific manual validation plan has been generated.
 
 ### → Done
