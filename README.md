@@ -3,26 +3,24 @@
 [![CI](https://github.com/portoduque/issuecraft-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/portoduque/issuecraft-workflow/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
+AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation.
 
-**Version:** 0.13.0  
+**Version:** 0.14.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
-
----
 
 ## Quick start
 
 You need **Git**, **Python 3** for installation, and a compatible coding agent.
 
-### 1. Clone IssueCraft
+### 1. Clone
 
 ```bash
 git clone https://github.com/portoduque/issuecraft-workflow.git
 cd issuecraft-workflow
 ```
 
-### 2. Install it into your project
+### 2. Install into your project
 
 ```bash
 python scripts/install.py /path/to/your-project
@@ -38,9 +36,7 @@ python scripts/install.py ~/projects/my-app
 python scripts/install.py C:\dev\my-app
 ```
 
-The installer copies only the workflow runtime and agent entry points. It does **not** change your application's stack and does **not** pre-create project decisions.
-
-### 3. Invoke `implement-issue`
+### 3. Run `implement-issue`
 
 | Agent | Command |
 |---|---|
@@ -52,195 +48,93 @@ Example:
 
 ```text
 /implement-issue
-Implement issue #42: add a password visibility toggle to the user form.
+Implement issue #42: add a password visibility toggle.
 ```
 
-For Codex, use `$implement-issue` instead of `/implement-issue`.
+For Codex, use `$implement-issue`.
 
-**That is enough to start.** On the first run, IssueCraft learns how the repository actually works before changing application code.
+That is enough to start. On first use, IssueCraft learns how the repository actually works before changing application code.
 
----
+## What happens on the first run
 
-## What IssueCraft does
+For an existing project, IssueCraft discovers the real repository from evidence: languages, runtimes, frameworks, dependencies, persistence/migrations, test commands, coverage policy, lint/type/build checks, CI, security, performance and architecture.
 
-IssueCraft provides one canonical `implement-issue` workflow that:
+It proposes a `PROJECT_PROFILE` and asks before persisting it.
 
-- discovers an existing project's real languages, frameworks, package/dependency management, database, migrations, tests, CI, lint, build, security and performance tooling from evidence;
-- bootstraps empty projects through a short adaptive interview instead of inventing a stack;
-- creates a proposed `PROJECT_PROFILE` for observed reality or `PROJECT_BLUEPRINT` for planned architecture;
-- requires human approval before persisting important project knowledge;
-- keeps human-gated approval bound to the reviewed material action and target; material drift makes approval stale instead of silently widening authorization;
-- detects project drift on later runs;
-- plans and implements the smallest coherent issue change;
-- models material behavior changes as current contract → requested delta → resulting contract, preserving unspecified existing obligations;
-- applies solution economy after understanding the real flow: reuse adequate existing project/runtime/platform/approved-dependency capabilities before creating new ownership;
-- performs mandatory security-impact and performance-impact triage;
-- selects tests by risk instead of assuming one framework or one test command;
-- requires evidence-or-zero for material obligations, decomposes compound requirements, and uses targeted discrimination checks when test strength is materially uncertain;
-- keeps scope integrity: local/reversible replanning stays autonomous, while material issue intent/scope drift requires a human decision;
-- keeps a proof floor above simplicity: correctness/completeness, security, accessibility, compatibility, preservation, reliability and applicable validation cannot be traded for fewer lines/files/tokens;
-- moves work through `In Progress → In Review → human validation → Done`;
-- generates an issue-specific manual validation plan before `In Review`;
-- learns from real usage while keeping persistence and adoption human-controlled.
+For an empty or near-empty project, it uses a short adaptive interview and proposes a `PROJECT_BLUEPRINT` instead of inventing a stack.
 
----
+Later runs detect material drift and update project knowledge only through the applicable human gate.
 
-## Compact output, full evidence
-
-IssueCraft keeps the analysis and validation deep while keeping chat handoffs short.
-
-The rule is:
-
-> **Compress presentation, never evidence.**
-
-Detailed evidence stays in durable project artifacts such as the Profile, drift report, validation plan, execution report, or improvement proposal. In chat, IssueCraft focuses on the current state, material changes, failures/unavailable checks, residual risks, required human decision, and the next action.
-
-Routine successful checks may be grouped; `not_applicable` checks may be summarized. Failures, unavailable validation, security/performance risks, uncertainty, and human gates are never hidden to save tokens.
-
-Compact output is a **projection of the complete validation result**, never a reason to validate fewer obligations. Partial evidence stays partial: if some material members are not proven, the parent obligation is not reported as a full pass.
-
-IssueCraft also enforces a **semantic compression floor**: compact wording must preserve material negation/boundaries, identifiers, versions, numbers/units, states/statuses, commands/paths, failure identifiers, and explicit human decisions. Material facts are stated once unless their state changes or the current decision needs them; routine tool mechanics are not narrated as progress. When targeted search/range/filter/field selection can retrieve the needed evidence directly, IssueCraft prefers that source-side narrowing over loading a large payload only to summarize it afterward.
-
-Token economy is evaluated as a net property. A shorter answer does not justify recurring instruction/context overhead, extra turns/retries, or weaker evidence. Changes proposed mainly to save tokens should demonstrate marginal benefit over existing behavior and, when practical, a minimal terse control.
-
-This reduces repeated output and accumulated conversation context without reducing testing or engineering depth.
-
----
-
-## Solution economy without code golf
-
-IssueCraft now separates **implementation economy** from raw code-size optimization.
-
-After the affected flow and contract are understood, it prefers:
+## Issue flow
 
 ```text
-no new implementation when none is needed
+issue
   ↓
-reuse an adequate capability already in the project
+discover/reconcile project context
   ↓
-use an adequate runtime/platform capability
-  ↓
-reuse an already-approved dependency
-  ↓
-only then add the smallest coherent new implementation
-```
-
-The goal is **less ownership and less unjustified complexity**, not the fewest lines or files. A larger implementation is preferred when the smaller one would drop required behavior, validation, security, accessibility, compatibility, observability, data integrity or reliability.
-
-For bug fixes, IssueCraft also checks whether the named symptom is only one path to a shared root cause. When repository evidence shows a common invariant, it prefers the smallest common correct enforcement point and validates the broader blast radius rather than duplicating the same guard across callers.
-
-Before `In Review`, the diff is checked for avoidable ownership such as speculative abstractions, wrappers, dependencies, configuration layers or duplicated project capability. Legitimate boundaries are not treated as bloat merely because they add code.
-
-Delegation/subagents remain optional. If they are used, IssueCraft does not assume that another context inherited project rules or human gates; the controlling workflow remains responsible for reconciliation and final validation.
-
----
-
-## First run: existing project vs. empty project
-
-```text
-first run
-   ↓
-inspect repository
-   ↓
-┌───────────────────────┬─────────────────────────┐
-│ existing project      │ empty/new project       │
-│                       │                         │
-│ Project Discovery     │ Project Bootstrap       │
-│                       │                         │
-│ proposed Profile      │ proposed Blueprint      │
-└───────────┬───────────┴────────────┬────────────┘
-            │                        │
-            └──── human approval ────┘
-                         ↓
-                  implement issue
-```
-
-### Existing project
-
-IssueCraft inspects repository evidence for:
-
-- languages, runtimes, frameworks and major libraries;
-- dependency/package managers and workspaces;
-- persistence, databases and migrations;
-- unit, integration, contract, system, E2E and other existing tests;
-- lint, format, type/static analysis and build commands;
-- CI/CD and release automation;
-- security policies/tooling and trust boundaries;
-- performance tooling, budgets, baselines and capacity evidence;
-- architecture, modules/services and project conventions.
-
-It proposes `.implement-issue/PROJECT_PROFILE.yaml`.
-
-If a fact cannot be established, it remains `unknown` or `not_detected`. Absence of evidence is not silently converted into a project fact.
-
-### Empty or near-empty project
-
-IssueCraft does not pretend to discover a stack that does not exist.
-
-It reads any existing documentation first, asks only the unresolved questions needed for the current scaffold, keeps optional decisions `undecided`, and proposes `.implement-issue/PROJECT_BLUEPRINT.yaml`.
-
-The distinction is intentional:
-
-- **Blueprint** = intended design.
-- **Profile** = observed repository reality.
-
-Both are human-approved before persistence.
-
----
-
-## Issue lifecycle
-
-```text
-issue/task
-   ↓
-understand context
-   ↓
-In Progress
-   ↓
 plan from evidence
-   ↓
-implement
-   ↓
-security review
-   ↓
-performance review
-   ↓
-risk-based automated validation
-   ↓
-generate manual validation plan
-   ↓
+  ↓
+implement smallest coherent change
+  ↓
+security + performance impact triage
+  ↓
+applicable automated validation
+  ↓
 In Review
-   ↓
+  ↓
+MANUAL_VALIDATION_PLAN.md
+  ↓
 human validation
-   ├── failed → In Progress
-   └── passed → Done
+  ↓
+PASS → Done
+FAIL → back to implementation
+PARTIAL / NOT RUN → remain In Review
 ```
 
-IssueCraft may prepare an issue for `In Review`, but **Done is human-owned**. Automated checks, an agent's own UI interaction, or confidence in the diff never substitute for the final human validation gate.
+The agent cannot mark the issue `Done` merely because automated tests passed or because the agent exercised the UI itself.
 
-During implementation, context is retrieved progressively: IssueCraft follows high-signal code/contracts/tests until material information gaps are resolved instead of reading the repository exhaustively. When the project already defines a domain glossary or canonical terminology source, IssueCraft loads it only for relevant work, uses those terms consistently in new/changed material, and prefers an approved pointer to that source over copied glossary text. Terminology conflicts are surfaced rather than triggering unrelated mass renames.
+## Testing and code coverage
 
-For difficult, intermittent, environment-dependent, or performance defects, IssueCraft first seeks the tightest feasible symptom-specific feedback signal before entering speculative fix loops. A faithful failing test is preferred when practical, but traces, replayable artifacts, differential checks, profiler/benchmark measurements, or scoped instrumentation remain valid when they better represent the real failure. Repeated fixes without new evidence still trigger a diagnostic reset.
+IssueCraft considers the full semantic test space and runs/adds the types that are applicable to the changed behavior and available project infrastructure.
 
-For non-trivial multi-surface work, IssueCraft prefers thin verifiable increments and resolves plan-invalidating uncertainty early with risk-first slices. When correctness depends on version-sensitive external behavior that the repository cannot establish, it checks the detected version against narrow authoritative documentation and marks anything it cannot verify as unverified.
+This can include unit, component, integration, contract, API, system, end-to-end, acceptance, smoke, regression, negative/boundary, property-based, fuzz, mutation, concurrency, resilience, security, benchmark/load/stress/soak, accessibility, compatibility, migration/recovery, lint, type/static analysis and build/package checks.
 
-Validation is evidence-aware: a prior green result is reused only while its relevant inputs remain materially unchanged. Before `In Review`, IssueCraft also reviews whether the diff weakened the project's quality bar, whether coexistence-sensitive migrations use a compatibility-safe expand/migrate/contract sequence, and whether dependency changes are supported by resolved lock-state and relevant release/migration evidence.
+For materially changed behavior, evidence must identify a meaningful check/assertion; a green broad suite or a high coverage percentage alone is not proof.
 
-If work is interrupted, IssueCraft can write a compact `.implement-issue/HANDOFF.md`. The handoff is only a resume hypothesis: on the next session it is reconciled against current repository/VCS state, tracker state when available, and durable validation evidence before any edit. Current evidence wins over stale narrative.
+Code coverage is also a quality guard:
 
-Materially hard-to-reverse implementation choices that are not already determined by the issue, approved project knowledge, existing contracts, or unavoidable constraints are treated as one-way doors and require an explicit human decision. Ordinary reversible implementation choices remain autonomous.
+- discover the project's existing coverage command/tool/policy;
+- preserve established thresholds/baselines;
+- do not lower or bypass coverage merely to make a change pass;
+- directly cover materially new/changed executable behavior when viable;
+- if the project has no coverage tooling, do not silently install one or invent a universal percentage.
 
-For material behavior changes, IssueCraft distinguishes what is **added, modified, removed, renamed/preserved, and unchanged-but-at-risk**. Modified behavior carries preservation obligations for existing scenarios/fields/states/paths the issue did not explicitly remove; removed behavior is verified as absent rather than treated as something to restore.
+The detailed rules live in [core/TEST_STRATEGY.md](core/TEST_STRATEGY.md) and [docs/testing.md](docs/testing.md).
 
-Before `In Review`, a change-coherence review reconciles the issue and acceptance criteria, project/repository contracts, behavior delta, implementation diff, automated evidence, and manual validation plan. Every material diff change needs a traceable reason. If the implementation plan proves wrong but the issue's intended outcome is unchanged, IssueCraft replans autonomously; if the issue itself would become materially different work, the human decides.
+Security and performance remain mandatory impact analyses; see [core/SECURITY.md](core/SECURITY.md) and [core/PERFORMANCE.md](core/PERFORMANCE.md).
 
-At resume and other material phase transitions, IssueCraft re-reads the mutable authoritative inputs needed for the next decision instead of trusting stale conversation memory. External/reference repositories or specification sources may inform the work, but read access never implies mutation authorization.
+## Manual validation before Done
 
-Project-specific learning also distinguishes **mechanical rules** from **judgement rules**. When an authorized mechanical constraint can be enforced proportionately by an existing project lint/test/architecture/pre-commit/CI mechanism, IssueCraft prefers that deterministic source of truth over repeating the same rule in agent prose. It does not install new tooling or expand an unrelated issue merely to automate a rule.
+After automated validation, IssueCraft generates:
 
----
+```text
+.implement-issue/MANUAL_VALIDATION_PLAN.md
+```
 
-## AI-agent neutral by design
+The final human step is:
+
+1. Open `.implement-issue/MANUAL_VALIDATION_PLAN.md`.
+2. Confirm the listed prerequisites/setup.
+3. Execute each numbered scenario in order.
+4. Compare each action with its expected result.
+5. Run the listed regression/security/performance/accessibility/compatibility/migration/recovery checks when applicable.
+6. Record one result: **PASS**, **FAIL**, or **PARTIAL / NOT RUN**.
+7. If **FAIL**, provide the failing step, expected result and actual result; IssueCraft returns to implementation and revalidates.
+8. Only an explicit human **PASS** (or equivalent clear approval) allows the transition from `In Review` to `Done`.
+
+See [docs/validation.md](docs/validation.md) for the full handoff model.
+
+## AI-agent neutral
 
 There is one canonical workflow:
 
@@ -248,130 +142,27 @@ There is one canonical workflow:
 core/WORKFLOW.md
 ```
 
-Agent-specific files are thin entry points that delegate to the same core:
+Agent-specific files are thin adapters only:
 
 ```text
-.agents/skills/implement-issue/SKILL.md
-.claude/skills/implement-issue/SKILL.md
+.agents/skills/implement-issue/SKILL.md   # Codex + Antigravity
+.claude/skills/implement-issue/SKILL.md  # Claude Code
 ```
 
-The canonical core is not allowed to branch behavior by AI provider. Repository validation scans the core for provider leakage, and the two adapters must remain behaviorally identical.
+Provider-specific behavior must not leak into `core/`. Compatibility details are in [docs/compatibility.md](docs/compatibility.md).
 
-See [docs/compatibility.md](docs/compatibility.md).
+## Stack/language neutral
 
----
+IssueCraft discovers the target project instead of assuming Python, JavaScript, Java, a database, a framework or a test runner.
 
-## Stack, framework and language neutral
+Commands and tools come from repository evidence and approved project context. Monorepos and multi-service repositories are handled per component when needed.
 
-The core works with semantic concepts such as:
+## Controlled learning
 
-```text
-build command
-test commands
-migration mechanism
-persistence type
-security checks
-performance checks
-CI behavior
-```
-
-It does not hardcode one preferred package manager, framework, database, migration tool, test library or operating system. Concrete commands come from repository evidence and approved project context.
-
-Monorepos and multi-service repositories are discovered per component instead of being forced into one global stack.
-
----
-
-## Security is mandatory
-
-Every issue gets a security-impact triage, even if the issue title does not look security-related.
-
-When applicable, IssueCraft considers authentication/authorization, tenant or privilege boundaries, untrusted input, secrets, sensitive data, files, network trust, persistence, dependency/supply-chain changes, state transitions, concurrency, logging, and other changed attack surfaces.
-
-A known material security regression blocks `In Review` unless that **specific residual risk** is explicitly accepted by a human.
-
-IssueCraft does not claim absolute security. It records what was assessed, what actually ran, and what remains unverified.
-
-See [core/SECURITY.md](core/SECURITY.md).
-
----
-
-## Performance is mandatory
-
-Every issue also gets a performance-impact triage.
-
-When relevant, IssueCraft considers algorithmic work, database/storage I/O, network calls, memory/resources, concurrency/locks, caching, payloads, startup/build cost, client responsiveness, background processing and observability volume.
-
-Existing budgets and baselines are respected when found. Numeric thresholds are never invented.
-
-High-load or destructive testing against production/shared systems requires explicit authorization.
-
-See [core/PERFORMANCE.md](core/PERFORMANCE.md).
-
----
-
-## Comprehensive risk-based testing
-
-IssueCraft considers the full semantic test space but runs/adds only what is applicable to the change and available in the project.
-
-That can include unit, component, integration, contract, API/interface, system, end-to-end, acceptance, smoke, regression, negative/boundary, property-based, fuzz, mutation, concurrency/race/idempotency, resilience/fault-injection, security, benchmark, load, stress, spike, soak, accessibility, visual regression, compatibility, migration, recovery, lint, typecheck and build verification.
-
-Every selected check keeps an explicit result:
+IssueCraft can learn from real use, but it never silently rewrites its own rules.
 
 ```text
-pass
-fail
-not_applicable
-unavailable
-```
-
-`not_applicable` and `unavailable` never mean `pass`.
-
-For reproducible bugs, IssueCraft prefers a durable regression reproducer that fails before the fix and passes after it when feasible. That RED is valid only when the intended defect/invariant actually causes the failure.
-
-IssueCraft also traces materially changed behaviors and acceptance criteria to meaningful evidence, chooses the lowest-cost test layer that can faithfully prove them, checks assertion quality rather than raw test count, and inspects risk-relevant equivalent paths/sibling surfaces after understanding a root cause. Mocks/fakes must preserve the contract under test; expensive E2E is reserved for real cross-layer risk.
-
-Coverage follows **evidence-or-zero**: a material obligation is not considered proven merely because a related suite is green. Compound requirements are decomposed into independently falsifiable clauses/fields/cases, vague requirements become explicit verification-precision gaps instead of invented thresholds, and an applicable check is labeled `unavailable` only after a safe probe or other concrete capability/environment evidence. For high-risk or uncertain assertions, IssueCraft may use an isolated fault/mutation discrimination check to confirm the verification can actually detect the wrong behavior; this is risk-based, not mandatory for every issue.
-
-See [core/TEST_STRATEGY.md](core/TEST_STRATEGY.md).
-
----
-
-## Manual validation before Done
-
-When automated validation is complete, IssueCraft generates:
-
-```text
-.implement-issue/MANUAL_VALIDATION_PLAN.md
-```
-
-The plan is derived from the issue, acceptance criteria, actual diff, affected code, project rules and automated results. It includes exact prerequisites, actions and expected results plus relevant regression, security, performance, accessibility, compatibility, migration and cleanup checks.
-
-It must not degrade into a generic "check that it works" checklist.
-
----
-
-## Drift detection
-
-An approved Profile is not assumed to stay correct forever.
-
-On later runs, IssueCraft performs a cheap preflight over evidence that can change engineering behavior: manifests, lockfiles, runtimes, frameworks, test/build commands, security policies/tooling, performance budgets/baselines/tooling, observability, persistence/migrations, CI and architecture boundaries.
-
-Material differences become a drift proposal. IssueCraft does not silently rewrite the Profile.
-
-See [core/DRIFT_DETECTION.md](core/DRIFT_DETECTION.md).
-
----
-
-## Controlled learning over time
-
-IssueCraft can learn from real use without becoming a silently self-modifying system.
-
-At the end of an issue it can identify reusable evidence such as a missed edge case, validation gap, project convention, security/performance escape, or adapter limitation.
-
-The workflow separates:
-
-```text
-observe
+observe evidence
   ↓
 draft proposal
   ↓
@@ -379,26 +170,14 @@ human approval to persist
   ↓
 .implement-issue/proposals/WIP-*.md
   ↓
-optional approved learning record
+optional LEARNINGS.md record
   ↓
-.implement-issue/LEARNINGS.md
-  ↓
-separate human approval to adopt behavior
+separate human approval to adopt
 ```
 
-A persisted proposal or entry in `LEARNINGS.md` is **not automatically normative**. Adoption into `PROJECT_RULES`, Profile/Blueprint, an adapter or the canonical core requires the appropriate human decision.
+A proposal or `LEARNINGS.md` entry is historical evidence, not automatically normative behavior.
 
-Recurrence across independent issues/features can strengthen the evidence for a proposal, but recurrence never auto-promotes a learning into persistent or normative behavior.
-
-This prevents one project's habits from contaminating the generic workflow.
-
-Generic IssueCraft changes also pass an anti-bloat admission check: concrete gap/evidence, overlap review, merge-first preference, true cross-project generality, ongoing complexity/context cost, and regression proof. Popularity or novelty alone is not enough.
-
-Canonical rules must also describe portable engineering procedures rather than workarounds for one agent/runtime quirk; implementation-specific behavior stays in compatibility/adapters/evals until a generic need is demonstrated.
-
-See [core/CONTINUOUS_IMPROVEMENT.md](core/CONTINUOUS_IMPROVEMENT.md).
-
----
+See [docs/learning.md](docs/learning.md) and [core/CONTINUOUS_IMPROVEMENT.md](core/CONTINUOUS_IMPROVEMENT.md).
 
 ## What gets installed
 
@@ -415,32 +194,22 @@ your-project/
         └── VERSION
 ```
 
-IssueCraft does **not** pre-create `PROJECT_PROFILE`, `PROJECT_BLUEPRINT`, `PROJECT_RULES.md`, `LEARNINGS.md`, persistent proposals, or `HANDOFF.md`. Persistent project knowledge follows the appropriate human gate; `HANDOFF.md` is created only when unfinished work actually needs resumable state.
+Project-owned state such as `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, proposals and `HANDOFF.md` is created only when the workflow actually needs it and the relevant gate is satisfied.
 
----
-
-## Updating IssueCraft in a project
-
-Update this repository, then reinstall only the runtime:
+## Update IssueCraft in a project
 
 ```bash
 git pull
 python scripts/install.py /path/to/your-project --overwrite-system
 ```
 
-`--overwrite-system` replaces the installed IssueCraft runtime/adapters while preserving project-owned state under `.implement-issue/`.
+`--overwrite-system` replaces only IssueCraft runtime/adapters and preserves project-owned state.
 
----
+Manual installation without Python is documented in [docs/install.md](docs/install.md).
 
-## Install without Python
+## Verify this repository
 
-Python is only the convenience installer. Manual installation is documented in [docs/install.md](docs/install.md).
-
----
-
-## Verify the repository
-
-Run the same deterministic layers used by CI:
+Run the deterministic validation layers:
 
 ```bash
 python scripts/validate_repo.py
@@ -449,73 +218,45 @@ python scripts/run_live_evals.py validate
 python -m unittest discover tests -v
 ```
 
-CI runs these on Linux, macOS and Windows.
+For IssueCraft's own branch-aware code-coverage gate:
 
-The 52 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
-
----
-
-## Repository structure
-
-```text
-issuecraft-workflow/
-├── core/                 # canonical provider/stack-neutral behavior
-├── schemas/              # Profile and Blueprint contracts
-├── templates/            # generated/project-state templates
-├── docs/                 # installation, architecture and examples
-├── evals/                # behavioral scenarios
-├── tests/                # repository/invariant tests
-├── scripts/              # installer, validator, eval runner, release tooling
-├── .agents/skills/       # Codex/Antigravity entry point
-├── .claude/skills/       # Claude Code entry point
-├── manifest.json
-├── VERSION
-└── README.md
+```bash
+python -m pip install -r requirements-dev.txt
+python -m coverage erase
+python -m coverage run --branch --source=scripts -m unittest discover tests -v
+python -m coverage run --append --branch --source=scripts scripts/validate_repo.py
+python -m coverage run --append --branch --source=scripts scripts/run_evals.py
+python -m coverage run --append --branch --source=scripts scripts/run_live_evals.py validate
+python -m coverage report --show-missing --fail-under=90
 ```
 
-The normative execution contract is [core/WORKFLOW.md](core/WORKFLOW.md).
+CI runs the main suite across Linux, macOS and Windows and enforces the coverage gate separately.
 
----
+## Documentation
+
+- [Installation](docs/install.md)
+- [Architecture](docs/architecture.md)
+- [Agent compatibility](docs/compatibility.md)
+- [Release compatibility smoke checks](docs/compatibility-release.md)
+- [Testing and coverage](docs/testing.md)
+- [Manual validation and Done gate](docs/validation.md)
+- [Controlled learning](docs/learning.md)
+- [Project runtime files](docs/project-files.md)
 
 ## Troubleshooting
 
-### The agent does not see `implement-issue`
+If the agent does not see `implement-issue`, confirm the adapter exists in the target repository and restart/reload the agent workspace if its skill discovery requires it.
 
-Confirm the workflow was installed into the same repository/workspace opened by the agent and that the appropriate skill file exists:
+If the runtime already exists, update with `--overwrite-system`.
 
-```text
-.agents/skills/implement-issue/SKILL.md
-.claude/skills/implement-issue/SKILL.md
-```
+If a discovered project fact is wrong, correct the proposal before approving it. IssueCraft must preserve evidence/conflicts rather than silently inventing facts.
 
-Restart/reload the agent workspace if its skill discovery is cached.
-
-### The runtime is already installed
-
-Use:
-
-```bash
-python scripts/install.py /path/to/your-project --overwrite-system
-```
-
-Project-owned state is preserved.
-
-### A first-run fact is wrong
-
-Do not approve the proposed Profile/Blueprint as-is. Correct the fact, provide the evidence if needed, and let IssueCraft reconcile the proposal before persistence.
-
-### A test cannot run
-
-IssueCraft should safely probe the check or its prerequisite/capability when reasonable, then report it as `unavailable` with evidence and use the strongest safe alternative. It must not report a false pass or run a destructive/high-load action merely to prove unavailability.
-
----
+If an applicable test cannot run, IssueCraft reports it as `unavailable`; it does not convert that state into `pass`.
 
 ## Contributing
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md). Generic behavior changes should include a concrete scenario and deterministic regression/eval coverage.
-
-Security reports should follow [SECURITY.md](SECURITY.md).
+Read [CONTRIBUTING.md](CONTRIBUTING.md). Generic behavior changes should include regression/eval evidence and preserve provider/stack neutrality.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
