@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(49, len(contract_evals.EVALS))
+        self.assertEqual(52, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -372,6 +372,65 @@ class RepositoryTests(unittest.TestCase):
 
         self.assertTrue((ROOT / "evals/scenarios/48-semantic-output-economy.md").is_file())
         self.assertTrue((ROOT / "evals/scenarios/49-token-economy-evidence.md").is_file())
+
+    def test_v013_project_language_guardrails_and_diagnostics(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        discovery = (ROOT / "core/PROJECT_DISCOVERY.md").read_text(encoding="utf-8")
+        learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
+        tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8")
+        rules = (ROOT / "templates/PROJECT_RULES.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "project language authority for the relevant domain",
+            "Prefer pointers to the source over copied glossary text",
+            "surface the conflict instead of silently normalizing it",
+            "Do not rename unaffected code, interfaces, data, or external contracts",
+            "Diagnostic feedback loop and reset",
+            "tightest feasible feedback signal",
+            "not a universal prerequisite",
+            "re-run the original diagnostic signal/reproducer",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "project rules, architecture and domain language",
+            "propose only the source pointer and its scope",
+            "do not copy the glossary",
+            "record the conflict rather than silently choosing a synonym",
+        ):
+            self.assertIn(phrase.lower(), discovery.lower())
+
+        for phrase in (
+            "Deterministic enforcement preference",
+            "mechanically decidable",
+            "prefer that deterministic guardrail over duplicating the same meaning as prose",
+            "implement it only when the current request/scope authorizes the change",
+            "capture it as an improvement proposal",
+        ):
+            self.assertIn(phrase.lower(), learning.lower())
+
+        for phrase in (
+            "strongest feasible diagnostic feedback signal",
+            "A regression test at the correct seam is preferred when practical",
+            "do not require test-first ceremony",
+            "original diagnostic signal",
+        ):
+            self.assertIn(phrase.lower(), tests.lower())
+
+        for phrase in (
+            "Domain vocabulary sources",
+            "Store pointers and scope here, not copied glossary content",
+            "mechanically decidable constraint",
+            "executable project guardrail",
+        ):
+            self.assertIn(phrase.lower(), rules.lower())
+
+        for rel in (
+            "evals/scenarios/50-project-language-continuity.md",
+            "evals/scenarios/51-deterministic-guardrail-preference.md",
+            "evals/scenarios/52-tight-diagnostic-feedback.md",
+        ):
+            self.assertTrue((ROOT / rel).is_file())
 
     def test_profile_schema_has_security_performance_and_test_discovery(self):
         schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))
