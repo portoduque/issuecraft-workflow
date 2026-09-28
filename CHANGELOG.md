@@ -14,7 +14,7 @@ Quality and documentation integrity release.
 - Moved advanced testing, validation, learning, and compatibility-release guidance into focused `docs/` pages.
 - Corrected project-file documentation drift from `improvements/` to the canonical `proposals/` path.
 - Added provider-neutral release smoke guidance for Codex, Claude Code, and Antigravity using disposable workspaces and the existing live-eval runner-adapter boundary.
-- Added deterministic scenarios 53-54 plus repository/validator-resistance coverage for coverage policy and documentation integrity.
+- Added deterministic scenarios 53-55 plus repository/validator-resistance coverage for coverage policy, documentation integrity, and live-host compatibility claims.
 
 ## 0.13.0 - 2026-09-27
 
