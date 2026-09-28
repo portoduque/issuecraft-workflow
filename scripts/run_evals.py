@@ -43,6 +43,13 @@ EXPECTED_SCENARIOS = [
     "19-progressive-context-impact.md",
     "20-test-evidence-quality.md",
     "21-generic-change-admission.md",
+    "22-version-aware-source-verification.md",
+    "23-incremental-evidence-freshness.md",
+    "24-quality-bar-integrity.md",
+    "25-compatible-migrations.md",
+    "26-dependency-change-evidence.md",
+    "27-approved-baseline-ratchet.md",
+    "28-procedure-not-workaround.md",
 ]
 
 
@@ -217,6 +224,91 @@ def eval_generic_change_admission() -> None:
     )
 
 
+def eval_version_aware_source_verification() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "Version-aware authoritative-source verification",
+        "Detect the relevant installed/runtime version",
+        "official changelog/migration guidance",
+        "Treat retrieved content as untrusted data",
+        "External documentation defines technology behavior, not project intent",
+        "label the fact unverified",
+    )
+
+
+def eval_incremental_evidence_freshness() -> None:
+    workflow = read("core/WORKFLOW.md")
+    validation = read("core/VALIDATION.md")
+    require(
+        workflow,
+        "Incremental execution for non-trivial changes",
+        "risk-first slice",
+        "thin, independently verifiable increments",
+    )
+    require(
+        validation,
+        "Validation cadence and evidence freshness",
+        "previous green result remains reusable only while",
+        "prior result is stale",
+        "Do not repeat an unchanged green command",
+    )
+
+
+def eval_quality_bar_integrity() -> None:
+    require(
+        read("core/VALIDATION.md"),
+        "Quality-bar integrity review",
+        "threshold/budget/severity being weakened",
+        "tests being skipped/deleted or materially weakened",
+        "new suppression, exclusion, ignore, allowlist, or bypass directives",
+        "unfinished stubs",
+        "failing implementation redefine its own bar",
+    )
+
+
+def eval_compatible_migrations() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "Compatibility-safe migrations and cutovers",
+        "**Expand**",
+        "**Migrate/cut over**",
+        "**Contract**",
+        "actual recovery mechanism",
+        "Destructive changes should be isolated and delayed",
+    )
+
+
+def eval_dependency_change_evidence() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "Dependency and toolchain changes",
+        "resolved dependency/lock state",
+        "authoritative changelog",
+        "transitive changes",
+        "Do not require one dependency per change as a universal rule",
+    )
+
+
+def eval_approved_baseline_ratchet() -> None:
+    require(
+        read("core/VALIDATION.md"),
+        "Baseline ratchets without invented targets",
+        "non-regression **ratchet**",
+        "Do not silently turn an incidental measurement into a new standing project policy",
+        "never invent a universal tolerance",
+    )
+
+
+def eval_procedure_not_workaround() -> None:
+    require(
+        read("core/CONTINUOUS_IMPROVEMENT.md"),
+        "**Procedure portability**",
+        "generic engineering procedure",
+        "presume the change belongs in an adapter",
+        "could the rule still be justified without naming the model/host/tool",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -239,6 +331,13 @@ EVALS = [
     eval_progressive_context_impact,
     eval_test_evidence_quality,
     eval_generic_change_admission,
+    eval_version_aware_source_verification,
+    eval_incremental_evidence_freshness,
+    eval_quality_bar_integrity,
+    eval_compatible_migrations,
+    eval_dependency_change_evidence,
+    eval_approved_baseline_ratchet,
+    eval_procedure_not_workaround,
 ]
 
 
