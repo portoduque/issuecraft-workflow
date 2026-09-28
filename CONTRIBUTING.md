@@ -65,6 +65,9 @@ Changes that affect the canonical workflow must preserve:
 - compact user-facing handoffs without loss of material evidence, failures, unavailable checks, risks, or human gates;
 - semantic output economy: state material facts once, avoid routine tool narration, preserve decision-bearing qualifiers/identifiers/values/statuses/errors/decisions, and prefer source-side narrowing when available;
 - token-economy changes must justify net recurring benefit rather than output length alone, using a minimal terse control when practical to isolate marginal value;
+- project-language continuity: consume relevant project-owned glossary/terminology sources on demand, prefer approved pointers over duplicated glossary text, surface authority conflicts, and avoid unrelated lexical renames;
+- deterministic-guardrail preference: mechanically decidable project rules should use proportionate existing executable enforcement when authorized, while judgement calls remain prose and unrelated work does not silently grow tooling scope;
+- diagnostic feedback loops for difficult/intermittent/performance defects should target the real symptom with the tightest feasible signal before speculative edits, without imposing universal TDD or requiring a local RED test when stronger runtime evidence is necessary;
 - human ownership of persistent learning, material risk acceptance, and final `Done`; recurrence may strengthen evidence but never auto-adopt behavior;
 - installer protection against managed symlink redirection;
 - release archives free from VCS metadata and local caches;
