@@ -2,6 +2,18 @@
 
 The workflow should be autonomous for normal reversible engineering work and should not repeatedly pause for approval. The following gates are mandatory.
 
+## Approval scope integrity
+
+Human approval for a gate is scoped to the **material action or decision actually presented for review**. Approval is not a reusable token for a later operation that is materially different.
+
+When requesting approval, describe the action/decision precisely enough for the human to understand the relevant target/environment, material scope/effects, known risk, and any precondition whose change could alter what is being authorized. Before crossing the gate, revalidate the material context needed for that action.
+
+If the target/environment, material scope, effects, risk, or a material precondition has changed enough that the reviewed action is no longer substantively the same, treat the approval as **stale**: show the material delta and obtain fresh approval before proceeding. Do not silently recompute or expand a gated operation after approval.
+
+Do not turn this rule into approval ceremony for ordinary reversible implementation details. Local replanning, equivalent mechanics, and other non-material execution details remain autonomous when they do not change what the human authorized.
+
+Approval for one target, environment, operation, or risk acceptance does not imply authorization for another. A materially distinct rollback, recovery, cleanup, destructive correction, or production-impacting follow-up is evaluated under its own applicable gate rather than inheriting authorization merely because it responds to an already-approved action.
+
 ## Gate A — create/update project knowledge
 
 Explicit human approval is required before persisting a newly inferred/proposed `PROJECT_PROFILE` or `PROJECT_BLUEPRINT`, and before changing material facts/decisions in them due to discovery or drift.
