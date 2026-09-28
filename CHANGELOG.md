@@ -2,6 +2,26 @@
 
 All notable changes are documented here.
 
+## 0.9.0 - 2026-09-27
+
+Behavior-delta, preservation, and change-coherence release.
+
+- Added current-contract -> requested-delta -> resulting-contract reasoning for material behavior changes without introducing persistent spec files or an artifact-graph runtime.
+- Added semantic handling for added, modified, removed, renamed/preserved, and unchanged-but-at-risk behavior.
+- Added preservation obligations so modifying one contract member cannot silently drop existing scenarios, fields, states, roles, error paths, or compatibility behavior that the issue did not supersede.
+- Added scope integrity: required behavior cannot be silently narrowed, deferred, waived, or redefined merely because implementation is harder than expected.
+- Added material issue intent/scope drift gating while preserving autonomous local/reversible replanning for the same accepted outcome.
+- Added change-coherence review across issue/acceptance criteria, project contracts, behavior delta, implementation diff, automated evidence, and manual validation.
+- Added material-diff justification traceability and actionable evidence-backed findings.
+- Added partial-evidence semantics: proven subsets remain useful but never upgrade unverified material members to a full pass.
+- Clarified that compact output is a projection of the complete validation result, never reduced validation scope.
+- Added mutable-authority rereads at resume/material phase transitions and the rule that reference/read scope does not grant mutation authority.
+- Added proportional planning rigor and active-change overlap as advisory coordination risk unless an explicit/evidenced dependency establishes ordering.
+- Added observable-behavior-over-implementation-detail testing guidance and regression protection against silent scenario/obligation loss.
+- Expanded deterministic contract coverage from 33 to 40 scenarios and extended validator mutation-resistance coverage.
+- Added one optional provider-neutral live-agent fixture for modified-contract preservation.
+- Preserved provider/stack neutrality and deliberately did not add persistent specs, custom workflow schemas, artifact DAGs, archive machinery, mandatory planning pauses, or a multi-repository orchestration engine.
+
 ## 0.8.0 - 2026-09-27
 
 Evidence-strength and resumability release.
