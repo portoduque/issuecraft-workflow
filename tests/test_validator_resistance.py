@@ -83,6 +83,24 @@ class ValidatorResistanceTests(unittest.TestCase):
                     "Change review",
                     "validation v0.9 coherence contract missing phrase",
                 )
+                mutate_text(
+                    "core/WORKFLOW.md",
+                    "Solution economy and root-cause placement",
+                    "Implementation preference",
+                    "workflow v0.10 solution-economy contract missing phrase",
+                )
+                mutate_text(
+                    "core/TEST_STRATEGY.md",
+                    "Proof floor before solution economy",
+                    "Implementation proof",
+                    "test v0.10 proof-floor contract missing phrase",
+                )
+                mutate_text(
+                    "core/VALIDATION.md",
+                    "Solution-economy / ownership review",
+                    "Implementation-size review",
+                    "validation v0.10 solution-economy contract missing phrase",
+                )
 
                 manifest_path = sandbox / "manifest.json"
                 manifest_original = manifest_path.read_text(encoding="utf-8")
@@ -97,12 +115,12 @@ class ValidatorResistanceTests(unittest.TestCase):
                 manifest_path.write_text(manifest_original, encoding="utf-8")
                 self.assertEqual([], validator.validate())
 
-                scenario = sandbox / "evals/scenarios/40-progressive-planning-overlap.md"
+                scenario = sandbox / "evals/scenarios/46-live-eval-methodology.md"
                 scenario_bytes = scenario.read_bytes()
                 scenario.unlink()
                 errors = validator.validate()
                 self.assertTrue(
-                    any("expected 40 behavioral eval scenarios" in error for error in errors),
+                    any("expected 46 behavioral eval scenarios" in error for error in errors),
                     f"scenario-count mutant survived; errors={errors}",
                 )
                 scenario.write_bytes(scenario_bytes)
