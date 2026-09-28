@@ -126,6 +126,12 @@
           "items": {
             "$ref": "#/$defs/fact"
           }
+        },
+        "coverage_policy": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fact"
+          }
         }
       },
       "additionalProperties": true
@@ -164,6 +170,12 @@
           }
         },
         "typecheck": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/command"
+          }
+        },
+        "coverage": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/command"
