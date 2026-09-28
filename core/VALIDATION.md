@@ -28,6 +28,15 @@ An applicable check should be labeled `unavailable` only after proportionate evi
 
 A narrative assumption such as "the environment probably cannot run this" is not enough. Do not perform a destructive, production-impacting, externally mutating, or expensive/high-load action merely to prove unavailability; in those cases, use the strongest safe prerequisite/capability evidence available.
 
+### Partial evidence is not full verification
+
+Evidence can support part of an obligation without proving the whole obligation. Preserve that distinction.
+
+- If a multi-part requirement has six material members and only four are proven, report four proven and two unverified; do not upgrade the parent obligation to `pass`.
+- A readable subset of artifacts, tests, environments, paths, roles, or cases does not make the missing subset pass.
+- Continue validating whatever evidence is available, but label the unsupported portion explicitly.
+- An overall `pass` requires evidence for every material applicable member, except members correctly classified `not_applicable`.
+
 ## Validation cadence and evidence freshness
 
 Order validation by information value, risk, and cost rather than running every check after every edit.
@@ -45,7 +54,7 @@ This cadence optimizes feedback without reducing final validation depth.
 
 ## Reporting validation evidence
 
-Preserve complete validation evidence, but compress routine presentation:
+Preserve complete validation evidence, but compress routine presentation. **Compact output must be a projection of the complete validation result, never a reduced validation scope.** The same applicable checks, material obligations, verdicts, failures, unavailable checks, and risk decisions must exist before presentation is compressed:
 
 - Detailed command/action, rationale, result, and evidence belong in the execution/validation artifact or equivalent durable record when available.
 - In chat, group routine successful checks into a compact summary instead of narrating each one.
@@ -60,14 +69,44 @@ Preserve complete validation evidence, but compress routine presentation:
 
 Before entering `In Review`, review the changed surfaces against the issue, acceptance criteria, impact reconnaissance, and surrounding contracts/tests.
 
+Every **material diff change needs justification traceability** to at least one legitimate source: issue/acceptance requirement, established repository/project invariant, security/performance/reliability/compatibility obligation, or a necessary enabling change for one of those. Unjustified material change is a scope/coherence concern, not free cleanup.
+
 Only report a review finding when there is enough evidence to state:
 
 - the concrete affected location/surface;
 - a plausible failure/risk mechanism;
 - supporting repository/test/runtime evidence;
-- a severity justified by impact and likelihood rather than by a need to produce findings.
+- a severity justified by impact and likelihood rather than by a need to produce findings;
+- a specific corrective action when the evidence makes one known.
 
 A clean review may legitimately produce zero findings. Do not invent nits or inflate severity to make the review look productive.
+
+### Behavior-delta verification
+
+When the issue materially changes behavior or a contract, verify the resulting state according to the delta semantics established during planning:
+
+- **added** — the new behavior exists and its material scenarios/obligations are proven;
+- **modified** — the requested new behavior is proven **and preservation obligations remain intact**; do not let a partial rewrite silently erase existing scenarios, fields, states, roles, compatibility behavior, or error paths that were not explicitly removed;
+- **removed** — the old behavior is no longer delivered where removal is required; finding no implementation is expected, not a reason to re-add it;
+- **renamed/preserved** — the semantic behavior remains; do not require internal code-symbol/file renames unless they are part of the actual contract;
+- **unchanged-but-at-risk** — nearby behavior exposed to regression by the diff remains intact with proportionate evidence.
+
+When the baseline cannot be established from evidence, report the relevant preservation/delta claim as unverified rather than inventing what used to be true.
+
+### Change coherence review
+
+Before `In Review`, reconcile the whole change as one contract:
+
+1. issue intent and acceptance criteria;
+2. applicable project/repository contracts and rules;
+3. current-contract -> requested-delta -> resulting-contract model when applicable;
+4. implementation diff;
+5. automated test/validation evidence;
+6. issue-specific manual validation plan.
+
+Look for contradictions in **any direction**, including code that implements behavior the issue did not authorize, tests that prove a different outcome than the issue requires, accepted behavior omitted from the diff, preservation obligations lost during a modification, or a manual plan that fails to exercise a material changed risk.
+
+A plan is not authoritative merely because it was written earlier. Current issue/project contracts plus repository evidence control; revise local/reversible plan assumptions when they are disproven. Material issue-intent/scope changes remain human decisions.
 
 For tests specifically, apply the evidence rules from `TEST_STRATEGY.md`:
 
@@ -119,7 +158,7 @@ Include when applicable:
 3. **Setup** — exact preparation steps without secret values.
 4. **Happy-path scenarios** — numbered actions and expected result after each meaningful step.
 5. **Edge/error scenarios** — boundaries introduced or affected by the change.
-6. **Regression checks** — nearby behavior most likely to break because of the diff.
+6. **Regression/preservation checks** — nearby behavior most likely to break because of the diff, including unchanged obligations on a modified surface that the issue did not authorize removing.
 7. **Security checks** — authorization, isolation, sensitive data, negative inputs, trust boundaries, or other changed security surfaces when relevant.
 8. **Performance/reliability checks** — responsiveness, representative workload, resource behavior, concurrency, or budgets when relevant.
 9. **Cross-surface/device/accessibility/compatibility checks** — only when relevant.
