@@ -1,10 +1,16 @@
 {
   "example-runner": {
-    "command": ["path/to/your/runner-adapter"],
+    "command": [
+      "path/to/your/runner-adapter"
+    ],
     "candidate_invocation": "/implement-issue",
     "supports_multiturn": true,
     "timeout_seconds": 600,
     "environment": {},
-    "notes": "The adapter should isolate personal agent configuration and limit tool access to the provided temporary workspace."
+    "notes": "The adapter should isolate personal agent configuration and limit tool access to the provided temporary workspace.",
+    "isolation": {
+      "verified": false,
+      "evidence": "Set verified=true only after the adapter proves personal/global plugins, instructions, memory/config, and IssueCraft activation cannot leak between baseline and candidate conditions."
+    }
   }
 }
