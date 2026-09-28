@@ -50,6 +50,11 @@ EXPECTED_SCENARIOS = [
     "26-dependency-change-evidence.md",
     "27-approved-baseline-ratchet.md",
     "28-procedure-not-workaround.md",
+    "29-evidence-or-zero-compound.md",
+    "30-probe-before-unavailable.md",
+    "31-risk-based-discrimination.md",
+    "32-resumable-handoff.md",
+    "33-one-way-door-gate.md",
 ]
 
 
@@ -309,6 +314,69 @@ def eval_procedure_not_workaround() -> None:
     )
 
 
+def eval_evidence_or_zero_compound() -> None:
+    tests = read("core/TEST_STRATEGY.md")
+    validation = read("core/VALIDATION.md")
+    require(
+        tests,
+        "Evidence-or-zero",
+        "Compound obligation decomposition",
+        "Verification precision gaps",
+        "Related tests exist",
+        "unproven/unverified",
+    )
+    require(
+        validation,
+        "evidence-or-zero",
+        "decompose compound/enumerated requirements",
+        "verification precision gaps",
+    )
+
+
+def eval_probe_before_unavailable() -> None:
+    require(
+        read("core/VALIDATION.md"),
+        "Probe before `unavailable`",
+        "safe execution attempt",
+        "safe prerequisite/capability probe",
+        "narrative assumption",
+        "Do not perform a destructive",
+    )
+
+
+def eval_risk_based_discrimination() -> None:
+    require(
+        read("core/TEST_STRATEGY.md"),
+        "Risk-based discrimination checks",
+        "isolated disposable state",
+        "surviving fault",
+        "do not require mutation/fault injection for every issue",
+        "universal number of mutations",
+    )
+
+
+def eval_resumable_handoff() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "Session handoff and resume",
+        ".implement-issue/HANDOFF.md",
+        "resume hypothesis",
+        "Reconcile it against current repository/VCS state",
+        "current evidence win over stale narrative",
+        "Replace or clear the handoff",
+    )
+
+
+def eval_one_way_door_gate() -> None:
+    require(
+        read("core/HUMAN_GATES.md"),
+        "Gate G — hard-to-reverse implementation decisions",
+        "explicit human decision",
+        "genuine one-way doors",
+        "ordinary local implementation choices",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -338,6 +406,11 @@ EVALS = [
     eval_dependency_change_evidence,
     eval_approved_baseline_ratchet,
     eval_procedure_not_workaround,
+    eval_evidence_or_zero_compound,
+    eval_probe_before_unavailable,
+    eval_risk_based_discrimination,
+    eval_resumable_handoff,
+    eval_one_way_door_gate,
 ]
 
 
