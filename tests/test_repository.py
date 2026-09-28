@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(55, len(contract_evals.EVALS))
+        self.assertEqual(59, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -162,8 +162,8 @@ class RepositoryTests(unittest.TestCase):
             self.assertIn(phrase.lower(), validation.lower())
 
         for phrase in (
-            "Session handoff and resume",
-            ".implement-issue/HANDOFF.md",
+            "Issue-scoped execution artifacts, handoff and resume",
+            ".implement-issue/issues/<issue-key>/HANDOFF.md",
             "resume hypothesis",
             "current evidence win over stale narrative",
         ):
@@ -528,6 +528,7 @@ class RepositoryTests(unittest.TestCase):
                 "docs/validation.md",
                 "docs/learning.md",
                 "docs/compatibility-release.md",
+                "docs/parallel-work.md",
             ):
                 self.assertIn(required, readme)
 
@@ -572,6 +573,66 @@ class RepositoryTests(unittest.TestCase):
             "evals/scenarios/53-code-coverage-quality-guard.md",
             "evals/scenarios/54-readme-manual-done-integrity.md",
             "evals/scenarios/55-agent-compatibility-release-smoke.md",
+        ):
+            self.assertTrue((ROOT / rel).is_file())
+
+    def test_v015_parallel_work_safety_contracts(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        lifecycle = (ROOT / "core/ISSUE_LIFECYCLE.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
+        project_files = (ROOT / "docs/project-files.md").read_text(encoding="utf-8")
+        parallel = (ROOT / "docs/parallel-work.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "parallel-work preflight",
+            "same physical working tree",
+            "prefer an already-isolated workspace/worktree/checkout",
+            "Known parallel work is a coordination input",
+            ".implement-issue/issues/<issue-key>/HANDOFF.md",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "Parallel issue work should remain concurrent when safely isolated",
+            "Known concurrent mutation inside the same physical working tree is an unsafe execution condition",
+            ".implement-issue/issues/<issue-key>/",
+        ):
+            self.assertIn(phrase.lower(), lifecycle.lower())
+
+        for phrase in (
+            "Integration freshness before In Review",
+            "mark only dependent validation evidence stale",
+            "Do not perform an automatic rebase/merge solely because the base moved",
+            "selective invalidation",
+            ".implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        for phrase in (
+            "Shared project-state write freshness",
+            "re-read the current target state",
+            "reconcile rather than overwriting the newer state",
+            "optimistic concurrency",
+        ):
+            self.assertIn(phrase.lower(), gates.lower())
+
+        for phrase in ("issues/", "<issue-key>", "HANDOFF.md", "MANUAL_VALIDATION_PLAN.md", "ISSUE_EXECUTION_REPORT.md"):
+            self.assertIn(phrase.lower(), project_files.lower())
+
+        for phrase in (
+            "There is no lock server, heartbeat, agent registry, or database",
+            "same physical working tree",
+            "IssueCraft does not auto-rebase or auto-merge",
+            "Legacy artifacts",
+        ):
+            self.assertIn(phrase.lower(), parallel.lower())
+
+        for rel in (
+            "evals/scenarios/56-parallel-isolated-issues.md",
+            "evals/scenarios/57-same-workspace-concurrent-mutation.md",
+            "evals/scenarios/58-shared-state-optimistic-concurrency.md",
+            "evals/scenarios/59-integration-freshness.md",
         ):
             self.assertTrue((ROOT / rel).is_file())
 
