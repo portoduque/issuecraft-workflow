@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(52, len(contract_evals.EVALS))
+        self.assertEqual(55, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -438,10 +438,11 @@ class RepositoryTests(unittest.TestCase):
         self.assertIn("testing_tools", observed)
         self.assertIn("security_tools", observed)
         self.assertIn("performance_tools", observed)
+        self.assertIn("coverage_policy", observed)
         command_props = schema["$defs"]["command"]["properties"]
         self.assertIn("kind", command_props)
         commands = schema["properties"]["commands"]["properties"]
-        for key in ("security", "benchmark", "performance", "load", "stress", "accessibility", "compatibility", "recovery"):
+        for key in ("security", "benchmark", "performance", "load", "stress", "accessibility", "compatibility", "recovery", "coverage"):
             self.assertIn(key, commands)
 
     def test_install_preserves_project_owned_state(self):
@@ -517,6 +518,62 @@ class RepositoryTests(unittest.TestCase):
                 self.assertIn(required, readme)
             self.assertNotIn("<REPOSITORY_URL>", readme)
             self.assertNotIn("<URL_DO_REPOSITORIO>", readme)
+            self.assertLessEqual(len(readme.splitlines()), 350)
+            for required in (
+                "MANUAL_VALIDATION_PLAN.md",
+                "PASS",
+                "FAIL",
+                "PARTIAL / NOT RUN",
+                "docs/testing.md",
+                "docs/validation.md",
+                "docs/learning.md",
+                "docs/compatibility-release.md",
+            ):
+                self.assertIn(required, readme)
+
+    def test_v014_coverage_and_documentation_integrity(self):
+        tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8")
+        discovery = (ROOT / "core/PROJECT_DISCOVERY.md").read_text(encoding="utf-8")
+        project_files = (ROOT / "docs/project-files.md").read_text(encoding="utf-8")
+        compatibility = (ROOT / "docs/compatibility-release.md").read_text(encoding="utf-8")
+        ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+        requirements = (ROOT / "requirements-dev.txt").read_text(encoding="utf-8").strip()
+
+        for phrase in (
+            "quality signal and regression guard",
+            "Preserve or improve an established coverage threshold/baseline",
+            "materially new or changed executable code",
+            "do not silently install a framework or invent a universal percentage",
+        ):
+            self.assertIn(phrase.lower(), tests.lower())
+
+        for phrase in ("code-coverage tooling/policy", "executable coverage command", "existing threshold/baseline"):
+            self.assertIn(phrase.lower(), discovery.lower())
+
+        self.assertIn("proposals/", project_files)
+        self.assertNotIn("improvements/", project_files)
+
+        for phrase in (
+            "Codex",
+            "Claude Code",
+            "Antigravity",
+            "disposable",
+            "scripts/run_live_evals.py",
+            "structural adapter check",
+            "not the same as a live host smoke result",
+        ):
+            self.assertIn(phrase.lower(), compatibility.lower())
+
+        self.assertEqual("coverage==7.16.1", requirements)
+        self.assertIn("Code coverage / Python 3.13", ci)
+        self.assertIn("--fail-under=90", ci)
+
+        for rel in (
+            "evals/scenarios/53-code-coverage-quality-guard.md",
+            "evals/scenarios/54-readme-manual-done-integrity.md",
+            "evals/scenarios/55-agent-compatibility-release-smoke.md",
+        ):
+            self.assertTrue((ROOT / rel).is_file())
 
     def test_learning_is_persistent_but_human_gated(self):
         learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
@@ -532,6 +589,9 @@ class RepositoryTests(unittest.TestCase):
             self.assertIn(os_name, ci)
         self.assertIn("persist-credentials: false", ci)
         self.assertIn("python scripts/run_evals.py", ci)
+        self.assertIn("Code coverage / Python 3.13", ci)
+        self.assertIn("requirements-dev.txt", ci)
+        self.assertIn("--fail-under=90", ci)
         for line in ci.splitlines():
             if line.strip().startswith("uses:"):
                 self.assertRegex(line.strip(), r"^uses:\s*[^@\s]+@[0-9a-f]{40}(?:\s+#.*)?$")

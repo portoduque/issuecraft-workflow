@@ -21,6 +21,7 @@ observed:
   security_tools: []
   performance_tools: []
   observability_tools: []
+  coverage_policy: []
   ci_cd: []
   architecture: []
 
@@ -31,6 +32,7 @@ commands:
   lint: []
   format_check: []
   typecheck: []
+  coverage: []
   migrate: []
   smoke: []
   security: []

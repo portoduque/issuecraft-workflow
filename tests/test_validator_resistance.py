@@ -141,6 +141,25 @@ class ValidatorResistanceTests(unittest.TestCase):
                     "workflow v0.13 language/diagnostic contract missing phrase",
                 )
 
+                mutate_text(
+                    "core/TEST_STRATEGY.md",
+                    "quality signal and regression guard",
+                    "quality metric",
+                    "test v0.14 coverage contract missing phrase",
+                )
+                mutate_text(
+                    "docs/project-files.md",
+                    "proposals/",
+                    "improvements/",
+                    "project-files docs missing canonical proposals/ path",
+                )
+                mutate_text(
+                    ".github/workflows/ci.yml",
+                    "--fail-under=90",
+                    "--fail-under=80",
+                    "CI coverage gate missing phrase: --fail-under=90",
+                )
+
                 manifest_path = sandbox / "manifest.json"
                 manifest_original = manifest_path.read_text(encoding="utf-8")
                 manifest = json.loads(manifest_original)
@@ -154,12 +173,12 @@ class ValidatorResistanceTests(unittest.TestCase):
                 manifest_path.write_text(manifest_original, encoding="utf-8")
                 self.assertEqual([], validator.validate())
 
-                scenario = sandbox / "evals/scenarios/52-tight-diagnostic-feedback.md"
+                scenario = sandbox / "evals/scenarios/55-agent-compatibility-release-smoke.md"
                 scenario_bytes = scenario.read_bytes()
                 scenario.unlink()
                 errors = validator.validate()
                 self.assertTrue(
-                    any("expected 52 behavioral eval scenarios" in error for error in errors),
+                    any("expected 55 behavioral eval scenarios" in error for error in errors),
                     f"scenario-count mutant survived; errors={errors}",
                 )
                 scenario.write_bytes(scenario_bytes)

@@ -21,6 +21,15 @@ python scripts/validate_repo.py
 python scripts/run_evals.py
 python scripts/run_live_evals.py validate
 python -m unittest discover tests -v
+
+# IssueCraft repository-specific coverage gate
+python -m pip install -r requirements-dev.txt
+python -m coverage erase
+python -m coverage run --branch --source=scripts -m unittest discover tests -v
+python -m coverage run --append --branch --source=scripts scripts/validate_repo.py
+python -m coverage run --append --branch --source=scripts scripts/run_evals.py
+python -m coverage run --append --branch --source=scripts scripts/run_live_evals.py validate
+python -m coverage report --show-missing --fail-under=90
 ```
 
 ## Compatibility adapters
@@ -68,6 +77,9 @@ Changes that affect the canonical workflow must preserve:
 - project-language continuity: consume relevant project-owned glossary/terminology sources on demand, prefer approved pointers over duplicated glossary text, surface authority conflicts, and avoid unrelated lexical renames;
 - deterministic-guardrail preference: mechanically decidable project rules should use proportionate existing executable enforcement when authorized, while judgement calls remain prose and unrelated work does not silently grow tooling scope;
 - diagnostic feedback loops for difficult/intermittent/performance defects should target the real symptom with the tightest feasible signal before speculative edits, without imposing universal TDD or requiring a local RED test when stronger runtime evidence is necessary;
+- coverage integrity: preserve project-defined coverage thresholds/baselines, add direct coverage for materially changed executable behavior when viable, and never lower/exclude/narrow coverage simply to pass;
+- documentation integrity: keep README onboarding concise and copy-pasteable, keep the manual Done procedure explicit, and prevent runtime-path drift such as `proposals/` vs obsolete names;
+- release compatibility claims for Codex/Claude Code/Antigravity must distinguish structural adapter validation from an actually executed disposable live-host smoke.
 - human ownership of persistent learning, material risk acceptance, and final `Done`; recurrence may strengthen evidence but never auto-adopt behavior;
 - installer protection against managed symlink redirection;
 - release archives free from VCS metadata and local caches;

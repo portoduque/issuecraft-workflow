@@ -13,6 +13,13 @@ REQUIRED = [
     "manifest.json",
     "README.md",
     "README.pt-BR.md",
+    ".coveragerc",
+    "requirements-dev.txt",
+    "docs/testing.md",
+    "docs/validation.md",
+    "docs/learning.md",
+    "docs/compatibility-release.md",
+    "docs/project-files.md",
     "core/WORKFLOW.md",
     "core/CAPABILITIES.md",
     "core/EVIDENCE_MODEL.md",
@@ -317,6 +324,22 @@ def check_quality_contracts(errors: list[str]) -> None:
             errors.append(f"test v0.13 diagnostic contract missing phrase: {phrase}")
 
     for phrase in (
+        "quality signal and regression guard",
+        "Preserve or improve an established coverage threshold/baseline",
+        "materially new or changed executable code",
+        "do not silently install a framework or invent a universal percentage",
+    ):
+        if phrase.lower() not in tests.lower():
+            errors.append(f"test v0.14 coverage contract missing phrase: {phrase}")
+    for phrase in (
+        "code-coverage tooling/policy",
+        "executable coverage command",
+        "existing threshold/baseline",
+    ):
+        if phrase.lower() not in discovery.lower():
+            errors.append(f"discovery v0.14 coverage contract missing phrase: {phrase}")
+
+    for phrase in (
         "approval scope integrity",
         "authorization is bound to the material action/decision and target",
         "prior approval is stale",
@@ -376,8 +399,8 @@ def check_learning_contract(errors: list[str]) -> None:
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 52:
-        errors.append(f"expected 52 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 55:
+        errors.append(f"expected 55 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))
@@ -441,11 +464,67 @@ def check_manifest(errors: list[str]) -> None:
 def check_readmes(errors: list[str]) -> None:
     for name in ("README.md", "README.pt-BR.md"):
         text = (ROOT / name).read_text(encoding="utf-8")
-        for phrase in ("IssueCraft Workflow", "git clone https://github.com/portoduque/issuecraft-workflow.git", "cd issuecraft-workflow", "scripts/install.py", "$implement-issue", "/implement-issue", "PROJECT_PROFILE", "PROJECT_BLUEPRINT", "In Review", "Done", "LEARNINGS.md", "--overwrite-system"):
+        for phrase in (
+            "IssueCraft Workflow",
+            "git clone https://github.com/portoduque/issuecraft-workflow.git",
+            "cd issuecraft-workflow",
+            "scripts/install.py",
+            "$implement-issue",
+            "/implement-issue",
+            "PROJECT_PROFILE",
+            "PROJECT_BLUEPRINT",
+            "In Review",
+            "Done",
+            "MANUAL_VALIDATION_PLAN.md",
+            "PASS",
+            "FAIL",
+            "PARTIAL / NOT RUN",
+            "LEARNINGS.md",
+            "--overwrite-system",
+            "docs/testing.md",
+            "docs/validation.md",
+            "docs/learning.md",
+            "docs/compatibility-release.md",
+        ):
             if phrase not in text:
                 errors.append(f"{name} onboarding missing: {phrase}")
+        if len(text.splitlines()) > 350:
+            errors.append(f"{name} onboarding is too long; keep it <=350 lines")
         if "<REPOSITORY_URL>" in text or "<URL_DO_REPOSITORIO>" in text:
             errors.append(f"{name} still contains clone URL placeholder")
+
+
+def check_documentation_integrity(errors: list[str]) -> None:
+    project_files = (ROOT / "docs/project-files.md").read_text(encoding="utf-8")
+    if "proposals/" not in project_files:
+        errors.append("project-files docs missing canonical proposals/ path")
+    if "improvements/" in project_files:
+        errors.append("project-files docs still contain obsolete improvements/ path")
+
+    compatibility = (ROOT / "docs/compatibility-release.md").read_text(encoding="utf-8")
+    for phrase in (
+        "Codex",
+        "Claude Code",
+        "Antigravity",
+        "disposable",
+        "scripts/run_live_evals.py",
+        "structural adapter check",
+        "not the same as a live host smoke result",
+    ):
+        if phrase.lower() not in compatibility.lower():
+            errors.append(f"compatibility release docs missing phrase: {phrase}")
+
+    profile_template = (ROOT / "templates/PROJECT_PROFILE.yaml").read_text(encoding="utf-8")
+    if "coverage_policy:" not in profile_template or "coverage:" not in profile_template:
+        errors.append("project profile template missing coverage policy/command fields")
+
+    schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))
+    observed = schema["properties"]["observed"]["properties"]
+    commands = schema["properties"]["commands"]["properties"]
+    if "coverage_policy" not in observed:
+        errors.append("project profile schema missing observed.coverage_policy")
+    if "coverage" not in commands:
+        errors.append("project profile schema missing commands.coverage")
 
 
 def check_ci_hardening(errors: list[str]) -> None:
@@ -463,6 +542,18 @@ def check_ci_hardening(errors: list[str]) -> None:
         errors.append("CI must execute deterministic contract evals")
     if "python scripts/run_live_evals.py validate" not in text:
         errors.append("CI must validate live-agent eval scenarios offline")
+    for phrase in (
+        "Code coverage / Python 3.13",
+        "requirements-dev.txt",
+        "python -m coverage run",
+        "--branch",
+        "--fail-under=90",
+    ):
+        if phrase not in text:
+            errors.append(f"CI coverage gate missing phrase: {phrase}")
+    requirements = (ROOT / "requirements-dev.txt").read_text(encoding="utf-8").strip()
+    if requirements != "coverage==7.16.1":
+        errors.append("development coverage dependency must stay pinned to coverage==7.16.1")
 
 
 def check_release_hardening(errors: list[str]) -> None:
@@ -487,6 +578,7 @@ def validate() -> list[str]:
     check_human_gates(errors)
     check_manifest(errors)
     check_readmes(errors)
+    check_documentation_integrity(errors)
     check_ci_hardening(errors)
     check_release_hardening(errors)
     return errors

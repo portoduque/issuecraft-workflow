@@ -74,6 +74,9 @@ EXPECTED_SCENARIOS = [
     "50-project-language-continuity.md",
     "51-deterministic-guardrail-preference.md",
     "52-tight-diagnostic-feedback.md",
+    "53-code-coverage-quality-guard.md",
+    "54-readme-manual-done-integrity.md",
+    "55-agent-compatibility-release-smoke.md",
 ]
 
 
@@ -780,6 +783,67 @@ def eval_tight_diagnostic_feedback() -> None:
     )
 
 
+def eval_code_coverage_quality_guard() -> None:
+    tests = read("core/TEST_STRATEGY.md")
+    discovery = read("core/PROJECT_DISCOVERY.md")
+    profile = read("templates/PROJECT_PROFILE.yaml")
+    require(
+        tests,
+        "quality signal and regression guard",
+        "Preserve or improve an established coverage threshold/baseline",
+        "materially new or changed executable code",
+        "do not silently install a framework or invent a universal percentage",
+    )
+    require(
+        discovery,
+        "code-coverage tooling/policy",
+        "executable coverage command",
+        "existing threshold/baseline",
+    )
+    require(profile, "coverage_policy:", "coverage:")
+
+
+def eval_readme_manual_done_integrity() -> None:
+    readme = read("README.md")
+    readme_pt = read("README.pt-BR.md")
+    project_files = read("docs/project-files.md")
+    for text in (readme, readme_pt):
+        require(
+            text,
+            "git clone https://github.com/portoduque/issuecraft-workflow.git",
+            "scripts/install.py",
+            "$implement-issue",
+            "/implement-issue",
+            "MANUAL_VALIDATION_PLAN.md",
+            "PASS",
+            "FAIL",
+            "PARTIAL / NOT RUN",
+            "--overwrite-system",
+        )
+    if len(readme.splitlines()) > 350 or len(readme_pt.splitlines()) > 350:
+        raise AssertionError("README onboarding must remain concise (<=350 lines per language)")
+    require(project_files, "proposals/", "human-approved persisted improvement proposals")
+    if "improvements/" in project_files:
+        raise AssertionError("obsolete improvements/ proposal path remains documented")
+
+
+def eval_agent_compatibility_release_smoke() -> None:
+    compatibility = read("docs/compatibility-release.md")
+    core = read("core/WORKFLOW.md")
+    require(
+        compatibility,
+        "Codex",
+        "Claude Code",
+        "Antigravity",
+        "disposable",
+        "scripts/run_live_evals.py",
+        "structural adapter check",
+        "not the same as a live host smoke result",
+    )
+    if VENDOR_TERMS.search(core):
+        raise AssertionError("provider-specific compatibility behavior leaked into canonical core")
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -833,6 +897,9 @@ EVALS = [
     eval_project_language_continuity,
     eval_deterministic_guardrail_preference,
     eval_tight_diagnostic_feedback,
+    eval_code_coverage_quality_guard,
+    eval_readme_manual_done_integrity,
+    eval_agent_compatibility_release_smoke,
 ]
 
 

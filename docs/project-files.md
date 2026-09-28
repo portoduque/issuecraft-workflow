@@ -16,7 +16,7 @@ After installation, the target repository receives `.implement-issue/system/` co
 ├── DRIFT_REPORT.md             # created when useful
 ├── MANUAL_VALIDATION_PLAN.md   # generated for current In Review handoff
 ├── HANDOFF.md                  # optional resume snapshot for interrupted/incomplete work
-└── improvements/               # optional proposals
+└── proposals/                  # human-approved persisted improvement proposals
 ```
 
 ## Source-of-truth rules

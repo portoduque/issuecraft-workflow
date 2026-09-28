@@ -26,3 +26,7 @@ Official references:
 ## Compatibility rule
 
 If an agent surface later changes how skills are discovered, update only the adapter/installer/docs unless the open workflow semantics themselves changed. Provider behavior must not leak into `core/`.
+
+## Release verification
+
+Structural adapter checks are not equivalent to live host verification. For adapter/invocation changes and periodic release confidence, use the disposable smoke procedure in [compatibility-release.md](compatibility-release.md).
