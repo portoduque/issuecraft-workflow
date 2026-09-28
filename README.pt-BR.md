@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.8.0  
+**Versão:** 0.9.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -71,9 +71,11 @@ Existe um único workflow canônico `implement-issue` que:
 - exige aprovação humana antes de persistir conhecimento importante do projeto;
 - detecta drift nas execuções futuras;
 - planeja e implementa a menor mudança coerente que atende a issue;
+- modela mudanças materiais como contrato atual → delta solicitado → contrato resultante, preservando obrigações existentes não alteradas;
 - faz triagem obrigatória de segurança e performance;
 - escolhe testes conforme o risco, sem depender de framework específico;
 - exige evidence-or-zero para obrigações materiais, decompõe requisitos compostos e usa discrimination checks direcionados quando a força do teste é materialmente incerta;
+- preserva integridade de escopo: replanning local/reversível continua autônomo, mas drift material de intenção/escopo da issue exige decisão humana;
 - conduz `In Progress → In Review → validação humana → Done`;
 - gera um roteiro manual específico da issue ao entrar em `In Review`;
 - aprende com o uso real, mas mantém persistência e adoção sob controle humano.
@@ -91,6 +93,8 @@ A regra é:
 Os detalhes ficam nos artefatos duráveis do projeto, como Profile, relatório de drift, plano de validação, relatório de execução ou proposta de melhoria. No chat, o IssueCraft prioriza estado atual, mudanças materiais, falhas/checks indisponíveis, riscos residuais, decisão humana necessária e próxima ação.
 
 Checks rotineiros que passaram podem ser agrupados; casos `not_applicable` podem ser resumidos. Falhas, validações indisponíveis, riscos de segurança/performance, incerteza e human gates nunca são escondidos para economizar tokens.
+
+Output compacto é uma **projeção do resultado completo da validação**, nunca um motivo para validar menos obrigações. Evidência parcial continua parcial: se membros materiais ainda não foram provados, a obrigação pai não vira `pass` integral.
 
 Assim o histórico da conversa fica menor sem reduzir testes ou profundidade técnica.
 
@@ -190,6 +194,12 @@ A validação também considera a validade temporal da evidência: um resultado 
 Se o trabalho for interrompido, o IssueCraft pode gravar um `.implement-issue/HANDOFF.md` compacto. Esse handoff é apenas uma hipótese de retomada: na sessão seguinte ele é reconciliado com o estado atual do repositório/VCS, tracker quando disponível e evidências duráveis de validação antes de qualquer edição. A evidência atual vence uma narrativa stale.
 
 Decisões de implementação materialmente difíceis de reverter, quando ainda não determinadas pela issue, conhecimento aprovado do projeto, contratos existentes ou restrições inevitáveis, são tratadas como one-way doors e exigem decisão humana explícita. Escolhas locais e reversíveis continuam autônomas.
+
+Para mudanças materiais de comportamento, o IssueCraft distingue o que foi **adicionado, modificado, removido, renomeado/preservado e unchanged-but-at-risk**. Comportamentos modificados carregam obrigações de preservação para cenários/campos/estados/caminhos existentes que a issue não removeu explicitamente; comportamento removido é validado como ausente, não como algo a ser restaurado.
+
+Antes de `In Review`, uma revisão de coerência confronta issue/acceptance criteria, contratos/regras do projeto, behavior delta, diff implementado, evidência automatizada e roteiro manual. Toda mudança material no diff precisa de justificativa rastreável. Se o plano estiver errado mas o resultado pretendido da issue continuar igual, o IssueCraft replana autonomamente; se a própria issue virar materialmente outro trabalho, o humano decide.
+
+Na retomada e em transições materiais de fase, o IssueCraft relê os inputs autoritativos e mutáveis necessários para a próxima decisão em vez de confiar na memória antiga do chat. Repositórios/specs externos podem servir de referência, mas permissão de leitura nunca implica autorização para modificar.
 
 ---
 
