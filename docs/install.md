@@ -54,6 +54,30 @@ On first use, IssueCraft performs Project Discovery or Project Bootstrap before 
 
 The installer does not create `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, persistent proposals, or issue-execution artifacts. Project-owned state is created only after the relevant workflow process and human approval. Issue-specific `HANDOFF.md`, `MANUAL_VALIDATION_PLAN.md`, and `ISSUE_EXECUTION_REPORT.md` live under `.implement-issue/issues/<issue-key>/` when needed.
 
+## Parallel work / worktrees
+
+A separate worktree or checkout is a separate physical workspace. Files that exist only locally/untracked in another workspace are not guaranteed to appear there.
+
+Before invoking IssueCraft in a new parallel workspace, confirm that these are present in that workspace:
+
+- `.agents/skills/implement-issue/SKILL.md` and/or `.claude/skills/implement-issue/SKILL.md`;
+- `.implement-issue/system/`;
+- any project-scoped IssueCraft state that the project intentionally distributes/version-controls.
+
+If the runtime/adapters are not present, run the installer against that workspace:
+
+```bash
+python scripts/install.py /path/to/the/worktree
+```
+
+Do not assume another worktree's uncommitted `PROJECT_PROFILE.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, proposals, or issue artifacts are visible. Reconcile only evidence actually visible through the current workspace/integration policy.
+
+### Existing adapter collision
+
+On a first install, IssueCraft refuses to overwrite an existing `implement-issue` adapter when no IssueCraft runtime is installed yet. This protects third-party/custom skills that happen to use the same discovery path.
+
+Use `--overwrite-system` only when replacing the existing adapters/runtime is explicitly intended.
+
 ## Update
 
 After pulling/downloading a newer IssueCraft version:
