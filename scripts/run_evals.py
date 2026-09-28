@@ -634,6 +634,35 @@ def eval_live_eval_methodology() -> None:
     )
 
 
+def eval_approval_scope_integrity() -> None:
+    gates = read("core/HUMAN_GATES.md")
+    workflow = read("core/WORKFLOW.md")
+    validation = read("core/VALIDATION.md")
+    require(
+        gates,
+        "Approval scope integrity",
+        "material action or decision actually presented for review",
+        "treat the approval as **stale**",
+        "Do not silently recompute or expand a gated operation after approval",
+        "ordinary reversible implementation details",
+    )
+    require(
+        workflow,
+        "approval scope integrity",
+        "authorization is bound to the material action/decision and target",
+        "prior approval is stale",
+        "Equivalent local/reversible execution details do not create a new gate",
+    )
+    require(
+        validation,
+        "Approval freshness for gated actions",
+        "validate approval freshness immediately before execution",
+        "mark the prior approval stale",
+        "semantic integrity check",
+        "not a requirement for hashes",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -681,6 +710,7 @@ EVALS = [
     eval_solution_economy_review,
     eval_delegation_constraint_continuity,
     eval_live_eval_methodology,
+    eval_approval_scope_integrity,
 ]
 
 
