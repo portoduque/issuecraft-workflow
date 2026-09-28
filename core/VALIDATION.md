@@ -153,6 +153,16 @@ When trustworthy project evidence already establishes a measured baseline as a q
 
 Do not silently turn an incidental measurement into a new standing project policy. A ratchet is valid only when the repository, approved project rules, issue requirement, or explicit human decision makes that baseline normative. Record measurement noise/tolerance only from project evidence; never invent a universal tolerance.
 
+## Approval freshness for gated actions
+
+For an action that required a human gate, validate approval freshness immediately before execution rather than treating earlier conversational approval as permanently valid.
+
+- Compare the current target/environment, material scope/effects, known risk, and gate-relevant preconditions with what the human reviewed.
+- If they remain substantively equivalent, the approval remains usable; incidental reversible mechanics do not require another approval.
+- If a material difference would change what a reasonable reviewer understood they were authorizing, mark the prior approval stale, surface the delta, and obtain fresh approval.
+- Do not let replanning, recovery, rollback, cleanup, retries, or follow-up work silently widen a previous authorization.
+- This is a semantic integrity check, not a requirement for hashes, persistent plan artifacts, or a new approval gate on routine implementation work.
+
 ## Failure handling
 
 - Fix failures introduced by the change before review.
