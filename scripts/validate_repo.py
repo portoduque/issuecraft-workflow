@@ -132,6 +132,21 @@ def check_quality_contracts(errors: list[str]) -> None:
     for phrase in ("Preserve complete validation evidence", "Token/output reduction is never a reason to omit material evidence"):
         if phrase not in validation:
             errors.append(f"validation output-efficiency contract missing phrase: {phrase}")
+    for phrase in ("diagnostic reset", "Retrieve context progressively", "risk-based impact reconnaissance"):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow evidence-efficiency contract missing phrase: {phrase}")
+    for phrase in (
+        "Behavior-to-evidence traceability",
+        "lowest-cost test layer that can faithfully prove the behavior",
+        "path parity",
+        "Mocks, fakes, stubs",
+        "Instrumented runtime diagnostics",
+    ):
+        if phrase.lower() not in tests.lower():
+            errors.append(f"test evidence-quality contract missing phrase: {phrase}")
+    for phrase in ("Evidence-backed diff review", "clean review may legitimately produce zero findings"):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"diff-review contract missing phrase: {phrase}")
 
 
 def check_learning_contract(errors: list[str]) -> None:
@@ -140,14 +155,17 @@ def check_learning_contract(errors: list[str]) -> None:
     for phrase in (".implement-issue/proposals/", ".implement-issue/LEARNINGS.md", "explicit human approval"):
         if phrase not in learning:
             errors.append(f"persistent learning contract missing phrase: {phrase}")
+    for phrase in ("Generic-change admission check", "Merge first", "marginal benefit does not justify its ongoing complexity"):
+        if phrase.lower() not in learning.lower():
+            errors.append(f"anti-bloat learning contract missing phrase: {phrase}")
     if "Persistence and adoption are distinct decisions" not in gates:
         errors.append("human gate must separate learning persistence from adoption")
 
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 17:
-        errors.append(f"expected 17 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 21:
+        errors.append(f"expected 21 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))

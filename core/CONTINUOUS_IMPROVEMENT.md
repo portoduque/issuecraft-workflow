@@ -11,6 +11,20 @@ When recurring friction, a missed edge case, a security/performance escape, an o
 - `agent_adapter`: discovery/invocation compatibility specific to an agent surface.
 - `not_actionable`: insufficient evidence or a one-off occurrence.
 
+## Generic-change admission check
+
+Before proposing or adopting a `generic_workflow` change, guard against append-only workflow growth:
+
+1. **Gap** — identify the concrete missing behavior or failure.
+2. **Evidence** — require a real scenario, recurring friction, failed eval, or other material evidence; novelty alone is insufficient.
+3. **Overlap** — check whether an existing rule already covers the need.
+4. **Merge first** — prefer strengthening/simplifying an existing rule over creating another layer, file, gate, or taxonomy item.
+5. **Generality** — confirm the behavior is useful across unrelated projects/agent hosts rather than a disguised local convention.
+6. **Cost** — account for context/token cost, cognitive complexity, maintenance burden, extra approvals, and new failure modes.
+7. **Regression proof** — define how the change will be evaluated and how a future regression will be detected.
+
+A proposed change should be rejected, kept project-specific/adapter-specific, or left as observation when its marginal benefit does not justify its ongoing complexity.
+
 ## Proposal
 
 For an actionable case, prepare a proposal using `../templates/WORKFLOW_IMPROVEMENT_PROPOSAL.md`. Include:

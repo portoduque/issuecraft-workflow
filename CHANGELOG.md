@@ -2,6 +2,25 @@
 
 All notable changes are documented here.
 
+## 0.6.0 - 2026-09-27
+
+Evidence-driven execution and test-quality release.
+
+- Added progressive issue-context retrieval with explicit stopping criteria to reduce unnecessary repository/context expansion.
+- Added risk-based impact reconnaissance for materially coupled changes without forcing call-graph work on trivial edits.
+- Added a diagnostic-reset protocol for repeated failed fixes without new evidence: recapture failure, verify actual state, restate evidence-backed hypothesis, shrink scope, run a discriminating diagnostic, then revise before editing.
+- Added behavior/acceptance-criterion to verification-evidence traceability.
+- Added lowest-sufficient test-fidelity selection so expensive integration/system/E2E checks are used only when lower layers cannot faithfully prove the behavior.
+- Strengthened test-oracle quality: assertions must materially discriminate correct behavior from the relevant regression.
+- Tightened bug-fix RED semantics so unrelated setup/environment/pre-existing failures do not count as a valid reproducer.
+- Added path-parity and sibling-surface regression checks when one root cause can affect equivalent execution paths.
+- Added contract-preserving guidance for mocks/fakes/stubs, instrumented runtime diagnostics, risk-prioritized E2E, and useful failure-artifact preservation.
+- Added evidence-backed diff review where zero findings is explicitly valid and severity must be supported.
+- Added an anti-bloat generic-change admission check so popularity/novelty cannot justify append-only workflow growth.
+- Added deterministic scenarios 18-21 plus a live diagnostic-reset fixture.
+- Preserved provider/stack neutrality and avoided new runtime dependencies, hooks, agents, arbitrary coverage thresholds, or mandatory TDD.
+
+
 ## 0.5.0 - 2026-09-27
 
 Output-efficiency release.

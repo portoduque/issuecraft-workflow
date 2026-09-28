@@ -18,6 +18,14 @@ For every selected type capture:
 
 Do not create a new foundational testing framework without an approved project decision when no applicable test infrastructure exists.
 
+## Behavior-to-evidence traceability
+
+Passing a large test suite is not enough by itself. For every materially changed behavior and acceptance criterion, identify the strongest applicable verification evidence.
+
+Prefer the **lowest-cost test layer that can faithfully prove the behavior**. Escalate fidelity only when the risk depends on real subsystem interaction, persistence, runtime behavior, network boundaries, platform/browser behavior, cross-component contracts, or an assembled user/business journey.
+
+A passing test is useful evidence only when its assertions materially discriminate correct behavior from the relevant failure. Prefer observable behavior, contracts, and invariants over implementation-detail assertions. A no-throw check or broad snapshot is not automatically meaningful evidence.
+
 ## Functional and behavioral tests
 
 - **Unit** — isolated behavior of a small unit.
@@ -103,7 +111,15 @@ These are verification gates even when they are not conventionally called tests:
 
 ## Bug-fix regression rule
 
-For a reproducible defect, prefer establishing a failing regression test or equivalent reproducible automated check before the fix when feasible. After the fix, demonstrate that the reproducer passes and that nearby relevant regression coverage remains green.
+For a reproducible defect, prefer establishing a failing regression test or equivalent reproducible automated check before the fix when feasible. A reproducer counts as valid **RED evidence only when the failure is attributable to the targeted defect, missing behavior, or violated invariant**. Unrelated setup, syntax, dependency, environment, or pre-existing failures do not establish the defect.
+
+After the fix:
+
+- demonstrate that the reproducer passes;
+- keep nearby relevant regression coverage green;
+- when the root cause can plausibly affect equivalent paths or sibling surfaces, inspect and test the risk-relevant siblings rather than patching only the reported example.
+
+Consider path parity when an invariant/interface has multiple implementations or modes, such as primary/fallback, enabled/disabled, success/rollback, cached/uncached, role/tenant variants, compatibility paths, or other repository-specific equivalents. Test only the variants supported by actual project evidence and risk.
 
 Do not force test-first development when the repository has no such rule and a failing automated reproducer is unsafe/impractical; explain the alternative evidence instead.
 
@@ -111,9 +127,23 @@ Do not force test-first development when the repository has no such rule and a f
 
 Do not repeatedly rerun a failure until it turns green and then call it passing. A bounded rerun may be used to characterize nondeterminism, but the final report must distinguish stable pass, stable fail, and suspected flake with evidence.
 
+When available, preserve useful failure artifacts such as traces, logs, screenshots, recordings, dumps, or reports. Prefer synchronization on observable conditions/invariants over arbitrary sleeps/time delays. Quarantining or skipping a known flaky check does not convert it into a pass; record the unresolved risk according to project policy.
+
 ## Coverage
 
 Respect existing coverage requirements if present. Do not invent a global coverage percentage. Coverage is evidence about exercised code, not proof of correctness; prioritize risk-relevant assertions and behavior.
+
+## Test doubles and boundary fidelity
+
+Mocks, fakes, stubs, simulators, and sandbox modes must preserve the material contract/invariant the test is intended to prove. Do not mock away the boundary whose correctness is under test. When the existing harness supports it, unexpected external interactions should fail loudly rather than silently bypassing the test.
+
+## Instrumented runtime diagnostics
+
+When already supported by the project and relevant to the changed risk, consider instrumented runtime diagnostics for memory/resource safety, undefined/invalid runtime behavior, data races, concurrency violations, or other runtime invariants. Treat these as semantic checks; do not install a new diagnostic tool silently.
+
+## End-to-end selection
+
+Prioritize end-to-end tests for critical cross-layer journeys and risks. Do not duplicate every unit/component assertion at the most expensive layer merely to increase test count. E2E is most valuable when correctness depends on the assembled system or a real cross-boundary flow.
 
 ## Test data and isolation
 

@@ -27,8 +27,24 @@ Preserve complete validation evidence, but compress routine presentation:
 - Multiple `not_applicable` categories may be grouped with a shared rationale when accurate.
 - Never collapse `unavailable` into `not_applicable` or `pass`; surface each material unavailable capability/reason needed for risk decisions.
 - Expand failures, suspected flakes, security/performance regressions, unexpected results, residual risks, and checks that require human attention.
+- When a failed check produces diagnostic artifacts, preserve/reference the useful artifacts when safe instead of discarding them or replacing them with an unsupported textual guess.
 - Do not repeat the full manual validation plan in chat after saving it; provide its location plus the first human action or the specific decision required.
 - Token/output reduction is never a reason to omit material evidence, uncertainty, a release blocker, or a required human gate.
+
+## Evidence-backed diff review
+
+Before entering `In Review`, review the changed surfaces against the issue, acceptance criteria, impact reconnaissance, and surrounding contracts/tests.
+
+Only report a review finding when there is enough evidence to state:
+
+- the concrete affected location/surface;
+- a plausible failure/risk mechanism;
+- supporting repository/test/runtime evidence;
+- a severity justified by impact and likelihood rather than by a need to produce findings.
+
+A clean review may legitimately produce zero findings. Do not invent nits or inflate severity to make the review look productive.
+
+For tests specifically, verify that materially changed behaviors/acceptance criteria have meaningful proof, that assertions could detect the relevant regression, and that risk-relevant equivalent paths were not silently left inconsistent.
 
 ## Failure handling
 
