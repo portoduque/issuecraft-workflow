@@ -18,6 +18,16 @@ For each check record:
 
 Never report `pass` without actual execution/observation.
 
+### Probe before `unavailable`
+
+An applicable check should be labeled `unavailable` only after proportionate evidence establishes the limitation. Prefer one of:
+
+- a safe execution attempt and its observed failure;
+- a safe prerequisite/capability probe;
+- direct environment/project evidence that the required capability or dependency is unavailable.
+
+A narrative assumption such as "the environment probably cannot run this" is not enough. Do not perform a destructive, production-impacting, externally mutating, or expensive/high-load action merely to prove unavailability; in those cases, use the strongest safe prerequisite/capability evidence available.
+
 ## Validation cadence and evidence freshness
 
 Order validation by information value, risk, and cost rather than running every check after every edit.
@@ -59,7 +69,13 @@ Only report a review finding when there is enough evidence to state:
 
 A clean review may legitimately produce zero findings. Do not invent nits or inflate severity to make the review look productive.
 
-For tests specifically, verify that materially changed behaviors/acceptance criteria have meaningful proof, that assertions could detect the relevant regression, and that risk-relevant equivalent paths were not silently left inconsistent.
+For tests specifically, apply the evidence rules from `TEST_STRATEGY.md`:
+
+- use **evidence-or-zero**: a material obligation is not covered unless concrete evidence identifies what proves the required outcome;
+- decompose compound/enumerated requirements so one broad assertion does not hide an unproven field, case, state, role, or clause;
+- record verification precision gaps rather than inventing expected values;
+- when risk/uncertainty justifies it, use a safe isolated discrimination check to prove that the relevant test/check can actually detect the wrong behavior;
+- verify that risk-relevant equivalent paths were not silently left inconsistent.
 
 ## Quality-bar integrity review
 
@@ -88,7 +104,7 @@ Do not silently turn an incidental measurement into a new standing project polic
 - Fix failures introduced by the change before review.
 - If a failure appears pre-existing, establish that with evidence when feasible and report it separately.
 - Do not weaken or delete legitimate checks to obtain green output.
-- If a required check cannot run because of environment/capability limitations, report the limitation and compensate with the strongest safe alternative.
+- If a required check cannot run because of environment/capability limitations, apply the safe probe-before-`unavailable` rule, report the limitation, and compensate with the strongest safe alternative.
 - A known material security regression or established performance-budget violation introduced by the change is release-blocking unless the specific residual risk is explicitly accepted by a human.
 - Do not use repeated reruns to launder a flaky failure into a pass; follow `TEST_STRATEGY.md`.
 
