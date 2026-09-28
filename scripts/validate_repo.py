@@ -370,13 +370,32 @@ def check_quality_contracts(errors: list[str]) -> None:
         if phrase.lower() not in validation.lower():
             errors.append(f"validation v0.15 parallel-work contract missing phrase: {phrase}")
     for phrase in (
-        "Shared project-state write freshness",
-        "re-read the current target state",
+        "Project-scoped state write freshness",
+        "re-read the current target state visible from the current workspace/integration point",
         "reconcile rather than overwriting the newer state",
-        "optimistic concurrency",
+        "optimistic concurrency over visible project state",
     ):
         if phrase.lower() not in gates.lower():
-            errors.append(f"human-gate v0.15 shared-state contract missing phrase: {phrase}")
+            errors.append(f"human-gate v0.15 project-state contract missing phrase: {phrase}")
+
+    for phrase in (
+        "Managed IssueCraft state path safety",
+        "relative path beneath that root",
+        "Refuse path traversal",
+        "symlink/junction/reparse-point",
+        "single conservative path segment",
+        "stable disambiguator",
+    ):
+        if phrase.lower() not in security.lower():
+            errors.append(f"security v0.16 managed-state path contract missing phrase: {phrase}")
+    for phrase in (
+        "Workspace isolation does not imply that local IssueCraft installation/state is physically synchronized across workspaces",
+        "never assume an uncommitted change from another workspace is shared",
+        "The key is one conservative path segment, never a path",
+        "apply the containment/symlink rules in `SECURITY.md`",
+    ):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.16 operational-hardening contract missing phrase: {phrase}")
 
     for phrase in (
         "approval scope integrity",
@@ -438,8 +457,8 @@ def check_learning_contract(errors: list[str]) -> None:
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 59:
-        errors.append(f"expected 59 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 63:
+        errors.append(f"expected 63 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))
@@ -465,6 +484,17 @@ def check_eval_coverage(errors: list[str]) -> None:
     ):
         if phrase.lower() not in live_runner.lower():
             errors.append(f"live-eval v0.10 isolation contract missing phrase: {phrase}")
+
+    human_done = json.loads(
+        (ROOT / "evals/live/scenarios/human-done-gate/scenario.json").read_text(encoding="utf-8")
+    )
+    criteria_text = "\n".join(str(item.get("text", "")) for item in human_done.get("criteria", []))
+    for phrase in (
+        ".implement-issue/issues/ISSUE-001/MANUAL_VALIDATION_PLAN.md",
+        "does not create a new root-level .implement-issue/MANUAL_VALIDATION_PLAN.md",
+    ):
+        if phrase.lower() not in criteria_text.lower():
+            errors.append(f"live-eval v0.16 issue-scoped artifact criterion missing phrase: {phrase}")
 
     live_rubric = (ROOT / "evals/live/rubric.md").read_text(encoding="utf-8")
     for phrase in (
@@ -545,10 +575,20 @@ def check_documentation_integrity(errors: list[str]) -> None:
         if phrase.lower() not in project_files.lower():
             errors.append(f"project-files v0.15 issue-scoped artifact docs missing phrase: {phrase}")
     for phrase in (
+        "Managed-path safety",
+        "authorized repository",
+        "symlink/junction/reparse-point",
+        "<issue-key>",
+    ):
+        if phrase.lower() not in project_files.lower():
+            errors.append(f"project-files v0.16 path-safety docs missing phrase: {phrase}")
+    for phrase in (
         "There is no lock server, heartbeat, agent registry, or database",
         "same physical working tree",
         "IssueCraft does not auto-rebase or auto-merge",
         "Legacy artifacts",
+        "Worktree visibility boundary",
+        "do not magically share untracked or uncommitted files",
     ):
         if phrase.lower() not in parallel.lower():
             errors.append(f"parallel-work docs missing phrase: {phrase}")
@@ -614,6 +654,23 @@ def check_release_hardening(errors: list[str]) -> None:
         errors.append("release ZIP must exclude .git")
     if "issuecraft-workflow-" not in text:
         errors.append("release ZIP must use IssueCraft artifact name")
+    for phrase in (
+        "evals/live/runners.local.json",
+        "evals/live/results",
+        ".coverage.*",
+        "coverage.xml",
+        "htmlcov",
+    ):
+        if phrase not in text:
+            errors.append(f"release ZIP local-artifact exclusion missing: {phrase}")
+
+    installer = (ROOT / "scripts/install.py").read_text(encoding="utf-8")
+    for phrase in (
+        "Refusing first install because an implement-issue adapter already exists",
+        "if not system.exists() and not overwrite_system",
+    ):
+        if phrase not in installer:
+            errors.append(f"installer adapter-collision protection missing: {phrase}")
 
 
 def validate() -> list[str]:
