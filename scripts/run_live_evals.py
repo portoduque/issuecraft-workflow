@@ -155,6 +155,20 @@ def load_runner(config_path: Path, runner_name: str, turn_count: int) -> dict[st
         not isinstance(k, str) or not isinstance(v, str) for k, v in env.items()
     ):
         raise LiveEvalError(f"runner {runner_name}: environment must map strings to strings")
+
+    isolation = runner.get("isolation", {"verified": False, "evidence": ""})
+    if not isinstance(isolation, dict):
+        raise LiveEvalError(f"runner {runner_name}: isolation must be an object")
+    verified = isolation.get("verified", False)
+    evidence = isolation.get("evidence", "")
+    if not isinstance(verified, bool):
+        raise LiveEvalError(f"runner {runner_name}: isolation.verified must be boolean")
+    if not isinstance(evidence, str):
+        raise LiveEvalError(f"runner {runner_name}: isolation.evidence must be a string")
+    if verified and not evidence.strip():
+        raise LiveEvalError(
+            f"runner {runner_name}: verified isolation requires concrete evidence"
+        )
     return runner
 
 
@@ -346,6 +360,9 @@ def run_once(
             "transcript": transcript,
             "workspace_changes": workspace_changes(before, after),
             "runner_metadata": response.get("metadata", {}),
+            "runner_isolation": runner.get(
+                "isolation", {"verified": False, "evidence": ""}
+            ),
             "usage": response.get("usage"),
             "cost_usd": response.get("cost_usd"),
             "elapsed_seconds": round(elapsed, 3),
@@ -390,6 +407,19 @@ def blind_pairs(responses: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
         pair = grouped[key]
         if set(pair) != {"baseline", "candidate"}:
             raise LiveEvalError(f"blind comparison requires baseline and candidate for {key}")
+
+        for condition in ("baseline", "candidate"):
+            isolation = pair[condition].get("runner_isolation", {})
+            if (
+                not isinstance(isolation, dict)
+                or isolation.get("verified") is not True
+                or not str(isolation.get("evidence", "")).strip()
+            ):
+                raise LiveEvalError(
+                    "blind baseline/candidate comparison requires verified runner "
+                    f"isolation evidence for {key} / {condition}"
+                )
+
         digest = hashlib.sha256("\x00".join(map(str, key)).encode("utf-8")).digest()
         labels = (
             {"A": "baseline", "B": "candidate"}
