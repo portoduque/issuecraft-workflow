@@ -34,3 +34,28 @@ jobs:
         run: python scripts/run_live_evals.py validate
       - name: Run repository tests
         run: python -m unittest discover tests -v
+
+  coverage:
+    name: Code coverage / Python 3.13
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - name: Install coverage tooling
+        run: python -m pip install --disable-pip-version-check -r requirements-dev.txt
+      - name: Measure branch-aware script coverage
+        shell: bash
+        run: |
+          python -m coverage erase
+          python -m coverage run --branch --source=scripts -m unittest discover tests -v
+          python -m coverage run --append --branch --source=scripts scripts/validate_repo.py
+          python -m coverage run --append --branch --source=scripts scripts/run_evals.py
+          python -m coverage run --append --branch --source=scripts scripts/run_live_evals.py validate
+          python -m coverage report --show-missing --fail-under=90
