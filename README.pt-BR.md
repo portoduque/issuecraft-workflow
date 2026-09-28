@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.7.0  
+**Versão:** 0.8.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -73,6 +73,7 @@ Existe um único workflow canônico `implement-issue` que:
 - planeja e implementa a menor mudança coerente que atende a issue;
 - faz triagem obrigatória de segurança e performance;
 - escolhe testes conforme o risco, sem depender de framework específico;
+- exige evidence-or-zero para obrigações materiais, decompõe requisitos compostos e usa discrimination checks direcionados quando a força do teste é materialmente incerta;
 - conduz `In Progress → In Review → validação humana → Done`;
 - gera um roteiro manual específico da issue ao entrar em `In Review`;
 - aprende com o uso real, mas mantém persistência e adoção sob controle humano.
@@ -186,6 +187,10 @@ Em trabalhos não triviais que atravessam várias superfícies, o IssueCraft pre
 
 A validação também considera a validade temporal da evidência: um resultado verde anterior só é reutilizado enquanto seus inputs relevantes continuarem materialmente iguais. Antes de `In Review`, o IssueCraft verifica se o diff enfraqueceu o quality bar do projeto, se migrations que exigem coexistência seguem uma sequência compatível de expand/migrate/contract e se mudanças de dependências estão sustentadas pelo lock state resolvido e por evidências relevantes de release/migration.
 
+Se o trabalho for interrompido, o IssueCraft pode gravar um `.implement-issue/HANDOFF.md` compacto. Esse handoff é apenas uma hipótese de retomada: na sessão seguinte ele é reconciliado com o estado atual do repositório/VCS, tracker quando disponível e evidências duráveis de validação antes de qualquer edição. A evidência atual vence uma narrativa stale.
+
+Decisões de implementação materialmente difíceis de reverter, quando ainda não determinadas pela issue, conhecimento aprovado do projeto, contratos existentes ou restrições inevitáveis, são tratadas como one-way doors e exigem decisão humana explícita. Escolhas locais e reversíveis continuam autônomas.
+
 ---
 
 ## Agnóstico de agente de IA
@@ -280,6 +285,8 @@ Para bugs reproduzíveis, o fluxo preferido é criar/identificar um teste de reg
 
 O IssueCraft também liga comportamentos materiais e critérios de aceitação a evidências reais, escolhe a camada de teste mais barata que prova o comportamento com fidelidade, avalia a qualidade das assertions em vez da quantidade de testes e verifica caminhos equivalentes/superfícies irmãs quando a mesma causa raiz pode atingi-los. Mocks/fakes precisam preservar o contrato testado; E2E caro fica para risco realmente cross-layer.
 
+A cobertura segue **evidence-or-zero**: uma obrigação material não é considerada provada só porque uma suíte relacionada ficou verde. Requisitos compostos são decompostos em cláusulas/campos/casos falsificáveis de forma independente, requisitos vagos viram `verification precision gaps` explícitos em vez de thresholds inventados, e um check aplicável só recebe `unavailable` depois de um probe seguro ou outra evidência concreta do ambiente/capacidade. Para assertions de alto risco ou força incerta, o IssueCraft pode usar fault/mutation discrimination em estado isolado para comprovar que a verificação realmente detecta o comportamento errado; isso é proporcional ao risco, não obrigatório em toda issue.
+
 Veja [core/TEST_STRATEGY.md](core/TEST_STRATEGY.md).
 
 ---
@@ -336,6 +343,8 @@ nova aprovação humana para adotar comportamento
 
 Uma proposta persistida ou entrada em `LEARNINGS.md` **não vira regra automaticamente**. A adoção em `PROJECT_RULES`, Profile/Blueprint, adapter ou core canônico exige a decisão humana apropriada.
 
+Recorrência em issues/features independentes pode fortalecer a evidência de uma proposta, mas nunca promove automaticamente um aprendizado para comportamento persistente ou normativo.
+
 Isso evita que particularidades de um projeto contaminem o workflow genérico.
 
 Mudanças genéricas no próprio IssueCraft também passam por um filtro anti-bloat: lacuna/evidência concreta, verificação de sobreposição, preferência por fundir com regra existente, generalidade real, custo contínuo de contexto/complexidade e prova de regressão. Popularidade ou novidade não são motivo suficiente.
@@ -361,7 +370,7 @@ seu-projeto/
         └── VERSION
 ```
 
-O IssueCraft **não** cria antecipadamente `PROJECT_PROFILE`, `PROJECT_BLUEPRINT`, `PROJECT_RULES.md`, `LEARNINGS.md` ou propostas persistentes.
+O IssueCraft **não** cria antecipadamente `PROJECT_PROFILE`, `PROJECT_BLUEPRINT`, `PROJECT_RULES.md`, `LEARNINGS.md`, propostas persistentes ou `HANDOFF.md`. Conhecimento persistente segue os human gates; `HANDOFF.md` só é criado quando trabalho incompleto realmente precisa de estado para retomada.
 
 ---
 
@@ -397,7 +406,7 @@ python -m unittest discover tests -v
 
 A CI executa isso em Linux, macOS e Windows.
 
-Os 28 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
+Os 33 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
 
 ---
 
@@ -452,7 +461,7 @@ Não aprove o Profile/Blueprint como está. Corrija o fato, forneça evidência 
 
 ### Um teste não pode ser executado
 
-O IssueCraft deve marcar o check aplicável como `unavailable`, explicar o motivo e usar a alternativa segura mais forte. Ele não pode inventar um `pass`.
+O IssueCraft deve fazer um probe seguro do check ou do pré-requisito/capacidade quando isso for razoável, então marcar `unavailable` com evidência e usar a alternativa segura mais forte. Ele não pode inventar um `pass` nem executar ação destrutiva/high-load só para provar indisponibilidade.
 
 ---
 
