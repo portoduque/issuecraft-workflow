@@ -68,6 +68,7 @@ EXPECTED_SCENARIOS = [
     "44-solution-economy-review.md",
     "45-delegation-constraint-continuity.md",
     "46-live-eval-methodology.md",
+    "47-approval-scope-integrity.md",
 ]
 
 
