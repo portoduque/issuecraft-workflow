@@ -259,6 +259,32 @@ def check_quality_contracts(errors: list[str]) -> None:
             errors.append(f"validation v0.10 solution-economy contract missing phrase: {phrase}")
 
 
+    for phrase in (
+        "approval scope integrity",
+        "authorization is bound to the material action/decision and target",
+        "prior approval is stale",
+        "Equivalent local/reversible execution details do not create a new gate",
+    ):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.11 approval-scope contract missing phrase: {phrase}")
+    for phrase in (
+        "Approval scope integrity",
+        "material action or decision actually presented for review",
+        "treat the approval as **stale**",
+        "ordinary reversible implementation details",
+    ):
+        if phrase.lower() not in gates.lower():
+            errors.append(f"human-gate v0.11 approval-scope contract missing phrase: {phrase}")
+    for phrase in (
+        "Approval freshness for gated actions",
+        "validate approval freshness immediately before execution",
+        "mark the prior approval stale",
+        "not a requirement for hashes",
+    ):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"validation v0.11 approval-scope contract missing phrase: {phrase}")
+
+
 def check_learning_contract(errors: list[str]) -> None:
     learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
     gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
@@ -301,32 +327,6 @@ def check_eval_coverage(errors: list[str]) -> None:
     ):
         if phrase.lower() not in live_runner.lower():
             errors.append(f"live-eval v0.10 isolation contract missing phrase: {phrase}")
-
-
-    for phrase in (
-        "approval scope integrity",
-        "authorization is bound to the material action/decision and target",
-        "prior approval is stale",
-        "Equivalent local/reversible execution details do not create a new gate",
-    ):
-        if phrase.lower() not in workflow.lower():
-            errors.append(f"workflow v0.11 approval-scope contract missing phrase: {phrase}")
-    for phrase in (
-        "Approval scope integrity",
-        "material action or decision actually presented for review",
-        "treat the approval as **stale**",
-        "ordinary reversible implementation details",
-    ):
-        if phrase.lower() not in gates.lower():
-            errors.append(f"human-gate v0.11 approval-scope contract missing phrase: {phrase}")
-    for phrase in (
-        "Approval freshness for gated actions",
-        "validate approval freshness immediately before execution",
-        "mark the prior approval stale",
-        "not a requirement for hashes",
-    ):
-        if phrase.lower() not in validation.lower():
-            errors.append(f"validation v0.11 approval-scope contract missing phrase: {phrase}")
 
 
 def check_human_gates(errors: list[str]) -> None:
