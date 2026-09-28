@@ -10,7 +10,7 @@ The files in `evals/scenarios/` are human-readable behavioral contracts.
 python scripts/run_evals.py
 ```
 
-The runner maps all 33 scenarios to executable assertions over the canonical repository contract. These checks require no model/API key and run in CI on every supported OS/Python matrix job.
+The runner maps all 40 scenarios to executable assertions over the canonical repository contract. These checks require no model/API key and run in CI on every supported OS/Python matrix job.
 
 They verify that source rules for safety, lifecycle, neutrality, drift, learning, testing, and human gates are actually present and regression-protected.
 
@@ -23,7 +23,7 @@ This layer can compare:
 - `baseline`: same task/fixture without IssueCraft installed;
 - `candidate`: same task/fixture with IssueCraft installed.
 
-The harness captures the transcript plus workspace changes, supports multi-turn scenarios through a runner-adapter protocol, and can export baseline/candidate pairs under blind labels. Discipline-sensitive behaviors may also use pressure scenarios that check whether the agent preserves evidence honesty, quality controls, safety boundaries, and human gates when a prompt argues for skipping them.
+The harness captures the transcript plus workspace changes, supports multi-turn scenarios through a runner-adapter protocol, and can export baseline/candidate pairs under blind labels. The modified-preservation fixture specifically exercises whether a one-member contract change preserves existing behavior that was not authorized for removal. Discipline-sensitive behaviors may also use pressure scenarios that check whether the agent preserves evidence honesty, quality controls, safety boundaries, and human gates when a prompt argues for skipping them.
 
 Live runs are intentionally **not** required by canonical CI because they can require external agent CLIs, authentication, network access, model spend, and host-specific isolation.
 
