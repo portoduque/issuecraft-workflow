@@ -2,6 +2,22 @@
 
 All notable changes are documented here.
 
+## 0.8.0 - 2026-09-27
+
+Evidence-strength and resumability release.
+
+- Added evidence-or-zero semantics so a material obligation is not considered covered without concrete proof of the required outcome.
+- Added compound-obligation decomposition for independently falsifiable fields, clauses, states, roles, cases, and enumerated members.
+- Added verification-precision gaps so vague requirements remain explicitly unproven instead of receiving invented thresholds or exact outcomes.
+- Added risk-based isolated discrimination/fault checks for high-risk or uncertain test oracles without making mutation testing mandatory.
+- Added probe-before-unavailable semantics: applicable checks require proportionate safe evidence before being labeled unavailable.
+- Added compact resumable `.implement-issue/HANDOFF.md` state for interrupted/incomplete work, with mandatory reconciliation against current repository/VCS/tracker/evidence before edits.
+- Added a human gate for genuine hard-to-reverse one-way-door implementation decisions while keeping ordinary reversible engineering autonomous.
+- Clarified that recurring independent observations strengthen improvement evidence but never auto-promote a learning into persistent or normative behavior.
+- Expanded deterministic contract coverage from 28 to 33 scenarios.
+- Added maintainer-only validator resistance testing that mutates a clean repository copy, requires the validator to kill broken invariants, and includes a harmless negative control.
+- Preserved provider/stack neutrality and added no runtime dependency, mandatory subagent, mandatory TDD rule, universal mutation count, or auto-learning engine.
+
 ## 0.7.0 - 2026-09-27
 
 Source-verification, incremental execution, and quality-bar hardening release.
