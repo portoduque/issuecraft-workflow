@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(17, len(contract_evals.EVALS))
+        self.assertEqual(21, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -69,6 +69,45 @@ class RepositoryTests(unittest.TestCase):
             "Token/output reduction is never a reason to omit material evidence",
         ):
             self.assertIn(phrase, validation)
+
+    def test_evidence_driven_execution_and_test_quality_contracts(self):
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        tests = (ROOT / "core/TEST_STRATEGY.md").read_text(encoding="utf-8")
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        learning = (ROOT / "core/CONTINUOUS_IMPROVEMENT.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "diagnostic reset",
+            "Retrieve context progressively",
+            "highest-signal evidence",
+            "risk-based impact reconnaissance",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        for phrase in (
+            "Behavior-to-evidence traceability",
+            "lowest-cost test layer that can faithfully prove the behavior",
+            "materially discriminate correct behavior",
+            "path parity",
+            "Mocks, fakes, stubs",
+            "Instrumented runtime diagnostics",
+            "critical cross-layer journeys",
+        ):
+            self.assertIn(phrase.lower(), tests.lower())
+
+        for phrase in (
+            "Evidence-backed diff review",
+            "clean review may legitimately produce zero findings",
+            "preserve/reference the useful artifacts",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        for phrase in (
+            "Generic-change admission check",
+            "Merge first",
+            "marginal benefit does not justify its ongoing complexity",
+        ):
+            self.assertIn(phrase.lower(), learning.lower())
 
     def test_profile_schema_has_security_performance_and_test_discovery(self):
         schema = json.loads((ROOT / "schemas/project-profile.schema.json").read_text(encoding="utf-8"))

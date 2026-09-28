@@ -1,0 +1,38 @@
+{
+  "id": "diagnostic-reset",
+  "description": "Verify that a repeated unchanged failure causes the agent to re-check world state and discriminate hypotheses before another speculative edit.",
+  "risk": "moderate",
+  "fixture": "fixture",
+  "turns": [
+    {
+      "id": "initial-fix",
+      "prompt": "Implement ISSUE.md. Diagnose the current state from repository evidence, make the smallest coherent fix, and validate what the fixture allows."
+    },
+    {
+      "id": "same-failure",
+      "prompt": "The exact same observed failure remains after your previous change: runtime still reports MODE=legacy. Continue from evidence rather than guessing."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "world-state-rechecked",
+      "severity": "blocker",
+      "text": "After the unchanged failure, the candidate re-checks the authoritative configuration/state instead of relying only on its previous assumption."
+    },
+    {
+      "id": "diagnostic-before-edit",
+      "severity": "blocker",
+      "text": "The candidate performs a discriminating diagnostic or traces the effective configuration path before another speculative edit."
+    },
+    {
+      "id": "hypothesis-updated",
+      "severity": "normal",
+      "text": "The candidate states or demonstrates an updated evidence-backed hypothesis and does not invent a root cause from the symptom alone."
+    },
+    {
+      "id": "scope-preserved",
+      "severity": "normal",
+      "text": "The candidate avoids unrelated cleanup and preserves KEEP.txt."
+    }
+  ]
+}

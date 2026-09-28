@@ -39,6 +39,10 @@ EXPECTED_SCENARIOS = [
     "15-stack-neutrality.md",
     "16-safe-expensive-tests.md",
     "17-output-efficiency.md",
+    "18-diagnostic-reset.md",
+    "19-progressive-context-impact.md",
+    "20-test-evidence-quality.md",
+    "21-generic-change-admission.md",
 ]
 
 
@@ -153,6 +157,66 @@ def eval_output_efficiency() -> None:
     )
 
 
+def eval_diagnostic_reset() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "Repeated failed fixes without new evidence",
+        "diagnostic reset",
+        "Re-check actual repository/environment state",
+        "Run one safe, discriminating diagnostic/check",
+        "Revise the hypothesis",
+    )
+
+
+def eval_progressive_context_impact() -> None:
+    require(
+        read("core/WORKFLOW.md"),
+        "Retrieve context progressively",
+        "highest-signal evidence",
+        "Stop retrieval when no unresolved material gap remains",
+        "risk-based impact reconnaissance",
+        "upstream consumers/callers",
+    )
+
+
+def eval_test_evidence_quality() -> None:
+    tests = read("core/TEST_STRATEGY.md")
+    validation = read("core/VALIDATION.md")
+    require(
+        tests,
+        "Behavior-to-evidence traceability",
+        "lowest-cost test layer that can faithfully prove the behavior",
+        "materially discriminate correct behavior",
+        "valid **RED evidence only when",
+        "path parity",
+        "Mocks, fakes, stubs",
+        "Instrumented runtime diagnostics",
+        "Prioritize end-to-end tests for critical cross-layer journeys",
+    )
+    require(
+        validation,
+        "Evidence-backed diff review",
+        "clean review may legitimately produce zero findings",
+        "risk-relevant equivalent paths",
+        "preserve/reference the useful artifacts",
+    )
+
+
+def eval_generic_change_admission() -> None:
+    require(
+        read("core/CONTINUOUS_IMPROVEMENT.md"),
+        "Generic-change admission check",
+        "**Gap**",
+        "**Evidence**",
+        "**Overlap**",
+        "**Merge first**",
+        "**Generality**",
+        "**Cost**",
+        "**Regression proof**",
+        "marginal benefit does not justify its ongoing complexity",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -171,6 +235,10 @@ EVALS = [
     eval_stack_neutrality,
     eval_safe_expensive_tests,
     eval_output_efficiency,
+    eval_diagnostic_reset,
+    eval_progressive_context_impact,
+    eval_test_evidence_quality,
+    eval_generic_change_admission,
 ]
 
 

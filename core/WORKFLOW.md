@@ -91,6 +91,18 @@ Before editing:
 7. Identify correctness, data/migration, compatibility, operability, security, performance, reliability, and regression risks specific to the change.
 8. Do not introduce a new framework/tool solely because it is familiar. If a new foundational tool is necessary and not already an approved decision, use the appropriate human gate.
 
+### Issue-specific context retrieval
+
+Retrieve context progressively rather than reading the repository exhaustively:
+
+1. Search broadly enough to identify candidate changed surfaces and existing tests/contracts.
+2. Inspect the highest-signal evidence first.
+3. Follow discovered terminology, callers/consumers, dependencies, interfaces, data flow, and related tests only when they can materially affect the implementation or validation decision.
+4. Track unresolved information gaps that could change scope, correctness, security, performance, compatibility, or test selection.
+5. Stop retrieval when no unresolved material gap remains. Do not keep reading merely to maximize repository coverage.
+
+Before editing a materially coupled surface, perform **risk-based impact reconnaissance**. Establish the relevant upstream consumers/callers, downstream dependencies, public contracts/interfaces, persistence/data effects, analogous implementation, and existing tests to the extent required by the change. Trivial isolated edits do not require artificial call-graph work.
+
 The plan may be internal unless the user or environment requires a visible plan. Do not stop after planning when implementation is authorized.
 
 ## 5. Enter In Progress
@@ -108,6 +120,19 @@ When implementation is actually ready to begin, transition the issue to the sema
 7. Preserve backward/forward compatibility when required by the issue, repository conventions, contracts, or rules.
 8. Do not hide failures by deleting/weakening tests, bypassing quality/security/performance gates, suppressing errors, or narrowing assertions without a justified project-specific reason.
 9. Do not commit, push, merge, deploy, run destructive/high-load operations, or mutate production systems unless explicitly requested or established by approved project rules and within the current capability/security boundary.
+
+### Diagnostic reset
+
+Repeated failed fixes without new evidence must trigger a **diagnostic reset** instead of another speculative edit:
+
+1. Capture the exact current failure/symptom and distinguish it from prior symptoms.
+2. Re-check actual repository/environment state rather than relying on the agent's earlier mental model.
+3. State the current hypothesis and the evidence for/against it; mark the cause unknown when evidence is insufficient.
+4. Shrink to the smallest failing surface that can discriminate between plausible hypotheses.
+5. Run one safe, discriminating diagnostic/check.
+6. Revise the hypothesis from the result before editing again.
+
+Do not use a fixed retry count as a substitute for judgment. The trigger is repeated unsuccessful change without materially new evidence.
 
 ## 7. Automated validation
 

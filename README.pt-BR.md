@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.5.0  
+**Versão:** 0.6.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -180,6 +180,8 @@ validação humana
 
 O IssueCraft pode preparar a issue para `In Review`, mas **Done pertence ao humano**. Testes automatizados, a própria IA exercitar a interface ou confiança no diff não substituem a validação humana final.
 
+Durante a implementação, o contexto é recuperado progressivamente: o IssueCraft segue código, contratos e testes de maior sinal até resolver as lacunas materiais, sem tentar ler o repositório inteiro. Se correções repetidas falharem sem nova evidência, ele faz um diagnostic reset antes de outra alteração.
+
 ---
 
 ## Agnóstico de agente de IA
@@ -268,7 +270,9 @@ unavailable
 
 `not_applicable` e `unavailable` nunca significam `pass`.
 
-Para bugs reproduzíveis, o fluxo preferido é criar/identificar um teste de regressão que falha antes da correção e passa depois, quando isso for viável.
+Para bugs reproduzíveis, o fluxo preferido é criar/identificar um teste de regressão que falha antes da correção e passa depois, quando isso for viável. Esse RED só é válido quando o defeito/invariante alvo realmente causa a falha.
+
+O IssueCraft também liga comportamentos materiais e critérios de aceitação a evidências reais, escolhe a camada de teste mais barata que prova o comportamento com fidelidade, avalia a qualidade das assertions em vez da quantidade de testes e verifica caminhos equivalentes/superfícies irmãs quando a mesma causa raiz pode atingi-los. Mocks/fakes precisam preservar o contrato testado; E2E caro fica para risco realmente cross-layer.
 
 Veja [core/TEST_STRATEGY.md](core/TEST_STRATEGY.md).
 
@@ -328,6 +332,8 @@ Uma proposta persistida ou entrada em `LEARNINGS.md` **não vira regra automatic
 
 Isso evita que particularidades de um projeto contaminem o workflow genérico.
 
+Mudanças genéricas no próprio IssueCraft também passam por um filtro anti-bloat: lacuna/evidência concreta, verificação de sobreposição, preferência por fundir com regra existente, generalidade real, custo contínuo de contexto/complexidade e prova de regressão. Popularidade ou novidade não são motivo suficiente.
+
 Veja [core/CONTINUOUS_IMPROVEMENT.md](core/CONTINUOUS_IMPROVEMENT.md).
 
 ---
@@ -372,17 +378,18 @@ Python é apenas uma conveniência para copiar os arquivos. A instalação manua
 
 ## Validando este repositório
 
-Rode as mesmas três camadas determinísticas usadas pela CI:
+Rode as mesmas camadas determinísticas usadas pela CI:
 
 ```bash
 python scripts/validate_repo.py
 python scripts/run_evals.py
+python scripts/run_live_evals.py validate
 python -m unittest discover tests -v
 ```
 
 A CI executa isso em Linux, macOS e Windows.
 
-Os 17 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
+Os 21 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
 
 ---
 

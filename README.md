@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.5.0  
+**Version:** 0.6.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -178,6 +178,8 @@ human validation
 
 IssueCraft may prepare an issue for `In Review`, but **Done is human-owned**. Automated checks, an agent's own UI interaction, or confidence in the diff never substitute for the final human validation gate.
 
+During implementation, context is retrieved progressively: IssueCraft follows high-signal code/contracts/tests until material information gaps are resolved instead of reading the repository exhaustively. If repeated fixes fail without new evidence, it performs a diagnostic reset before another edit.
+
 ---
 
 ## AI-agent neutral by design
@@ -266,7 +268,9 @@ unavailable
 
 `not_applicable` and `unavailable` never mean `pass`.
 
-For reproducible bugs, IssueCraft prefers a durable regression reproducer that fails before the fix and passes after it when feasible.
+For reproducible bugs, IssueCraft prefers a durable regression reproducer that fails before the fix and passes after it when feasible. That RED is valid only when the intended defect/invariant actually causes the failure.
+
+IssueCraft also traces materially changed behaviors and acceptance criteria to meaningful evidence, chooses the lowest-cost test layer that can faithfully prove them, checks assertion quality rather than raw test count, and inspects risk-relevant equivalent paths/sibling surfaces after understanding a root cause. Mocks/fakes must preserve the contract under test; expensive E2E is reserved for real cross-layer risk.
 
 See [core/TEST_STRATEGY.md](core/TEST_STRATEGY.md).
 
@@ -326,6 +330,8 @@ A persisted proposal or entry in `LEARNINGS.md` is **not automatically normative
 
 This prevents one project's habits from contaminating the generic workflow.
 
+Generic IssueCraft changes also pass an anti-bloat admission check: concrete gap/evidence, overlap review, merge-first preference, true cross-project generality, ongoing complexity/context cost, and regression proof. Popularity or novelty alone is not enough.
+
 See [core/CONTINUOUS_IMPROVEMENT.md](core/CONTINUOUS_IMPROVEMENT.md).
 
 ---
@@ -370,17 +376,18 @@ Python is only the convenience installer. Manual installation is documented in [
 
 ## Verify the repository
 
-Run the same three deterministic layers used by CI:
+Run the same deterministic layers used by CI:
 
 ```bash
 python scripts/validate_repo.py
 python scripts/run_evals.py
+python scripts/run_live_evals.py validate
 python -m unittest discover tests -v
 ```
 
 CI runs these on Linux, macOS and Windows.
 
-The 17 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 21 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 
