@@ -10,6 +10,14 @@
 
 -
 
+## Behavior delta / preservation
+
+- Current contract/baseline evidence:
+- Requested delta: added / modified / removed / renamed-preserved / unchanged-but-at-risk / not_applicable
+- Resulting contract:
+- Preservation obligations:
+- Intent/scope drift: none / human decision reference
+
 ## Files / components affected
 
 -
@@ -34,6 +42,8 @@
 - Unproven material obligations / verification precision gaps:
 - Unavailable checks and probe/capability evidence:
 - Discrimination/fault checks performed (if risk-justified):
+- Partial/unverified obligation members:
+- Change coherence findings / resolution:
 
 ## Security validation
 
