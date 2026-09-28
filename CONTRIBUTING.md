@@ -55,7 +55,8 @@ Changes that affect the canonical workflow must preserve:
 - thin verifiable increments, risk-first slices, and evidence freshness for non-trivial work;
 - quality-bar integrity review, compatibility-safe migrations/cutovers, dependency lock-state evidence, approved-baseline ratchets, and probe-before-unavailable evidence;
 - risk-based isolated discrimination/fault checks when test effectiveness is materially uncertain;
-- resumable handoff snapshots that are reconciled against current repository/VCS/tracker evidence before edits;
+- resumable issue-scoped handoff snapshots that are reconciled against current repository/VCS/tracker evidence before edits;
+- parallel-work safety without orchestration bloat: isolated physical workspaces for known concurrent mutation, issue-scoped execution artifacts, optimistic shared-state rereads, overlap-as-risk rather than automatic dependency, and selective integration-freshness invalidation;
 - human gating for genuine hard-to-reverse one-way-door choices without turning ordinary reversible engineering into approval ceremony;
 - approval-scope integrity: gated authorization stays bound to the material action/target/effects reviewed by the human, material drift requires fresh approval, and equivalent reversible mechanics stay autonomous;
 - behavior-delta semantics for added/modified/removed/renamed-preserved behavior, including preservation of existing obligations not explicitly superseded;

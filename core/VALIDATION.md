@@ -52,6 +52,18 @@ Order validation by information value, risk, and cost rather than running every 
 
 This cadence optimizes feedback without reducing final validation depth.
 
+### Integration freshness before In Review
+
+When the repository/VCS can identify an integration baseline/current base, check whether that base materially changed while the issue was in progress before entering `In Review`.
+
+- If the base did not change, keep current evidence.
+- If the base changed only on surfaces that cannot materially affect this issue's changed behavior, contracts, dependencies, build/test definitions, or risk assumptions, do not rerun unrelated green checks merely because another issue merged.
+- If the base changed a materially relevant surface, reconcile according to the project's integration policy, re-evaluate the affected diff/contracts, mark only dependent validation evidence stale, and rerun the checks whose inputs changed.
+- Do not perform an automatic rebase/merge solely because the base moved; branch/integration policy belongs to the project/environment.
+- If freshness cannot be established and the uncertainty is material to release safety, report the limitation instead of pretending prior evidence is current.
+
+The goal is selective invalidation, not full revalidation after every unrelated parallel change.
+
 ## Reporting validation evidence
 
 Preserve complete validation evidence, but compress routine presentation. **Compact output must be a projection of the complete validation result, never a reduced validation scope.** The same applicable checks, material obligations, verdicts, failures, unavailable checks, and risk decisions must exist before presentation is compressed:
@@ -176,7 +188,9 @@ For an action that required a human gate, validate approval freshness immediatel
 
 ## Manual validation plan
 
-Generate `.implement-issue/MANUAL_VALIDATION_PLAN.md` as part of the `In Review` handoff. It must be tailored to the issue and actual diff, not generic boilerplate.
+Generate `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md` as part of the `In Review` handoff. It must be tailored to the issue and actual diff, not generic boilerplate. One issue's plan must not replace another issue's plan.
+
+For backward compatibility, a legacy root-level `.implement-issue/MANUAL_VALIDATION_PLAN.md` may be consulted only when its issue identity unambiguously matches the current issue. New/updated plans use the issue-scoped path; do not delete an ambiguous legacy plan automatically.
 
 Include when applicable:
 

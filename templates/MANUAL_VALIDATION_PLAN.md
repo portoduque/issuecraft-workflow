@@ -3,6 +3,7 @@
 ## Issue
 
 - Identifier:
+- Issue key:
 - Title:
 
 ## Objective

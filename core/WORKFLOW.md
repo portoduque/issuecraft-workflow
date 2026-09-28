@@ -47,8 +47,15 @@ Use these supporting documents when their phase is reached:
 1. Identify the repository/workspace root without assuming a particular VCS.
 2. Detect available capabilities.
 3. Inspect current working changes if possible. Preserve unrelated user changes and never reset/revert them merely to obtain a clean workspace.
-4. Locate `.implement-issue/PROJECT_PROFILE.yaml`, `.implement-issue/PROJECT_BLUEPRINT.yaml`, and `.implement-issue/PROJECT_RULES.md` if present.
-5. Do not interpret the workflow runtime or its skill-adapter files as evidence about the target application's stack.
+4. Run a lightweight **parallel-work preflight** when repository/VCS/workspace evidence can expose it:
+   - identify the current physical workspace/checkout and branch/reference when available;
+   - detect known concurrent mutating workspaces or active changes relevant to the same repository;
+   - if another mutating IssueCraft execution is known to share the **same physical working tree**, do not begin/continue application mutations until the work is isolated or the concurrent mutation stops;
+   - prefer an already-isolated workspace/worktree/checkout for intentional parallel issue execution when the environment supports it, but never create, switch, rebase, merge, or delete workspaces automatically unless the current request/project policy explicitly authorizes that operation.
+5. Locate `.implement-issue/PROJECT_PROFILE.yaml`, `.implement-issue/PROJECT_BLUEPRINT.yaml`, and `.implement-issue/PROJECT_RULES.md` if present.
+6. Do not interpret the workflow runtime or its skill-adapter files as evidence about the target application's stack.
+
+Known parallel work is a coordination input, not a reason to invent a scheduler, lock service, agent registry, dependency graph, heartbeat, or execution order.
 
 ## 2. Establish project context
 
@@ -83,19 +90,27 @@ Capture only supported facts: identifier, title, description, acceptance criteri
 
 If the task is sufficiently defined without a tracker, proceed. Do not require a tracker integration.
 
-### Session handoff and resume
+### Issue-scoped execution artifacts, handoff and resume
 
-Use `.implement-issue/HANDOFF.md` only for work that is likely to continue later: an explicit pause, a blocker/human gate with unfinished work, or an interrupted in-progress issue. Do not continuously rewrite it during normal uninterrupted execution.
+Resolve one stable filesystem-safe **issue key** for the current work from the strongest available issue identifier/reference. If no stable external identifier exists, establish one local issue key once and reuse it for that issue; do not silently change keys between sessions.
 
-A handoff is a **resume hypothesis**, never a source of truth. Keep it compact and operational: issue/reference, semantic state, current workspace/branch when known, validated completed work, in-progress/uncommitted surfaces, next concrete action, blockers/human decision, and pointers to relevant validation/evidence artifacts. Never store secrets.
+Issue-execution artifacts live under:
+
+`.implement-issue/issues/<issue-key>/`
+
+Use the issue-scoped `HANDOFF.md` only for work that is likely to continue later: an explicit pause, a blocker/human gate with unfinished work, or an interrupted in-progress issue. Do not continuously rewrite it during normal uninterrupted execution.
+
+A handoff is a **resume hypothesis**, never a source of truth. Keep it compact and operational: issue/reference, issue key, semantic state, current workspace/branch when known, integration baseline when known, validated completed work, in-progress/uncommitted surfaces, next concrete action, blockers/human decision, and pointers to relevant validation/evidence artifacts. Never store secrets.
 
 On resume, before editing:
 
-1. Read the handoff if present.
-2. Reconcile it against current repository/VCS state when available: workspace/branch, status/uncommitted changes, recent relevant history, issue/tracker state, and durable IssueCraft artifacts.
+1. Read `.implement-issue/issues/<issue-key>/HANDOFF.md` if present.
+2. Reconcile it against current repository/VCS state when available: workspace/branch, status/uncommitted changes, recent relevant history, integration baseline/current base, issue/tracker state, and durable IssueCraft artifacts.
 3. Let current evidence win over stale narrative. Do not redo work already proven complete, and do not discard partial/unexplained user changes.
 4. If the handoff and current evidence conflict materially and safe reconciliation is not possible, surface the smallest necessary question/decision.
-5. Replace or clear the handoff when its resume state is superseded or the issue is truly complete.
+5. Replace or clear only the current issue's handoff when its resume state is superseded or the issue is truly complete.
+
+For backward compatibility, a legacy root-level `.implement-issue/HANDOFF.md` may be read only when its embedded issue identity unambiguously matches the current issue. Reconcile it before reuse, write future handoff state to the issue-scoped path, and do not delete or reinterpret an ambiguous legacy artifact automatically.
 
 At resume and at material semantic phase transitions, re-read the **mutable authoritative inputs** that the next decision depends on instead of relying on conversation memory. This may include the live issue/tracker state, project rules, affected contracts/configuration, changed files, and durable validation artifacts. Keep the reread proportional; do not rescan unchanged unrelated repository areas.
 
@@ -146,6 +161,12 @@ Retrieve context progressively rather than reading the repository exhaustively:
 Before editing a materially coupled surface, perform **risk-based impact reconnaissance**. Establish the relevant upstream consumers/callers, downstream dependencies, public contracts/interfaces, persistence/data effects, analogous implementation, and existing tests to the extent required by the change. Trivial isolated edits do not require artificial call-graph work.
 
 If current tracker/VCS/repository evidence reveals another active change touching the same public contract, migration, persistence boundary, or other high-collision surface, treat the overlap as a coordination risk. Overlap alone is not an implicit dependency and must not fabricate ordering; only an explicit/evidenced dependency blocks or constrains execution.
+
+For known parallel execution:
+- isolated workspaces with disjoint change surfaces should continue without an extra gate;
+- isolated workspaces with overlapping files/contracts remain allowed unless project/tracker evidence establishes a dependency or incompatibility; raise coordination/validation depth proportionally instead of serializing by default;
+- known concurrent mutation in the same physical working tree is unsafe because code, index, generated artifacts, and IssueCraft issue state can interleave; stop mutation until isolation exists or concurrency ends;
+- two executions for the same issue may be intentional alternatives or accidental duplication; do not assume either case without evidence.
 
 ### Solution economy and root-cause placement
 
@@ -270,7 +291,7 @@ When implementation is complete enough for human review:
 
 1. Generate the issue-specific manual validation plan defined in `VALIDATION.md`.
 2. Include exact prerequisites, steps, expected results, regression checks, edge cases, security-sensitive checks, performance-sensitive checks, accessibility/compatibility checks, data/migration checks, and cleanup when relevant to the change.
-3. Save/update `.implement-issue/MANUAL_VALIDATION_PLAN.md` when filesystem writes are available.
+3. Save/update `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md` when filesystem writes are available.
 4. Transition to semantic `In Review` if possible; otherwise report the requested transition.
 5. Present a compact handoff: semantic state, material implementation delta, validation summary, unresolved risks/unavailable checks, artifact path, and one concrete human next action. Do not duplicate the full manual validation artifact in chat.
 

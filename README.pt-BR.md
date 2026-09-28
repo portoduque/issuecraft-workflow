@@ -5,7 +5,7 @@
 
 Workflow agnóstico de agente de IA e de stack para implementar issues desde a descoberta do projeto até a validação humana.
 
-**Versão:** 0.14.0  
+**Versão:** 0.15.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -118,12 +118,14 @@ Segurança e performance continuam sendo análises obrigatórias de impacto; vej
 Depois da validação automatizada, o IssueCraft gera:
 
 ```text
-.implement-issue/MANUAL_VALIDATION_PLAN.md
+.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md
 ```
+
+O IssueCraft resolve `<issue-key>` a partir da issue/referência atual e informa o caminho exato do artefato no handoff.
 
 O passo final humano é:
 
-1. Abra `.implement-issue/MANUAL_VALIDATION_PLAN.md`.
+1. Abra o `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md` informado.
 2. Confirme os pré-requisitos/setup listados.
 3. Execute cada cenário numerado na ordem.
 4. Compare cada ação com o resultado esperado.
@@ -156,6 +158,14 @@ Comportamento específico de provedor não pode vazar para `core/`. Veja [docs/c
 O IssueCraft descobre o projeto-alvo em vez de assumir Python, JavaScript, Java, banco, framework ou test runner.
 
 Comandos e ferramentas vêm de evidência do repositório e contexto aprovado. Monorepos e repositórios multisserviço são tratados por componente quando necessário.
+
+## Trabalho paralelo
+
+Vários agentes/issues podem trabalhar em paralelo, mas execuções que alteram código devem preferir workspaces/checkouts físicos isolados quando o ambiente suportar.
+
+O IssueCraft **não** cria servidor de locks, scheduler, heartbeat, registro de agentes, worktree automático, rebase automático ou merge automático. Ele separa artefatos por issue, relê estado compartilhado antes de writes concorrentes aprovados, trata overlap como risco em vez de dependência automática e invalida seletivamente evidências quando a base de integração muda.
+
+Veja [docs/parallel-work.md](docs/parallel-work.md).
 
 ## Aprendizado controlado
 
@@ -194,7 +204,7 @@ seu-projeto/
         └── VERSION
 ```
 
-Estado específico do projeto como `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, propostas e `HANDOFF.md` só é criado quando necessário e depois do gate aplicável.
+Conhecimento compartilhado como `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md` e propostas continua no nível do projeto. Handoff, validação manual e relatório de execução ficam por issue em `.implement-issue/issues/<issue-key>/`.
 
 ## Atualizando o IssueCraft
 
@@ -240,6 +250,7 @@ A CI roda a suíte principal em Linux, macOS e Windows e aplica o gate de covera
 - [Smoke de compatibilidade para releases](docs/compatibility-release.md)
 - [Testes e coverage](docs/testing.md)
 - [Validação manual e gate de Done](docs/validation.md)
+- [Segurança para trabalho paralelo](docs/parallel-work.md)
 - [Aprendizado controlado](docs/learning.md)
 - [Arquivos do runtime do projeto](docs/project-files.md)
 

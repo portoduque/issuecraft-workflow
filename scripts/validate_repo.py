@@ -19,6 +19,7 @@ REQUIRED = [
     "docs/validation.md",
     "docs/learning.md",
     "docs/compatibility-release.md",
+    "docs/parallel-work.md",
     "docs/project-files.md",
     "core/WORKFLOW.md",
     "core/CAPABILITIES.md",
@@ -188,7 +189,11 @@ def check_quality_contracts(errors: list[str]) -> None:
     ):
         if phrase.lower() not in validation.lower():
             errors.append(f"validation v0.8 evidence contract missing phrase: {phrase}")
-    for phrase in ("Session handoff and resume", ".implement-issue/HANDOFF.md", "resume hypothesis"):
+    for phrase in (
+        "Issue-scoped execution artifacts, handoff and resume",
+        ".implement-issue/issues/<issue-key>/HANDOFF.md",
+        "resume hypothesis",
+    ):
         if phrase.lower() not in workflow.lower():
             errors.append(f"workflow v0.8 handoff contract missing phrase: {phrase}")
     gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
@@ -340,6 +345,40 @@ def check_quality_contracts(errors: list[str]) -> None:
             errors.append(f"discovery v0.14 coverage contract missing phrase: {phrase}")
 
     for phrase in (
+        "parallel-work preflight",
+        "same physical working tree",
+        "prefer an already-isolated workspace/worktree/checkout",
+        "Known parallel work is a coordination input",
+        ".implement-issue/issues/<issue-key>/HANDOFF.md",
+    ):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.15 parallel-work contract missing phrase: {phrase}")
+    for phrase in (
+        "Parallel issue work should remain concurrent when safely isolated",
+        "Known concurrent mutation inside the same physical working tree is an unsafe execution condition",
+        ".implement-issue/issues/<issue-key>/",
+    ):
+        if phrase.lower() not in lifecycle.lower():
+            errors.append(f"lifecycle v0.15 parallel-work contract missing phrase: {phrase}")
+    for phrase in (
+        "Integration freshness before In Review",
+        "mark only dependent validation evidence stale",
+        "Do not perform an automatic rebase/merge solely because the base moved",
+        "selective invalidation",
+        ".implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md",
+    ):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"validation v0.15 parallel-work contract missing phrase: {phrase}")
+    for phrase in (
+        "Shared project-state write freshness",
+        "re-read the current target state",
+        "reconcile rather than overwriting the newer state",
+        "optimistic concurrency",
+    ):
+        if phrase.lower() not in gates.lower():
+            errors.append(f"human-gate v0.15 shared-state contract missing phrase: {phrase}")
+
+    for phrase in (
         "approval scope integrity",
         "authorization is bound to the material action/decision and target",
         "prior approval is stale",
@@ -399,8 +438,8 @@ def check_learning_contract(errors: list[str]) -> None:
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 55:
-        errors.append(f"expected 55 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 59:
+        errors.append(f"expected 59 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))
@@ -485,6 +524,7 @@ def check_readmes(errors: list[str]) -> None:
             "docs/validation.md",
             "docs/learning.md",
             "docs/compatibility-release.md",
+            "docs/parallel-work.md",
         ):
             if phrase not in text:
                 errors.append(f"{name} onboarding missing: {phrase}")
@@ -496,10 +536,22 @@ def check_readmes(errors: list[str]) -> None:
 
 def check_documentation_integrity(errors: list[str]) -> None:
     project_files = (ROOT / "docs/project-files.md").read_text(encoding="utf-8")
+    parallel = (ROOT / "docs/parallel-work.md").read_text(encoding="utf-8")
     if "proposals/" not in project_files:
         errors.append("project-files docs missing canonical proposals/ path")
     if "improvements/" in project_files:
         errors.append("project-files docs still contain obsolete improvements/ path")
+    for phrase in ("issues/", "<issue-key>", "HANDOFF.md", "MANUAL_VALIDATION_PLAN.md", "ISSUE_EXECUTION_REPORT.md"):
+        if phrase.lower() not in project_files.lower():
+            errors.append(f"project-files v0.15 issue-scoped artifact docs missing phrase: {phrase}")
+    for phrase in (
+        "There is no lock server, heartbeat, agent registry, or database",
+        "same physical working tree",
+        "IssueCraft does not auto-rebase or auto-merge",
+        "Legacy artifacts",
+    ):
+        if phrase.lower() not in parallel.lower():
+            errors.append(f"parallel-work docs missing phrase: {phrase}")
 
     compatibility = (ROOT / "docs/compatibility-release.md").read_text(encoding="utf-8")
     for phrase in (

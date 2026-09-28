@@ -77,6 +77,10 @@ EXPECTED_SCENARIOS = [
     "53-code-coverage-quality-guard.md",
     "54-readme-manual-done-integrity.md",
     "55-agent-compatibility-release-smoke.md",
+    "56-parallel-isolated-issues.md",
+    "57-same-workspace-concurrent-mutation.md",
+    "58-shared-state-optimistic-concurrency.md",
+    "59-integration-freshness.md",
 ]
 
 
@@ -388,12 +392,12 @@ def eval_risk_based_discrimination() -> None:
 def eval_resumable_handoff() -> None:
     require(
         read("core/WORKFLOW.md"),
-        "Session handoff and resume",
-        ".implement-issue/HANDOFF.md",
+        "Issue-scoped execution artifacts, handoff and resume",
+        ".implement-issue/issues/<issue-key>/HANDOFF.md",
         "resume hypothesis",
         "Reconcile it against current repository/VCS state",
         "current evidence win over stale narrative",
-        "Replace or clear the handoff",
+        "Replace or clear only the current issue's handoff",
     )
 
 
@@ -844,6 +848,69 @@ def eval_agent_compatibility_release_smoke() -> None:
         raise AssertionError("provider-specific compatibility behavior leaked into canonical core")
 
 
+def eval_parallel_isolated_issues() -> None:
+    workflow = read("core/WORKFLOW.md")
+    lifecycle = read("core/ISSUE_LIFECYCLE.md")
+    project_files = read("docs/project-files.md")
+    require(
+        workflow,
+        "parallel-work preflight",
+        "prefer an already-isolated workspace/worktree/checkout",
+        "Known parallel work is a coordination input",
+        "isolated workspaces with disjoint change surfaces should continue without an extra gate",
+    )
+    require(
+        lifecycle,
+        "Parallel issue work should remain concurrent when safely isolated",
+        ".implement-issue/issues/<issue-key>/",
+    )
+    require(project_files, "issues/", "<issue-key>", "PROJECT_PROFILE.yaml")
+
+
+def eval_same_workspace_concurrent_mutation() -> None:
+    workflow = read("core/WORKFLOW.md")
+    lifecycle = read("core/ISSUE_LIFECYCLE.md")
+    require(
+        workflow,
+        "same physical working tree",
+        "do not begin/continue application mutations until the work is isolated or the concurrent mutation stops",
+        "never create, switch, rebase, merge, or delete workspaces automatically",
+    )
+    require(
+        lifecycle,
+        "Known concurrent mutation inside the same physical working tree is an unsafe execution condition",
+    )
+
+
+def eval_shared_state_optimistic_concurrency() -> None:
+    gates = read("core/HUMAN_GATES.md")
+    parallel = read("docs/parallel-work.md")
+    require(
+        gates,
+        "Shared project-state write freshness",
+        "re-read the current target state",
+        "reconcile rather than overwriting the newer state",
+        "This is optimistic concurrency",
+    )
+    require(
+        parallel,
+        "There is no lock server, heartbeat, agent registry, or database",
+        "Before an approved write to shared project state, re-read the current file",
+    )
+
+
+def eval_integration_freshness() -> None:
+    validation = read("core/VALIDATION.md")
+    require(
+        validation,
+        "Integration freshness before In Review",
+        "If the base changed only on surfaces that cannot materially affect this issue",
+        "mark only dependent validation evidence stale",
+        "Do not perform an automatic rebase/merge solely because the base moved",
+        "selective invalidation",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -900,6 +967,10 @@ EVALS = [
     eval_code_coverage_quality_guard,
     eval_readme_manual_done_integrity,
     eval_agent_compatibility_release_smoke,
+    eval_parallel_isolated_issues,
+    eval_same_workspace_concurrent_mutation,
+    eval_shared_state_optimistic_concurrency,
+    eval_integration_freshness,
 ]
 
 
