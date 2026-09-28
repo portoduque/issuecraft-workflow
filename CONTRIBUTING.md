@@ -48,6 +48,7 @@ Changes that affect the canonical workflow must preserve:
 - risk-based isolated discrimination/fault checks when test effectiveness is materially uncertain;
 - resumable handoff snapshots that are reconciled against current repository/VCS/tracker evidence before edits;
 - human gating for genuine hard-to-reverse one-way-door choices without turning ordinary reversible engineering into approval ceremony;
+- approval-scope integrity: gated authorization stays bound to the material action/target/effects reviewed by the human, material drift requires fresh approval, and equivalent reversible mechanics stay autonomous;
 - behavior-delta semantics for added/modified/removed/renamed-preserved behavior, including preservation of existing obligations not explicitly superseded;
 - autonomous local replanning with scope integrity, plus a human gate only when the issue's intent/outcome/acceptance/scope identity materially changes;
 - change-coherence review tying material diff changes to issue/project/risk evidence and reconciling implementation, tests, and manual validation;
