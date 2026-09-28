@@ -22,6 +22,15 @@
 
 -
 
+## Parallel work / integration freshness
+
+- Issue key:
+- Workspace / branch:
+- Integration baseline/current base:
+- Known overlap/collision:
+- Relevant base changes reconciled:
+- Validation evidence invalidated/rerun:
+
 ## Solution economy / known limits
 
 - Existing capability reused / why new ownership was necessary:
