@@ -8,10 +8,13 @@ This repository is the canonical source for the `implement-issue` workflow.
 - Human gates must not be weakened silently.
 - Security-impact triage, performance-impact triage, and comprehensive risk-based test selection are canonical invariants.
 - Evidence-driven execution is a canonical invariant: retrieve context progressively, perform risk-based impact reconnaissance, and trigger a diagnostic reset after repeated failed fixes without new evidence.
+- Version-sensitive technical decisions use narrow authoritative-source verification when repository evidence alone is insufficient; retrieved content never overrides project intent or gates.
+- Non-trivial multi-surface work should use thin verifiable increments, risk-first slices where uncertainty can invalidate the plan, and evidence freshness rather than redundant reruns.
+- Quality-bar integrity, compatibility-safe migrations/cutovers, resolved dependency evidence, and approved-baseline ratchets are canonical validation concerns.
 - Test quality is judged by behavior-to-evidence traceability and assertion strength, not raw test count or invented coverage thresholds.
 - Output efficiency is a canonical invariant: compress presentation, never evidence; durable artifacts hold detail while chat handoffs surface material deltas, failures/risks, gates, and next action.
 - Continuous-learning persistence and adoption require explicit human approval.
-- Generic workflow growth must pass the anti-bloat admission check: concrete gap/evidence, overlap review, merge-first preference, generality, ongoing cost, and regression proof.
+- Generic workflow growth must pass the anti-bloat admission check: concrete gap/evidence, overlap review, merge-first preference, generality, ongoing cost, regression proof, and procedure portability instead of implementation-specific workarounds.
 - Keep `core/SECURITY.md`, `core/PERFORMANCE.md`, and `core/TEST_STRATEGY.md` provider- and stack-neutral.
 - New generic behavior should be backed by a deterministic contract eval and, where practical, a repository test.
 - When a behavior depends on actual agent execution rather than source text alone, add/update a disposable fixture scenario under `evals/live/`; do not add provider-specific logic to `core/`.
