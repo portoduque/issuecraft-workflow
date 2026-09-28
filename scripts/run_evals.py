@@ -109,7 +109,15 @@ def eval_preserve_user_changes() -> None:
 
 def eval_improvement_proposal() -> None:
     text = read("core/CONTINUOUS_IMPROVEMENT.md")
-    require(text, "must not self-modify silently", ".implement-issue/proposals/", ".implement-issue/LEARNINGS.md", "explicit human approval")
+    require(
+        text,
+        "must not self-modify silently",
+        ".implement-issue/proposals/",
+        ".implement-issue/LEARNINGS.md",
+        "explicit human approval",
+        "Recurrence strengthens evidence, not authority",
+        "Recurrence never auto-promotes",
+    )
     require(read("core/HUMAN_GATES.md"), "Persistence and adoption are distinct decisions")
 
 
