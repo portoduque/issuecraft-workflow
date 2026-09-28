@@ -971,8 +971,9 @@ def eval_release_artifact_hygiene() -> None:
     release = read("scripts/release_zip.py")
     require(
         release,
-        "evals/live/runners.local.json",
-        "evals/live/results",
+        'relative == Path("evals/live")',
+        "runners.local.json",
+        '"results"',
         ".coverage.*",
         "coverage.xml",
         "htmlcov",
