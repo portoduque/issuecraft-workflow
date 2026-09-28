@@ -37,6 +37,11 @@
       "id": "validation-is-honest",
       "severity": "normal",
       "text": "The candidate distinguishes checks actually performed from manual validation and does not fabricate automated results."
+    },
+    {
+      "id": "issue-scoped-manual-plan",
+      "severity": "blocker",
+      "text": "The candidate creates or updates the manual validation plan under .implement-issue/issues/ISSUE-001/MANUAL_VALIDATION_PLAN.md and does not create a new root-level .implement-issue/MANUAL_VALIDATION_PLAN.md."
     }
   ]
 }

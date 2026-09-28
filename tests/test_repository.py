@@ -28,7 +28,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual([], validator.validate())
 
     def test_contract_evals_execute_all_scenarios(self):
-        self.assertEqual(59, len(contract_evals.EVALS))
+        self.assertEqual(63, len(contract_evals.EVALS))
         self.assertEqual([], contract_evals.run())
 
     def test_agent_adapters_are_identical_and_delegate_to_core(self):
@@ -472,6 +472,21 @@ class RepositoryTests(unittest.TestCase):
             for rel in ("PROJECT_PROFILE.yaml", "PROJECT_BLUEPRINT.yaml", "PROJECT_RULES.md", "LEARNINGS.md", "HANDOFF.md", "proposals", "issues"):
                 self.assertFalse((state / rel).exists(), rel)
 
+    def test_first_install_refuses_existing_adapter_without_partial_runtime(self):
+        with tempfile.TemporaryDirectory() as td:
+            target = Path(td)
+            adapter = target / ".agents/skills/implement-issue"
+            adapter.mkdir(parents=True)
+            skill = adapter / "SKILL.md"
+            skill.write_text("custom third-party skill\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(SystemExit, "Refusing first install"):
+                installer.install(target)
+
+            self.assertEqual("custom third-party skill\n", skill.read_text(encoding="utf-8"))
+            self.assertFalse((target / ".implement-issue/system").exists())
+            self.assertFalse((target / ".claude/skills/implement-issue").exists())
+
     @unittest.skipUnless(hasattr(os, "symlink"), "symlink support required")
     def test_installer_refuses_managed_symlink(self):
         with tempfile.TemporaryDirectory() as td, tempfile.TemporaryDirectory() as outside_td:
@@ -494,6 +509,37 @@ class RepositoryTests(unittest.TestCase):
             self.assertTrue(names)
             self.assertFalse(any("/.git/" in f"/{name}" or name.endswith("/.git") for name in names))
             self.assertFalse(any("__pycache__" in name or name.endswith(".pyc") for name in names))
+
+    def test_release_zip_excludes_local_eval_and_coverage_artifacts(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            source = root / "source"
+            output = root / "out"
+            (source / "evals/live/results").mkdir(parents=True)
+            (source / "evals/live").mkdir(parents=True, exist_ok=True)
+            (source / "htmlcov").mkdir()
+            (source / "VERSION").write_text("9.9.9\n", encoding="utf-8")
+            (source / "README.md").write_text("keep\n", encoding="utf-8")
+            (source / "evals/live/runners.local.json").write_text('{"secretish":"local"}\n', encoding="utf-8")
+            (source / "evals/live/results/result.jsonl").write_text("{}\n", encoding="utf-8")
+            (source / ".coverage").write_text("local\n", encoding="utf-8")
+            (source / ".coverage.test").write_text("local\n", encoding="utf-8")
+            (source / "coverage.xml").write_text("<coverage/>\n", encoding="utf-8")
+            (source / "htmlcov/index.html").write_text("local\n", encoding="utf-8")
+
+            archive = release_zip.create_release_zip(output, source_root=source)
+            with zipfile.ZipFile(archive) as zf:
+                names = zf.namelist()
+            joined = "\n".join(names)
+            self.assertIn("README.md", joined)
+            for forbidden in (
+                "runners.local.json",
+                "evals/live/results/",
+                "/.coverage",
+                "coverage.xml",
+                "htmlcov/",
+            ):
+                self.assertNotIn(forbidden, joined)
 
     def test_readmes_have_copy_paste_onboarding_and_core_guarantees(self):
         for name in ("README.md", "README.pt-BR.md"):
@@ -610,10 +656,10 @@ class RepositoryTests(unittest.TestCase):
             self.assertIn(phrase.lower(), validation.lower())
 
         for phrase in (
-            "Shared project-state write freshness",
-            "re-read the current target state",
+            "Project-scoped state write freshness",
+            "re-read the current target state visible from the current workspace/integration point",
             "reconcile rather than overwriting the newer state",
-            "optimistic concurrency",
+            "optimistic concurrency over visible project state",
         ):
             self.assertIn(phrase.lower(), gates.lower())
 
@@ -633,6 +679,46 @@ class RepositoryTests(unittest.TestCase):
             "evals/scenarios/57-same-workspace-concurrent-mutation.md",
             "evals/scenarios/58-shared-state-optimistic-concurrency.md",
             "evals/scenarios/59-integration-freshness.md",
+        ):
+            self.assertTrue((ROOT / rel).is_file())
+
+    def test_v016_operational_hardening_contracts(self):
+        security = (ROOT / "core/SECURITY.md").read_text(encoding="utf-8")
+        workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
+        parallel = (ROOT / "docs/parallel-work.md").read_text(encoding="utf-8")
+        install_doc = (ROOT / "docs/install.md").read_text(encoding="utf-8")
+        human_done = json.loads(
+            (ROOT / "evals/live/scenarios/human-done-gate/scenario.json").read_text(encoding="utf-8")
+        )
+        criteria = "\n".join(item["text"] for item in human_done["criteria"])
+
+        for phrase in (
+            "Managed IssueCraft state path safety",
+            "relative path beneath that root",
+            "Refuse path traversal",
+            "symlink/junction/reparse-point",
+            "single conservative path segment",
+            "stable disambiguator",
+        ):
+            self.assertIn(phrase.lower(), security.lower())
+
+        for phrase in (
+            "Workspace isolation does not imply that local IssueCraft installation/state is physically synchronized across workspaces",
+            "never assume an uncommitted change from another workspace is shared",
+            "The key is one conservative path segment, never a path",
+        ):
+            self.assertIn(phrase.lower(), workflow.lower())
+
+        self.assertIn("Worktree visibility boundary".lower(), parallel.lower())
+        self.assertIn("Parallel work / worktrees".lower(), install_doc.lower())
+        self.assertIn(".implement-issue/issues/ISSUE-001/MANUAL_VALIDATION_PLAN.md", criteria)
+        self.assertIn("does not create a new root-level .implement-issue/MANUAL_VALIDATION_PLAN.md", criteria)
+
+        for rel in (
+            "evals/scenarios/60-managed-state-path-safety.md",
+            "evals/scenarios/61-worktree-state-visibility.md",
+            "evals/scenarios/62-installer-adapter-collision.md",
+            "evals/scenarios/63-release-artifact-hygiene.md",
         ):
             self.assertTrue((ROOT / rel).is_file())
 

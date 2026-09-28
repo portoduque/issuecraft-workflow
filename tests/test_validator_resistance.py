@@ -168,9 +168,9 @@ class ValidatorResistanceTests(unittest.TestCase):
                 )
                 mutate_text(
                     "core/HUMAN_GATES.md",
-                    "Shared project-state write freshness",
-                    "Shared state handling",
-                    "human-gate v0.15 shared-state contract missing phrase",
+                    "Project-scoped state write freshness",
+                    "Project state handling",
+                    "human-gate v0.15 project-state contract missing phrase",
                 )
                 mutate_text(
                     "core/VALIDATION.md",
@@ -183,6 +183,37 @@ class ValidatorResistanceTests(unittest.TestCase):
                     "There is no lock server, heartbeat, agent registry, or database",
                     "Coordination is lightweight",
                     "parallel-work docs missing phrase",
+                )
+
+                mutate_text(
+                    "core/SECURITY.md",
+                    "Managed IssueCraft state path safety",
+                    "Managed state paths",
+                    "security v0.16 managed-state path contract missing phrase",
+                )
+                mutate_text(
+                    "core/WORKFLOW.md",
+                    "Workspace isolation does not imply that local IssueCraft installation/state is physically synchronized across workspaces",
+                    "Workspace isolation keeps state available",
+                    "workflow v0.16 operational-hardening contract missing phrase",
+                )
+                mutate_text(
+                    "docs/parallel-work.md",
+                    "Worktree visibility boundary",
+                    "Worktree behavior",
+                    "parallel-work docs missing phrase",
+                )
+                mutate_text(
+                    "scripts/release_zip.py",
+                    "runners.local.json",
+                    "runner.local.json",
+                    "release ZIP local-artifact exclusion missing",
+                )
+                mutate_text(
+                    "scripts/install.py",
+                    "Refusing first install because an implement-issue adapter already exists",
+                    "Adapter conflict",
+                    "installer adapter-collision protection missing",
                 )
 
                 manifest_path = sandbox / "manifest.json"
@@ -198,12 +229,12 @@ class ValidatorResistanceTests(unittest.TestCase):
                 manifest_path.write_text(manifest_original, encoding="utf-8")
                 self.assertEqual([], validator.validate())
 
-                scenario = sandbox / "evals/scenarios/59-integration-freshness.md"
+                scenario = sandbox / "evals/scenarios/63-release-artifact-hygiene.md"
                 scenario_bytes = scenario.read_bytes()
                 scenario.unlink()
                 errors = validator.validate()
                 self.assertTrue(
-                    any("expected 59 behavioral eval scenarios" in error for error in errors),
+                    any("expected 63 behavioral eval scenarios" in error for error in errors),
                     f"scenario-count mutant survived; errors={errors}",
                 )
                 scenario.write_bytes(scenario_bytes)

@@ -5,7 +5,7 @@
 
 AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation.
 
-**Version:** 0.15.0  
+**Version:** 0.16.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -163,7 +163,7 @@ Commands and tools come from repository evidence and approved project context. M
 
 Multiple agents/issues may run in parallel, but mutating executions should use isolated physical workspaces/checkouts when the environment supports them.
 
-IssueCraft does **not** run a lock server, scheduler, heartbeat, agent registry, auto-worktree, auto-rebase or auto-merge. It keeps operational artifacts per issue, re-reads shared project state before approved concurrent writes, treats overlap as risk rather than automatic dependency, and selectively invalidates stale validation when the integration base changes.
+IssueCraft does **not** run a lock server, scheduler, heartbeat, agent registry, auto-worktree, auto-rebase or auto-merge. It keeps operational artifacts per issue, re-reads project-scoped state visible in the current workspace/integration point before approved concurrent writes, treats overlap as risk rather than automatic dependency, and selectively invalidates stale validation when the integration base changes. A new worktree must have the IssueCraft runtime/adapters available there; local uncommitted state from another worktree is not assumed to be shared.
 
 See [docs/parallel-work.md](docs/parallel-work.md).
 

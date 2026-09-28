@@ -2,6 +2,20 @@
 
 All notable changes are documented here.
 
+## 0.16.0 - 2026-09-27
+
+Operational hardening release.
+
+- Added managed IssueCraft state path-safety rules: all `.implement-issue/` writes stay inside the authorized repository, traversal is refused, redirecting symlink/junction/reparse-point paths are treated as unsafe, and issue keys are conservative single path segments with stable disambiguation when needed.
+- Clarified that Profile/Blueprint/Rules/Learnings are project-scoped but not magically synchronized across isolated worktrees; optimistic concurrency applies only to state visible through the current workspace/integration point.
+- Documented the two safe parallel-work distribution paths: install IssueCraft in each worktree that needs it, or use the project's approved/versioned runtime/adapters.
+- Hardened first install so an existing same-name `implement-issue` adapter is not silently overwritten before an IssueCraft runtime exists; explicit `--overwrite-system` remains the intentional replacement/update path.
+- Hardened release ZIP hygiene by excluding local live-eval runner config/results and generated coverage output in addition to existing VCS/cache exclusions.
+- Strengthened the live `human-done-gate` scenario so real-agent evaluation requires the issue-scoped `.implement-issue/issues/ISSUE-001/MANUAL_VALIDATION_PLAN.md` path and rejects recreation of the legacy root-level plan.
+- Updated architecture, project-file, installation, security, README, PR-template, contribution, and maintainer guidance for the v0.16 boundaries.
+- Added deterministic scenarios 60-63 plus repository and validator-resistance tests for managed-state safety, worktree visibility, installer collisions, and release hygiene.
+- Preserved the no-orchestrator design: no daemon, lock service, heartbeat, central state database, automatic worktree lifecycle, automatic rebase/merge, or provider-specific core logic was added.
+
 ## 0.15.0 - 2026-09-27
 
 Parallel-work safety release.

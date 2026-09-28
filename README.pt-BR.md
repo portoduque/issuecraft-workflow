@@ -5,7 +5,7 @@
 
 Workflow agnóstico de agente de IA e de stack para implementar issues desde a descoberta do projeto até a validação humana.
 
-**Versão:** 0.15.0  
+**Versão:** 0.16.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -163,7 +163,7 @@ Comandos e ferramentas vêm de evidência do repositório e contexto aprovado. M
 
 Vários agentes/issues podem trabalhar em paralelo, mas execuções que alteram código devem preferir workspaces/checkouts físicos isolados quando o ambiente suportar.
 
-O IssueCraft **não** cria servidor de locks, scheduler, heartbeat, registro de agentes, worktree automático, rebase automático ou merge automático. Ele separa artefatos por issue, relê estado compartilhado antes de writes concorrentes aprovados, trata overlap como risco em vez de dependência automática e invalida seletivamente evidências quando a base de integração muda.
+O IssueCraft **não** cria servidor de locks, scheduler, heartbeat, registro de agentes, worktree automático, rebase automático ou merge automático. Ele separa artefatos por issue, relê o estado do projeto visível no workspace/ponto de integração atual antes de writes concorrentes aprovados, trata overlap como risco em vez de dependência automática e invalida seletivamente evidências quando a base de integração muda. Um novo worktree precisa ter o runtime/adapters do IssueCraft disponíveis nele; estado local não integrado de outro worktree não é presumido como compartilhado.
 
 Veja [docs/parallel-work.md](docs/parallel-work.md).
 

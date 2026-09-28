@@ -1,6 +1,6 @@
 # Security Policy
 
-IssueCraft is instruction-first and does not require network access or credentials. The optional installer copies local files only and refuses managed destination symlinks so installation cannot intentionally write through those paths outside the target repository.
+IssueCraft is instruction-first and does not require network access or credentials. The optional installer copies local files only and refuses managed destination symlinks so installation cannot intentionally write through those paths outside the target repository. Canonical runtime rules also require later `.implement-issue/` state writes to remain contained under the authorized repository and to refuse traversal or redirecting filesystem paths.
 
 When IssueCraft is used by an agent, that agent may have powerful repository, shell, browser, connector, cloud, or tracker permissions. The canonical workflow therefore requires untrusted-input handling, least privilege, explicit production/destructive-action gates, secret protection, security/performance triage, risk-based validation, and a human-owned final Done gate.
 

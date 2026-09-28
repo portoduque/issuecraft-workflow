@@ -13,12 +13,16 @@
 - [ ] No change
 - [ ] Changes a human gate (explain explicitly below)
 
-## Security / performance impact
+## Security / performance / parallel-work impact
 
 - Security:
 - Performance:
+- Parallel work / project-state impact:
 
 ## Evals / regression coverage
+
+- Deterministic scenario(s):
+- Live-agent scenario impact (if behavior depends on real agent execution):
 
 ## Validation
 
@@ -26,3 +30,5 @@
 - [ ] `python scripts/run_evals.py`
 - [ ] `python scripts/run_live_evals.py validate`
 - [ ] `python -m unittest discover tests -v`
+- [ ] Branch-aware coverage remains at or above the repository gate
+- [ ] If adapter/discovery/invocation changed, live host smoke was run or explicitly recorded as not yet verified
