@@ -82,4 +82,4 @@ If Python is unavailable, copy:
 - `.agents/skills/implement-issue/` → target `.agents/skills/implement-issue/`
 - `.claude/skills/implement-issue/` → target `.claude/skills/implement-issue/`
 
-Do not pre-create a Profile, Blueprint, Rules file, learning ledger, or proposal merely to bypass human-gated onboarding.
+Do not pre-create a Profile, Blueprint, Rules file, learning ledger, proposal, or HANDOFF snapshot merely to bypass human-gated onboarding or simulate interrupted work. `HANDOFF.md` is created only when unfinished work actually needs resumable state.
