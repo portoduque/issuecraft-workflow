@@ -7,7 +7,7 @@ The canonical rules live in `../core/VALIDATION.md` and `../core/HUMAN_GATES.md`
 After applicable automated validation is complete, IssueCraft generates:
 
 ```text
-.implement-issue/MANUAL_VALIDATION_PLAN.md
+.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md
 ```
 
 The plan is issue-specific and derived from the issue, acceptance criteria, actual diff, affected code, project rules and automated evidence.
@@ -16,7 +16,7 @@ It can contain prerequisites/setup, happy path, edge/error cases, regression/pre
 
 ## Human procedure
 
-1. Open `.implement-issue/MANUAL_VALIDATION_PLAN.md`.
+1. Open `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md`.
 2. Prepare the listed environment, role/permissions, test data and services.
 3. Execute the numbered scenarios in order.
 4. Check every expected result.
