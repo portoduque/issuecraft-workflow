@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+ADAPTER_COLLISION_PREFIX = "Refusing first install because an implement-issue adapter already exists"
 
 
 def refuse_managed_symlinks(target: Path, path: Path) -> None:
@@ -69,9 +70,8 @@ def install(target: Path, overwrite_system: bool = False) -> None:
         if conflicts:
             rendered = ", ".join(str(path) for path in conflicts)
             raise SystemExit(
-                "Refusing first install because an implement-issue adapter already "
-                f"exists: {rendered}. Preserve/rename the existing skill, or use "
-                "--overwrite-system only when replacing it is explicitly intended."
+                f"{ADAPTER_COLLISION_PREFIX}: {rendered}. Preserve/rename the existing "
+                "skill, or use --overwrite-system only when replacing it is explicitly intended."
             )
 
     state.mkdir(parents=True, exist_ok=True)
