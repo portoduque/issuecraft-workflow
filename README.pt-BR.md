@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.10.0  
+**Versão:** 0.11.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -69,6 +69,7 @@ Existe um único workflow canônico `implement-issue` que:
 - trata projetos vazios com uma entrevista curta e adaptativa em vez de inventar uma stack;
 - propõe um `PROJECT_PROFILE` para a realidade observada ou um `PROJECT_BLUEPRINT` para a arquitetura planejada;
 - exige aprovação humana antes de persistir conhecimento importante do projeto;
+- mantém aprovações de human gates vinculadas à ação material e ao alvo revisados; drift material torna a aprovação obsoleta em vez de ampliar a autorização silenciosamente;
 - detecta drift nas execuções futuras;
 - planeja e implementa a menor mudança coerente que atende a issue;
 - modela mudanças materiais como contrato atual → delta solicitado → contrato resultante, preservando obrigações existentes não alteradas;
