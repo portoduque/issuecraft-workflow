@@ -15,6 +15,10 @@ This repository is the canonical source for the `implement-issue` workflow.
 - Material obligations use evidence-or-zero, compound obligations are decomposed, unavailable checks need proportionate probe evidence, and discrimination checks are risk-based rather than universal.
 - Interrupted work may use a compact `HANDOFF.md`, but resume state is always reconciled against current repository/VCS/tracker/evidence before editing.
 - Genuine hard-to-reverse one-way-door decisions require the human gate when not already determined by authoritative project/issue evidence; ordinary reversible choices remain autonomous.
+- Material behavior changes use current-contract -> requested-delta -> resulting-contract reasoning when useful; modified behavior preserves unspecified existing obligations, removals are proven absent, and renamed/preserved behavior is verified semantically rather than by incidental internal names.
+- The implementation plan is a hypothesis. Local/reversible replanning stays autonomous, but material issue intent/scope drift uses the human gate and required behavior must never be silently narrowed/deferred to make implementation easier.
+- Before In Review, change coherence must reconcile issue/project contracts, behavior delta, diff, automated evidence, and manual validation; partial evidence never upgrades the unverified remainder to pass.
+- Compact validation output must be a projection of the complete result rather than reduced validation scope. External/reference context is read-only unless mutation is separately authorized.
 - Output efficiency is a canonical invariant: compress presentation, never evidence; durable artifacts hold detail while chat handoffs surface material deltas, failures/risks, gates, and next action.
 - Continuous-learning persistence and adoption require explicit human approval; recurrence may strengthen evidence but never auto-adopts a rule.
 - Generic workflow growth must pass the anti-bloat admission check: concrete gap/evidence, overlap review, merge-first preference, generality, ongoing cost, regression proof, and procedure portability instead of implementation-specific workarounds.
