@@ -416,7 +416,7 @@ python -m unittest discover tests -v
 
 A CI executa isso em Linux, macOS e Windows.
 
-Os 33 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
+Os 40 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
 
 ---
 
