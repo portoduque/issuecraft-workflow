@@ -69,6 +69,8 @@ EXPECTED_SCENARIOS = [
     "45-delegation-constraint-continuity.md",
     "46-live-eval-methodology.md",
     "47-approval-scope-integrity.md",
+    "48-semantic-output-economy.md",
+    "49-token-economy-evidence.md",
 ]
 
 
@@ -664,6 +666,54 @@ def eval_approval_scope_integrity() -> None:
     )
 
 
+def eval_semantic_output_economy() -> None:
+    workflow = read("core/WORKFLOW.md")
+    validation = read("core/VALIDATION.md")
+    require(
+        workflow,
+        "new decision-relevant information",
+        "State each material fact once",
+        "semantic compression floor",
+        "Do not invent opaque shorthand solely to save tokens",
+        "source-side narrowing/projection",
+    )
+    require(
+        validation,
+        "decisive result",
+        "shortest useful failure/error/location evidence",
+        "preserve material semantic qualifiers",
+        "a shorter statement that changes meaning is a validation/reporting defect",
+    )
+
+
+def eval_token_economy_evidence() -> None:
+    learning = read("core/CONTINUOUS_IMPROVEMENT.md")
+    live = read("evals/live/README.md")
+    rubric = read("evals/live/rubric.md")
+    require(
+        learning,
+        "Token-economy admission",
+        "net benefit",
+        "recurring instruction/context overhead",
+        "minimal terse control",
+        "marginal benefit",
+        "Do not invent a numeric savings claim",
+    )
+    require(
+        live,
+        "whole intervention",
+        "recurring instruction/context overhead",
+        "minimal terse control",
+        "not net-better",
+    )
+    require(
+        rubric,
+        "Communication efficiency",
+        "semantic qualifiers",
+        "narration of routine tool mechanics",
+    )
+
+
 EVALS = [
     eval_existing_project,
     eval_empty_project,
@@ -712,6 +762,8 @@ EVALS = [
     eval_delegation_constraint_continuity,
     eval_live_eval_methodology,
     eval_approval_scope_integrity,
+    eval_semantic_output_economy,
+    eval_token_economy_evidence,
 ]
 
 
