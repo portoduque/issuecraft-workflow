@@ -655,8 +655,9 @@ def check_release_hardening(errors: list[str]) -> None:
     if "issuecraft-workflow-" not in text:
         errors.append("release ZIP must use IssueCraft artifact name")
     for phrase in (
-        "evals/live/runners.local.json",
-        "evals/live/results",
+        'relative == Path("evals/live")',
+        "runners.local.json",
+        '"results"',
         ".coverage.*",
         "coverage.xml",
         "htmlcov",
