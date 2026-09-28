@@ -27,14 +27,19 @@ IGNORE = shutil.ignore_patterns(
     ".coverage",
     ".coverage.*",
     "coverage.xml",
-    "evals/live/runners.local.json",
-    "evals/live/results",
     "*.zip",
 )
 
 
 def create_release_zip(output_dir: Path | None = None, source_root: Path = ROOT) -> Path:
     source_root = source_root.resolve()
+
+    def ignore_release_artifacts(directory: str, names: list[str]) -> set[str]:
+        ignored = set(IGNORE(directory, names))
+        relative = Path(directory).resolve().relative_to(source_root)
+        if relative == Path("evals/live"):
+            ignored.update(name for name in ("runners.local.json", "results") if name in names)
+        return ignored
     version = (source_root / "VERSION").read_text(encoding="utf-8").strip()
     output_dir = (output_dir or source_root.parent).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -44,7 +49,7 @@ def create_release_zip(output_dir: Path | None = None, source_root: Path = ROOT)
     with tempfile.TemporaryDirectory() as td:
         stage_root = Path(td)
         staged = stage_root / archive_root_name
-        shutil.copytree(source_root, staged, ignore=IGNORE)
+        shutil.copytree(source_root, staged, ignore=ignore_release_artifacts)
         archive = shutil.make_archive(
             str(out_base),
             "zip",
