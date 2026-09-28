@@ -81,6 +81,10 @@ EXPECTED_SCENARIOS = [
     "57-same-workspace-concurrent-mutation.md",
     "58-shared-state-optimistic-concurrency.md",
     "59-integration-freshness.md",
+    "60-managed-state-path-safety.md",
+    "61-worktree-state-visibility.md",
+    "62-installer-adapter-collision.md",
+    "63-release-artifact-hygiene.md",
 ]
 
 
@@ -887,15 +891,16 @@ def eval_shared_state_optimistic_concurrency() -> None:
     parallel = read("docs/parallel-work.md")
     require(
         gates,
-        "Shared project-state write freshness",
-        "re-read the current target state",
+        "Project-scoped state write freshness",
+        "re-read the current target state visible from the current workspace/integration point",
         "reconcile rather than overwriting the newer state",
-        "This is optimistic concurrency",
+        "optimistic concurrency over visible project state",
     )
     require(
         parallel,
         "There is no lock server, heartbeat, agent registry, or database",
-        "Before an approved write to shared project state, re-read the current file",
+        "Before an approved write to project-scoped state",
+        "worktrees/checkouts do not magically share untracked or uncommitted files",
     )
 
 
@@ -908,6 +913,69 @@ def eval_integration_freshness() -> None:
         "mark only dependent validation evidence stale",
         "Do not perform an automatic rebase/merge solely because the base moved",
         "selective invalidation",
+    )
+
+
+def eval_managed_state_path_safety() -> None:
+    security = read("core/SECURITY.md")
+    workflow = read("core/WORKFLOW.md")
+    require(
+        security,
+        "Managed IssueCraft state path safety",
+        "relative path beneath that root",
+        "Refuse path traversal",
+        "symlink/junction/reparse-point",
+        "single conservative path segment",
+        "stable disambiguator",
+    )
+    require(
+        workflow,
+        "The key is one conservative path segment, never a path",
+        "apply the containment/symlink rules in `SECURITY.md`",
+    )
+
+
+def eval_worktree_state_visibility() -> None:
+    workflow = read("core/WORKFLOW.md")
+    parallel = read("docs/parallel-work.md")
+    install = read("docs/install.md")
+    require(
+        workflow,
+        "Workspace isolation does not imply that local IssueCraft installation/state is physically synchronized across workspaces",
+        "never assume an uncommitted change from another workspace is shared",
+    )
+    require(
+        parallel,
+        "Worktree visibility boundary",
+        "optimistic concurrency can protect only state that is visible",
+    )
+    require(install, "Parallel work / worktrees", "run the installer against that workspace")
+
+
+def eval_installer_adapter_collision() -> None:
+    installer = read("scripts/install.py")
+    install = read("docs/install.md")
+    require(
+        installer,
+        "Refusing first install because an implement-issue adapter already exists",
+        "conflicts = [dst for _, dst in adapters if dst.exists()]",
+    )
+    require(
+        install,
+        "Existing adapter collision",
+        "refuses to overwrite an existing `implement-issue` adapter",
+    )
+
+
+def eval_release_artifact_hygiene() -> None:
+    release = read("scripts/release_zip.py")
+    require(
+        release,
+        "evals/live/runners.local.json",
+        "evals/live/results",
+        ".coverage.*",
+        "coverage.xml",
+        "htmlcov",
     )
 
 
@@ -971,6 +1039,10 @@ EVALS = [
     eval_same_workspace_concurrent_mutation,
     eval_shared_state_optimistic_concurrency,
     eval_integration_freshness,
+    eval_managed_state_path_safety,
+    eval_worktree_state_visibility,
+    eval_installer_adapter_collision,
+    eval_release_artifact_hygiene,
 ]
 
 
