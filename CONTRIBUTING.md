@@ -56,7 +56,8 @@ Changes that affect the canonical workflow must preserve:
 - quality-bar integrity review, compatibility-safe migrations/cutovers, dependency lock-state evidence, approved-baseline ratchets, and probe-before-unavailable evidence;
 - risk-based isolated discrimination/fault checks when test effectiveness is materially uncertain;
 - resumable issue-scoped handoff snapshots that are reconciled against current repository/VCS/tracker evidence before edits;
-- parallel-work safety without orchestration bloat: isolated physical workspaces for known concurrent mutation, issue-scoped execution artifacts, optimistic shared-state rereads, overlap-as-risk rather than automatic dependency, and selective integration-freshness invalidation;
+- parallel-work safety without orchestration bloat: isolated physical workspaces for known concurrent mutation, issue-scoped execution artifacts, optimistic rereads of visible/integrated project-scoped state, no assumption that uncommitted state is shared across worktrees, overlap-as-risk rather than automatic dependency, and selective integration-freshness invalidation;
+- managed-state path safety: every `.implement-issue/` write stays inside the authorized repository tree, issue keys are conservative single path segments, and traversal/symlink redirection is refused;
 - human gating for genuine hard-to-reverse one-way-door choices without turning ordinary reversible engineering into approval ceremony;
 - approval-scope integrity: gated authorization stays bound to the material action/target/effects reviewed by the human, material drift requires fresh approval, and equivalent reversible mechanics stay autonomous;
 - behavior-delta semantics for added/modified/removed/renamed-preserved behavior, including preservation of existing obligations not explicitly superseded;
@@ -82,8 +83,8 @@ Changes that affect the canonical workflow must preserve:
 - documentation integrity: keep README onboarding concise and copy-pasteable, keep the manual Done procedure explicit, and prevent runtime-path drift such as `proposals/` vs obsolete names;
 - release compatibility claims for Codex/Claude Code/Antigravity must distinguish structural adapter validation from an actually executed disposable live-host smoke.
 - human ownership of persistent learning, material risk acceptance, and final `Done`; recurrence may strengthen evidence but never auto-adopt behavior;
-- installer protection against managed symlink redirection;
-- release archives free from VCS metadata and local caches;
+- installer protection against managed symlink redirection and first-install same-name adapter collisions;
+- release archives free from VCS metadata, local live-eval configuration/results, coverage output, and local caches;
 - immutable-SHA pinning for GitHub Actions dependencies.
 
 ## Validator resistance
