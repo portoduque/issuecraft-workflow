@@ -44,9 +44,19 @@ def install(target: Path, overwrite_system: bool = False) -> None:
 
     state = target / ".implement-issue"
     system = state / "system"
+    adapters = [
+        (REPO_ROOT / ".agents/skills/implement-issue", target / ".agents/skills/implement-issue"),
+        (REPO_ROOT / ".claude/skills/implement-issue", target / ".claude/skills/implement-issue"),
+    ]
+
+    # Preflight every managed destination before changing the target. A first
+    # install must not silently destroy an existing third-party/custom skill
+    # that happens to use the same discovery path.
     refuse_managed_symlinks(target, state)
-    state.mkdir(parents=True, exist_ok=True)
     refuse_managed_symlinks(target, system)
+    for _, dst in adapters:
+        refuse_managed_symlinks(target, dst.parent)
+        refuse_managed_symlinks(target, dst)
 
     if system.exists() and not overwrite_system:
         raise SystemExit(
@@ -54,6 +64,17 @@ def install(target: Path, overwrite_system: bool = False) -> None:
             "Re-run with --overwrite-system to update only runtime/adapters."
         )
 
+    if not system.exists() and not overwrite_system:
+        conflicts = [dst for _, dst in adapters if dst.exists()]
+        if conflicts:
+            rendered = ", ".join(str(path) for path in conflicts)
+            raise SystemExit(
+                "Refusing first install because an implement-issue adapter already "
+                f"exists: {rendered}. Preserve/rename the existing skill, or use "
+                "--overwrite-system only when replacing it is explicitly intended."
+            )
+
+    state.mkdir(parents=True, exist_ok=True)
     if system.exists():
         shutil.rmtree(system)
     system.mkdir(parents=True)
@@ -63,13 +84,7 @@ def install(target: Path, overwrite_system: bool = False) -> None:
     shutil.copy2(REPO_ROOT / "VERSION", system / "VERSION")
     shutil.copy2(REPO_ROOT / "manifest.json", system / "manifest.json")
 
-    adapters = [
-        (REPO_ROOT / ".agents/skills/implement-issue", target / ".agents/skills/implement-issue"),
-        (REPO_ROOT / ".claude/skills/implement-issue", target / ".claude/skills/implement-issue"),
-    ]
     for src, dst in adapters:
-        refuse_managed_symlinks(target, dst.parent)
-        refuse_managed_symlinks(target, dst)
         dst.parent.mkdir(parents=True, exist_ok=True)
         copytree(src, dst, overwrite=True)
 
