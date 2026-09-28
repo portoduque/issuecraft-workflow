@@ -6,7 +6,7 @@ The design is intentionally small:
 
 1. isolate mutating work when parallel execution is intentional;
 2. keep execution artifacts scoped to the issue;
-3. treat shared project knowledge as optimistic-concurrency state;
+3. treat project-scoped knowledge as optimistic-concurrency state when it is visible in the current workspace/integration point;
 4. detect relevant integration drift before `In Review`;
 5. serialize only when evidence shows a real dependency/conflict.
 
@@ -25,9 +25,9 @@ This is an example, not a canonical requirement. IssueCraft remains VCS-neutral 
 
 Known concurrent mutation by multiple IssueCraft executions in the same physical working tree is unsafe. Pause mutation until the work is isolated or one execution stops.
 
-## What stays shared
+## What stays project-scoped
 
-Project knowledge remains shared:
+Project knowledge remains scoped to the project:
 
 ```text
 .implement-issue/
@@ -38,7 +38,9 @@ Project knowledge remains shared:
 └── proposals/
 ```
 
-Before an approved write to shared project state, re-read the current file. If another execution changed it, reconcile instead of overwriting newer state. Compatible additions can be combined when safe; material conflicts require the applicable existing human decision.
+Before an approved write to project-scoped state, re-read the current file visible in this workspace/integration point. If another execution's integrated change is visible, reconcile instead of overwriting newer state. Compatible additions can be combined when safe; material conflicts require the applicable existing human decision.
+
+**Worktree visibility boundary:** separate worktrees/checkouts do not magically share untracked or uncommitted files. If `.implement-issue/`, `.agents/`, or `.claude/` are local-only in one workspace, a newly created worktree may not contain them. Either install IssueCraft in each workspace that needs it or use a project-approved/versioned distribution path. Likewise, optimistic concurrency can protect only state that is visible; it cannot detect another worktree's uncommitted local Project Profile/Rules/Learnings.
 
 There is no lock server, heartbeat, agent registry, or database.
 
@@ -53,7 +55,7 @@ Operational artifacts live under:
 └── ISSUE_EXECUTION_REPORT.md
 ```
 
-Use a stable filesystem-safe key derived from the strongest issue/reference available. If no external identifier exists, establish a local key once and reuse it for that issue.
+Use one stable conservative path segment derived from the strongest issue/reference available. Never use raw issue text as a path. Normalize unsafe characters deterministically, reject empty/`.`/`..`/platform-reserved outcomes, add a stable disambiguator when normalization could collide, and reuse the established key for that issue.
 
 ## Collision semantics
 
