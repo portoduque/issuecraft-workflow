@@ -730,8 +730,8 @@ class ValidatorErrorPathTests(unittest.TestCase):
 
                 mutate(
                     "scripts/release_zip.py",
-                    '"issuecraft-workflow-"',
-                    '"artifact-"',
+                    "issuecraft-workflow-",
+                    "artifact-",
                     validator.check_release_hardening,
                     "artifact name",
                 )
