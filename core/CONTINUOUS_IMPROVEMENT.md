@@ -26,6 +26,8 @@ Before proposing or adopting a `generic_workflow` change, guard against append-o
 
 A proposed change should be rejected, kept project-specific/adapter-specific, or left as observation when its marginal benefit does not justify its ongoing complexity.
 
+**Failure to demonstrate benefit is valid evidence for non-adoption.** A plausible rule that produces no measurable/observable improvement, regresses another invariant, or adds ongoing context/maintenance cost without enough benefit should remain an observation, be revised, or be rejected. A null result is not a reason to add more instruction text until the desired result appears.
+
 A useful portability test is: **could the rule still be justified without naming the model/host/tool that originally failed?** If not, it is not yet a canonical-core rule.
 
 ## Proposal
