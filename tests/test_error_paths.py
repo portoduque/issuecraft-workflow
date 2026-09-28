@@ -580,18 +580,18 @@ class ValidatorErrorPathTests(unittest.TestCase):
 
                 quality_mutants = [
                     ("core/WORKFLOW.md", "TEST_STRATEGY.md", "TEST_PLAN.md", "workflow quality contract"),
-                    ("core/TEST_STRATEGY.md", "Unit", "Small-test", "test taxonomy missing"),
+                    ("core/TEST_STRATEGY.md", "soak", "endurance-check", "test taxonomy missing"),
                     ("core/SECURITY.md", "material security regression", "security regression", "security blocker contract"),
                     ("core/PERFORMANCE.md", "performance budget", "performance target", "performance budget contract"),
                     ("core/WORKFLOW.md", "Compress presentation, never evidence", "Compact output", "output efficiency contract"),
                     ("core/VALIDATION.md", "Preserve complete validation evidence", "Keep evidence", "validation output-efficiency"),
                     ("core/WORKFLOW.md", "Retrieve context progressively", "Retrieve context", "workflow evidence-efficiency"),
-                    ("core/TEST_STRATEGY.md", "Behavior-to-evidence traceability", "Test traceability", "test evidence-quality"),
+                    ("core/TEST_STRATEGY.md", "lowest-cost test layer that can faithfully prove the behavior", "cheapest useful test layer", "test evidence-quality"),
                     ("core/VALIDATION.md", "Evidence-backed diff review", "Diff review", "diff-review contract"),
                     ("core/WORKFLOW.md", "Version-aware authoritative-source verification", "Source verification", "workflow v0.7"),
                     ("core/VALIDATION.md", "Validation cadence and evidence freshness", "Validation cadence", "validation v0.7"),
                     ("core/TEST_STRATEGY.md", "Behavior-delta test semantics", "Delta tests", "test v0.9 delta"),
-                    ("core/EVIDENCE_MODEL.md", "Partial evidence", "Subset evidence", "evidence v0.9"),
+                    ("core/EVIDENCE_MODEL.md", "Mutable evidence and conversation memory", "Mutable evidence", "evidence v0.9"),
                     ("core/HUMAN_GATES.md", "Gate H — material issue intent/scope drift", "Gate H — scope", "human-gate v0.9"),
                     ("core/ISSUE_LIFECYCLE.md", "intent and scope identity", "scope identity", "lifecycle v0.9"),
                     ("core/VALIDATION.md", "preserve material semantic qualifiers", "preserve qualifiers", "validation v0.12"),
@@ -628,13 +628,23 @@ class ValidatorErrorPathTests(unittest.TestCase):
                     "must separate learning persistence",
                 )
 
-                mutate(
-                    "core/HUMAN_GATES.md",
-                    "PROJECT_PROFILE",
-                    "PROJECT_STATE",
-                    validator.check_human_gates,
-                    "human gate contract",
+                workflow_path = sandbox / "core/WORKFLOW.md"
+                gates_path = sandbox / "core/HUMAN_GATES.md"
+                workflow_original = workflow_path.read_text(encoding="utf-8")
+                gates_original = gates_path.read_text(encoding="utf-8")
+                workflow_path.write_text(
+                    workflow_original.replace("PROJECT_BLUEPRINT", "PROJECT_PLAN"),
+                    encoding="utf-8",
                 )
+                gates_path.write_text(
+                    gates_original.replace("PROJECT_BLUEPRINT", "PROJECT_PLAN"),
+                    encoding="utf-8",
+                )
+                errors = []
+                validator.check_human_gates(errors)
+                self.assertTrue(any("human gate contract" in e for e in errors))
+                workflow_path.write_text(workflow_original, encoding="utf-8")
+                gates_path.write_text(gates_original, encoding="utf-8")
 
                 mutate(
                     "manifest.json",
