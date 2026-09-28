@@ -121,9 +121,11 @@ Depois da validação automatizada, o IssueCraft gera:
 .implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md
 ```
 
+O IssueCraft resolve `<issue-key>` a partir da issue/referência atual e informa o caminho exato do artefato no handoff.
+
 O passo final humano é:
 
-1. Abra `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md`.
+1. Abra o `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md` informado.
 2. Confirme os pré-requisitos/setup listados.
 3. Execute cada cenário numerado na ordem.
 4. Compare cada ação com o resultado esperado.
