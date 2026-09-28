@@ -5,7 +5,7 @@
 
 A reusable, AI-agent-neutral and stack-neutral workflow for implementing software issues from project discovery to human validation, with security, performance, testing, drift detection, and controlled learning built in.
 
-**Version:** 0.7.0  
+**Version:** 0.8.0  
 **License:** MIT  
 **Language:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -73,6 +73,7 @@ IssueCraft provides one canonical `implement-issue` workflow that:
 - plans and implements the smallest coherent issue change;
 - performs mandatory security-impact and performance-impact triage;
 - selects tests by risk instead of assuming one framework or one test command;
+- requires evidence-or-zero for material obligations, decomposes compound requirements, and uses targeted discrimination checks when test strength is materially uncertain;
 - moves work through `In Progress → In Review → human validation → Done`;
 - generates an issue-specific manual validation plan before `In Review`;
 - learns from real usage while keeping persistence and adoption human-controlled.
@@ -184,6 +185,10 @@ For non-trivial multi-surface work, IssueCraft prefers thin verifiable increment
 
 Validation is evidence-aware: a prior green result is reused only while its relevant inputs remain materially unchanged. Before `In Review`, IssueCraft also reviews whether the diff weakened the project's quality bar, whether coexistence-sensitive migrations use a compatibility-safe expand/migrate/contract sequence, and whether dependency changes are supported by resolved lock-state and relevant release/migration evidence.
 
+If work is interrupted, IssueCraft can write a compact `.implement-issue/HANDOFF.md`. The handoff is only a resume hypothesis: on the next session it is reconciled against current repository/VCS state, tracker state when available, and durable validation evidence before any edit. Current evidence wins over stale narrative.
+
+Materially hard-to-reverse implementation choices that are not already determined by the issue, approved project knowledge, existing contracts, or unavoidable constraints are treated as one-way doors and require an explicit human decision. Ordinary reversible implementation choices remain autonomous.
+
 ---
 
 ## AI-agent neutral by design
@@ -276,6 +281,8 @@ For reproducible bugs, IssueCraft prefers a durable regression reproducer that f
 
 IssueCraft also traces materially changed behaviors and acceptance criteria to meaningful evidence, chooses the lowest-cost test layer that can faithfully prove them, checks assertion quality rather than raw test count, and inspects risk-relevant equivalent paths/sibling surfaces after understanding a root cause. Mocks/fakes must preserve the contract under test; expensive E2E is reserved for real cross-layer risk.
 
+Coverage follows **evidence-or-zero**: a material obligation is not considered proven merely because a related suite is green. Compound requirements are decomposed into independently falsifiable clauses/fields/cases, vague requirements become explicit verification-precision gaps instead of invented thresholds, and an applicable check is labeled `unavailable` only after a safe probe or other concrete capability/environment evidence. For high-risk or uncertain assertions, IssueCraft may use an isolated fault/mutation discrimination check to confirm the verification can actually detect the wrong behavior; this is risk-based, not mandatory for every issue.
+
 See [core/TEST_STRATEGY.md](core/TEST_STRATEGY.md).
 
 ---
@@ -332,6 +339,8 @@ separate human approval to adopt behavior
 
 A persisted proposal or entry in `LEARNINGS.md` is **not automatically normative**. Adoption into `PROJECT_RULES`, Profile/Blueprint, an adapter or the canonical core requires the appropriate human decision.
 
+Recurrence across independent issues/features can strengthen the evidence for a proposal, but recurrence never auto-promotes a learning into persistent or normative behavior.
+
 This prevents one project's habits from contaminating the generic workflow.
 
 Generic IssueCraft changes also pass an anti-bloat admission check: concrete gap/evidence, overlap review, merge-first preference, true cross-project generality, ongoing complexity/context cost, and regression proof. Popularity or novelty alone is not enough.
@@ -357,7 +366,7 @@ your-project/
         └── VERSION
 ```
 
-IssueCraft does **not** pre-create `PROJECT_PROFILE`, `PROJECT_BLUEPRINT`, `PROJECT_RULES.md`, `LEARNINGS.md`, or persistent proposals. They are project-owned state and are created only through the appropriate workflow/human gate.
+IssueCraft does **not** pre-create `PROJECT_PROFILE`, `PROJECT_BLUEPRINT`, `PROJECT_RULES.md`, `LEARNINGS.md`, persistent proposals, or `HANDOFF.md`. Persistent project knowledge follows the appropriate human gate; `HANDOFF.md` is created only when unfinished work actually needs resumable state.
 
 ---
 
@@ -393,7 +402,7 @@ python -m unittest discover tests -v
 
 CI runs these on Linux, macOS and Windows.
 
-The 28 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
+The 33 scenario files in `evals/scenarios/` have executable provider-neutral contract assertions. Optional live-agent evals may also be run in sandbox repositories, but they are not made a canonical dependency on one AI provider.
 
 ---
 
@@ -448,7 +457,7 @@ Do not approve the proposed Profile/Blueprint as-is. Correct the fact, provide t
 
 ### A test cannot run
 
-IssueCraft should report the applicable check as `unavailable`, explain why, and use the strongest safe alternative. It must not report a false pass.
+IssueCraft should safely probe the check or its prerequisite/capability when reasonable, then report it as `unavailable` with evidence and use the strongest safe alternative. It must not report a false pass or run a destructive/high-load action merely to prove unavailability.
 
 ---
 
