@@ -189,7 +189,14 @@ When available, preserve useful failure artifacts such as traces, logs, screensh
 
 ## Coverage
 
-Respect existing coverage requirements if present. Do not invent a global coverage percentage. Coverage is evidence about exercised code, not proof of correctness; prioritize risk-relevant assertions and behavior.
+Treat code coverage as a **quality signal and regression guard**, not as proof of correctness.
+
+- Discover and use the project's existing coverage tool, command, policy, scope, and CI threshold/baseline when present.
+- Preserve or improve an established coverage threshold/baseline; do not silently lower, bypass, exclude, or narrow measured scope merely to make a change pass.
+- For materially new or changed executable code, prefer direct risk-relevant test coverage when the project has viable test infrastructure. A high global percentage does not excuse an untested changed behavior.
+- When the project has coverage tooling but no explicit threshold, record the observed baseline and avoid material regression attributable to the change when reasonably measurable.
+- When no coverage tooling/policy exists, do not silently install a framework or invent a universal percentage. Report the gap and, when recurring or material, propose a project-specific guardrail through the normal learning/adoption process.
+- Coverage percentage never replaces behavior-to-evidence traceability, assertion quality, integration/contract/E2E evidence, security/performance checks, or manual validation when those are applicable.
 
 A related green suite does not prove preservation when the changed contract can silently lose an existing scenario/field/state/path. Prefer explicit preservation evidence where that loss is materially plausible.
 
