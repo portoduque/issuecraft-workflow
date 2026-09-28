@@ -31,6 +31,10 @@
 | Check | Result | Evidence |
 |---|---|---|
 
+- Unproven material obligations / verification precision gaps:
+- Unavailable checks and probe/capability evidence:
+- Discrimination/fault checks performed (if risk-justified):
+
 ## Security validation
 
 - Checks performed:
