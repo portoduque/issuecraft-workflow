@@ -134,6 +134,8 @@ Use [rubric.md](rubric.md) plus each scenario's criteria. IssueCraft intentional
 
 When runner metadata exposes token usage/cost, retain it as a secondary efficiency signal. Compare output usage between baseline/candidate only after correctness, evidence fidelity, safety/human gates, validation quality, and scope discipline are satisfied. Fewer tokens never compensate for a blocker or missing evidence.
 
+For a workflow change whose primary claim is token/output/context economy, measure the whole intervention when practical: recurring instruction/context overhead plus output/tool/turn effects, not only the final answer length. Add a minimal terse control when the experiment can isolate whether the candidate rule adds value beyond a plain concision request. Keep usage bases explicit; provider/runtime-reported usage and local estimates are not interchangeable. A shorter candidate that is not net-better, or that weakens semantic/evidence fidelity, is a null/negative result rather than proof for adoption.
+
 ## Multi-turn scenarios
 
 A scenario may contain multiple turns. A real runner adapter should preserve the native session when practical. If a host cannot resume sessions reliably, the adapter may provide the previous transcript explicitly, but it must record that limitation in result metadata.
