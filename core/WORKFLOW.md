@@ -57,6 +57,8 @@ Use these supporting documents when their phase is reached:
 
 Known parallel work is a coordination input, not a reason to invent a scheduler, lock service, agent registry, dependency graph, heartbeat, or execution order.
 
+Workspace isolation does not imply that local IssueCraft installation/state is physically synchronized across workspaces. A newly created worktree/checkout may not contain untracked/local adapters, runtime, Profile/Rules/Learnings, or issue artifacts. Use only the state actually visible in the current workspace/repository integration point; never assume an uncommitted change from another workspace is shared. If IssueCraft runtime/adapters are not present in the current workspace, install them there or use the project's approved/versioned distribution path before invocation.
+
 ## 2. Establish project context
 
 ### 2.1 No approved Profile exists
@@ -92,7 +94,7 @@ If the task is sufficiently defined without a tracker, proceed. Do not require a
 
 ### Issue-scoped execution artifacts, handoff and resume
 
-Resolve one stable filesystem-safe **issue key** for the current work from the strongest available issue identifier/reference. If no stable external identifier exists, establish one local issue key once and reuse it for that issue; do not silently change keys between sessions.
+Resolve one stable filesystem-safe **issue key** for the current work from the strongest available issue identifier/reference. The key is one conservative path segment, never a path: prefer a stable external identifier when already portable/safe; otherwise normalize unsafe characters deterministically, reject empty/`.`/`..`/reserved outcomes, add a stable disambiguator when normalization could collide, and reuse the established key for that issue across sessions. Before any managed state write, apply the containment/symlink rules in `SECURITY.md`.
 
 Issue-execution artifacts live under:
 
