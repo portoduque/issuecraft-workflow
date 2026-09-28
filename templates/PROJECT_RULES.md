@@ -12,6 +12,12 @@ _None approved yet._
 
 _None approved yet._
 
+## Domain vocabulary sources
+
+_Optional approved pointers to existing project-owned glossary/ubiquitous-language/terminology sources. Store pointers and scope here, not copied glossary content._
+
+_None approved yet._
+
 ## Validation requirements
 
 _None approved yet._
@@ -26,4 +32,4 @@ _None approved yet._
 
 ## Rule provenance
 
-For each rule, record the human decision or repository document that established it.
+For each rule, record the human decision or repository document that established it. For a mechanically decidable constraint already enforced by an executable project guardrail, prefer pointing to that source of truth instead of duplicating its full rule text here.
