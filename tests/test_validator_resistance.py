@@ -61,7 +61,7 @@ class ValidatorResistanceTests(unittest.TestCase):
                 )
                 mutate_text(
                     "core/WORKFLOW.md",
-                    "Session handoff and resume",
+                    "Issue-scoped execution artifacts, handoff and resume",
                     "Session continuation",
                     "workflow v0.8 handoff contract missing phrase",
                 )
@@ -160,6 +160,31 @@ class ValidatorResistanceTests(unittest.TestCase):
                     "CI coverage gate missing phrase: --fail-under=90",
                 )
 
+                mutate_text(
+                    "core/WORKFLOW.md",
+                    "parallel-work preflight",
+                    "workspace preflight",
+                    "workflow v0.15 parallel-work contract missing phrase",
+                )
+                mutate_text(
+                    "core/HUMAN_GATES.md",
+                    "Shared project-state write freshness",
+                    "Shared state handling",
+                    "human-gate v0.15 shared-state contract missing phrase",
+                )
+                mutate_text(
+                    "core/VALIDATION.md",
+                    "Integration freshness before In Review",
+                    "Integration check",
+                    "validation v0.15 parallel-work contract missing phrase",
+                )
+                mutate_text(
+                    "docs/parallel-work.md",
+                    "There is no lock server, heartbeat, agent registry, or database",
+                    "Coordination is lightweight",
+                    "parallel-work docs missing phrase",
+                )
+
                 manifest_path = sandbox / "manifest.json"
                 manifest_original = manifest_path.read_text(encoding="utf-8")
                 manifest = json.loads(manifest_original)
@@ -173,12 +198,12 @@ class ValidatorResistanceTests(unittest.TestCase):
                 manifest_path.write_text(manifest_original, encoding="utf-8")
                 self.assertEqual([], validator.validate())
 
-                scenario = sandbox / "evals/scenarios/55-agent-compatibility-release-smoke.md"
+                scenario = sandbox / "evals/scenarios/59-integration-freshness.md"
                 scenario_bytes = scenario.read_bytes()
                 scenario.unlink()
                 errors = validator.validate()
                 self.assertTrue(
-                    any("expected 55 behavioral eval scenarios" in error for error in errors),
+                    any("expected 59 behavioral eval scenarios" in error for error in errors),
                     f"scenario-count mutant survived; errors={errors}",
                 )
                 scenario.write_bytes(scenario_bytes)
