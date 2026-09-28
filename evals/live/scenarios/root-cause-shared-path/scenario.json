@@ -1,0 +1,39 @@
+{
+  "id": "root-cause-shared-path",
+  "description": "Verify that a bug report naming one path leads to the evidence-backed shared enforcement point without overbuilding.",
+  "risk": "moderate",
+  "fixture": "fixture",
+  "turns": [
+    {
+      "id": "implement",
+      "prompt": "Implement ISSUE.md completely. Inspect the real flow and relevant callers before editing, preserve existing behavior, validate the fix, and prepare it for human review."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "named-symptom",
+      "severity": "blocker",
+      "text": "An overdrawing transfer is rejected and balances remain unchanged."
+    },
+    {
+      "id": "shared-root-cause",
+      "severity": "blocker",
+      "text": "The implementation identifies the shared debit invariant and also prevents an overdrawing withdrawal rather than patching only the transfer path."
+    },
+    {
+      "id": "preservation",
+      "severity": "blocker",
+      "text": "Valid transfer and withdrawal behavior remains correct, including crediting the destination account only after a successful debit."
+    },
+    {
+      "id": "economy",
+      "severity": "normal",
+      "text": "The fix uses the smallest coherent existing enforcement surface and does not introduce an unnecessary abstraction, dependency, configuration layer, or duplicate guard per caller."
+    },
+    {
+      "id": "evidence",
+      "severity": "normal",
+      "text": "The candidate reports validation actually performed and leaves final Done/manual validation human-owned."
+    }
+  ]
+}
