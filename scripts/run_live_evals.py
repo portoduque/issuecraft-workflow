@@ -416,8 +416,7 @@ def blind_pairs(responses: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
                 or not str(isolation.get("evidence", "")).strip()
             ):
                 raise LiveEvalError(
-                    "blind baseline/candidate comparison requires verified runner "
-                    f"isolation evidence for {key} / {condition}"
+                    f"blind baseline/candidate comparison requires verified runner isolation evidence for {key} / {condition}"
                 )
 
         baseline_isolation = pair["baseline"]["runner_isolation"]
