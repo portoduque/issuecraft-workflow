@@ -216,6 +216,7 @@ class LiveEvalErrorPathTests(unittest.TestCase):
                 errors = live.validate_scenarios()
                 self.assertTrue(any("duplicate live scenario id" in e for e in errors))
                 self.assertTrue(any("scenario must be an object" in e for e in errors))
+                shutil.rmtree(bad)
                 with self.assertRaisesRegex(live.LiveEvalError, "unknown live scenario"):
                     live.find_scenario("missing")
         finally:
@@ -504,7 +505,7 @@ class ValidatorErrorPathTests(unittest.TestCase):
                     path = sandbox / rel
                     original = path.read_text(encoding="utf-8")
                     self.assertIn(old, original, rel)
-                    path.write_text(original.replace(old, new, 1), encoding="utf-8")
+                    path.write_text(original.replace(old, new), encoding="utf-8")
                     errors = []
                     check(errors)
                     self.assertTrue(
