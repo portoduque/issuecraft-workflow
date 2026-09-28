@@ -147,6 +147,21 @@ def check_quality_contracts(errors: list[str]) -> None:
     for phrase in ("Evidence-backed diff review", "clean review may legitimately produce zero findings"):
         if phrase.lower() not in validation.lower():
             errors.append(f"diff-review contract missing phrase: {phrase}")
+    for phrase in (
+        "Version-aware authoritative-source verification",
+        "Incremental execution for non-trivial changes",
+        "Compatibility-safe migrations and cutovers",
+        "Dependency and toolchain changes",
+    ):
+        if phrase.lower() not in workflow.lower():
+            errors.append(f"workflow v0.7 contract missing phrase: {phrase}")
+    for phrase in (
+        "Validation cadence and evidence freshness",
+        "Quality-bar integrity review",
+        "Baseline ratchets without invented targets",
+    ):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"validation v0.7 contract missing phrase: {phrase}")
 
 
 def check_learning_contract(errors: list[str]) -> None:
@@ -155,7 +170,7 @@ def check_learning_contract(errors: list[str]) -> None:
     for phrase in (".implement-issue/proposals/", ".implement-issue/LEARNINGS.md", "explicit human approval"):
         if phrase not in learning:
             errors.append(f"persistent learning contract missing phrase: {phrase}")
-    for phrase in ("Generic-change admission check", "Merge first", "marginal benefit does not justify its ongoing complexity"):
+    for phrase in ("Generic-change admission check", "Merge first", "marginal benefit does not justify its ongoing complexity", "Procedure portability"):
         if phrase.lower() not in learning.lower():
             errors.append(f"anti-bloat learning contract missing phrase: {phrase}")
     if "Persistence and adoption are distinct decisions" not in gates:
@@ -164,8 +179,8 @@ def check_learning_contract(errors: list[str]) -> None:
 
 def check_eval_coverage(errors: list[str]) -> None:
     scenarios = sorted((ROOT / "evals/scenarios").glob("*.md"))
-    if len(scenarios) != 21:
-        errors.append(f"expected 21 behavioral eval scenarios, found {len(scenarios)}")
+    if len(scenarios) != 28:
+        errors.append(f"expected 28 behavioral eval scenarios, found {len(scenarios)}")
     if not (ROOT / "scripts/run_evals.py").is_file():
         errors.append("deterministic contract eval runner missing")
     live_scenarios = sorted((ROOT / "evals/live/scenarios").glob("*/scenario.json"))

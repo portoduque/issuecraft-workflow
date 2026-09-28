@@ -2,6 +2,22 @@
 
 All notable changes are documented here.
 
+## 0.7.0 - 2026-09-27
+
+Source-verification, incremental execution, and quality-bar hardening release.
+
+- Added version-aware authoritative-source verification for material version-sensitive technical decisions, with narrow retrieval, untrusted-content handling, and explicit unverified states.
+- Added thin independently verifiable implementation increments and risk-first slices for plan-invalidating uncertainty without forcing artificial slicing on trivial changes.
+- Added validation cadence and evidence-freshness semantics so focused checks run near the change, stale evidence is rerun, and unchanged green checks are not repeated merely for reassurance.
+- Added quality-bar integrity review for weakened thresholds, removed checks, weakened tests, suppressions/bypasses, unfinished stubs, and silent-failure paths.
+- Added compatibility-safe expand -> migrate/cut over -> contract guidance for coexistence-sensitive migrations, while requiring truthful recovery semantics instead of invented rollback claims.
+- Strengthened dependency/toolchain change review with resolved lock-state, authoritative release/migration evidence, transitive effects, and contract-focused tests.
+- Added baseline ratchets only when project evidence makes the baseline normative; no incidental metric becomes policy and no universal tolerance is invented.
+- Strengthened anti-bloat governance so implementation-specific workarounds stay out of canonical core until a provider-neutral engineering need is demonstrated.
+- Expanded deterministic contract coverage from 21 to 28 scenarios.
+- Added a live deadline-pressure scenario that checks evidence honesty, quality-bar integrity, and the human-owned Done gate.
+- Preserved provider/stack neutrality and added no runtime dependency, persona, hook, mandatory TDD rule, or universal numeric quality threshold.
+
 ## 0.6.0 - 2026-09-27
 
 Evidence-driven execution and test-quality release.

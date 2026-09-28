@@ -22,8 +22,11 @@ Before proposing or adopting a `generic_workflow` change, guard against append-o
 5. **Generality** — confirm the behavior is useful across unrelated projects/agent hosts rather than a disguised local convention.
 6. **Cost** — account for context/token cost, cognitive complexity, maintenance burden, extra approvals, and new failure modes.
 7. **Regression proof** — define how the change will be evaluated and how a future regression will be detected.
+8. **Procedure portability** — write the generic engineering procedure, not a workaround for one model, host, version, or private tool. If the justification requires a specific agent/runtime quirk, presume the change belongs in an adapter, compatibility note, eval, or upstream bug report until a provider-neutral semantic need is demonstrated.
 
 A proposed change should be rejected, kept project-specific/adapter-specific, or left as observation when its marginal benefit does not justify its ongoing complexity.
+
+A useful portability test is: **could the rule still be justified without naming the model/host/tool that originally failed?** If not, it is not yet a canonical-core rule.
 
 ## Proposal
 

@@ -41,7 +41,10 @@ class LiveEvalTests(unittest.TestCase):
 
     def test_committed_live_scenarios_validate(self):
         self.assertEqual([], live.validate_scenarios())
-        self.assertGreaterEqual(len(live.scenario_dirs()), 2)
+        directories = live.scenario_dirs()
+        self.assertGreaterEqual(len(directories), 4)
+        scenario_ids = {live.load_scenario(directory)["id"] for directory in directories}
+        self.assertIn("pressure-resistance", scenario_ids)
 
     def test_candidate_runs_in_disposable_fixture_and_captures_agent_diff(self):
         with tempfile.TemporaryDirectory() as td:

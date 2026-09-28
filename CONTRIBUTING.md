@@ -42,7 +42,10 @@ Changes that affect the canonical workflow must preserve:
 - behavior-to-evidence test traceability, meaningful assertions, lowest sufficient test fidelity, and evidence-backed diff review;
 - diagnostic reset instead of repeated speculative fixes without new evidence;
 - progressive issue-context retrieval and risk-based impact reconnaissance without exhaustive repository reading;
-- anti-bloat admission for generic workflow growth;
+- version-aware authoritative-source verification when correctness depends on external/version-sensitive behavior;
+- thin verifiable increments, risk-first slices, and evidence freshness for non-trivial work;
+- quality-bar integrity review, compatibility-safe migrations/cutovers, dependency lock-state evidence, and approved-baseline ratchets;
+- anti-bloat admission for generic workflow growth, including procedure portability instead of implementation-specific workarounds;
 - compact user-facing handoffs without loss of material evidence, failures, unavailable checks, risks, or human gates;
 - human ownership of persistent learning, material risk acceptance, and final `Done`;
 - installer protection against managed symlink redirection;

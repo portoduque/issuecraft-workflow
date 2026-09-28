@@ -5,7 +5,7 @@
 
 Workflow reutilizável, agnóstico de agente de IA, stack, framework e linguagem para implementar issues desde a descoberta do projeto até a validação humana, com segurança, performance, testes, detecção de drift e aprendizado controlado.
 
-**Versão:** 0.6.0  
+**Versão:** 0.7.0  
 **Licença:** MIT  
 **Idioma:** [English](README.md) · [Português (Brasil)](README.pt-BR.md)
 
@@ -182,6 +182,10 @@ O IssueCraft pode preparar a issue para `In Review`, mas **Done pertence ao huma
 
 Durante a implementação, o contexto é recuperado progressivamente: o IssueCraft segue código, contratos e testes de maior sinal até resolver as lacunas materiais, sem tentar ler o repositório inteiro. Se correções repetidas falharem sem nova evidência, ele faz um diagnostic reset antes de outra alteração.
 
+Em trabalhos não triviais que atravessam várias superfícies, o IssueCraft prefere incrementos pequenos e verificáveis e resolve cedo incertezas capazes de invalidar o plano com slices risk-first. Quando a correção depende de comportamento externo sensível à versão que o repositório não consegue comprovar, ele confere a versão detectada em documentação oficial e marca como `unverified` o que não puder confirmar.
+
+A validação também considera a validade temporal da evidência: um resultado verde anterior só é reutilizado enquanto seus inputs relevantes continuarem materialmente iguais. Antes de `In Review`, o IssueCraft verifica se o diff enfraqueceu o quality bar do projeto, se migrations que exigem coexistência seguem uma sequência compatível de expand/migrate/contract e se mudanças de dependências estão sustentadas pelo lock state resolvido e por evidências relevantes de release/migration.
+
 ---
 
 ## Agnóstico de agente de IA
@@ -246,6 +250,8 @@ Toda issue também recebe triagem de impacto de performance.
 Quando relevante, são considerados complexidade, I/O e consultas, rede, memória/recursos, concorrência/locks, cache, payloads, startup/build, responsividade, processamento em background e volume de observabilidade.
 
 Budgets e baselines reais são respeitados quando existem. O workflow não inventa thresholds numéricos.
+
+Um baseline confiável pode funcionar como ratchet de não regressão somente quando evidências do repositório, regras aprovadas, a issue ou uma decisão humana já o tornam normativo. Uma medição incidental nunca vira política silenciosamente.
 
 Testes destrutivos ou de alta carga em produção/ambientes compartilhados exigem autorização explícita.
 
@@ -334,6 +340,8 @@ Isso evita que particularidades de um projeto contaminem o workflow genérico.
 
 Mudanças genéricas no próprio IssueCraft também passam por um filtro anti-bloat: lacuna/evidência concreta, verificação de sobreposição, preferência por fundir com regra existente, generalidade real, custo contínuo de contexto/complexidade e prova de regressão. Popularidade ou novidade não são motivo suficiente.
 
+As regras canônicas também devem descrever procedimentos de engenharia portáveis, e não workarounds para uma peculiaridade de um agente/runtime específico; comportamentos específicos ficam em compatibilidade/adapters/evals até existir uma necessidade genérica comprovada.
+
 Veja [core/CONTINUOUS_IMPROVEMENT.md](core/CONTINUOUS_IMPROVEMENT.md).
 
 ---
@@ -389,7 +397,7 @@ python -m unittest discover tests -v
 
 A CI executa isso em Linux, macOS e Windows.
 
-Os 21 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
+Os 28 cenários de `evals/scenarios/` possuem assertions de contrato executáveis e agnósticas de fornecedor. Evals com agentes reais podem ser feitos em repositórios sandbox, mas o core não depende de uma API de IA específica.
 
 ---
 
