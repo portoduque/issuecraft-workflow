@@ -63,6 +63,8 @@ Changes that affect the canonical workflow must preserve:
 - anti-bloat admission for generic workflow growth, including procedure portability instead of implementation-specific workarounds;
 - live-eval causal comparisons only with verified intervention isolation; automated scorers/judges need positive/negative calibration controls when practical, and null results are valid non-adoption evidence;
 - compact user-facing handoffs without loss of material evidence, failures, unavailable checks, risks, or human gates;
+- semantic output economy: state material facts once, avoid routine tool narration, preserve decision-bearing qualifiers/identifiers/values/statuses/errors/decisions, and prefer source-side narrowing when available;
+- token-economy changes must justify net recurring benefit rather than output length alone, using a minimal terse control when practical to isolate marginal value;
 - human ownership of persistent learning, material risk acceptance, and final `Done`; recurrence may strengthen evidence but never auto-adopt behavior;
 - installer protection against managed symlink redirection;
 - release archives free from VCS metadata and local caches;
