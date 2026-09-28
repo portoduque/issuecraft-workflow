@@ -5,9 +5,17 @@
 The repository intentionally separates four layers and keeps security/performance/testing as cross-cutting core contracts:
 
 1. **Canonical core (`core/`)** — provider- and stack-neutral behavior.
-2. **Project state (`.implement-issue/` in a target project)** — observed Profile, intended Blueprint, local Rules, drift/validation artifacts.
+2. **Project-owned state (`.implement-issue/` in a target project)** — project-scoped Profile/Blueprint/Rules/Learnings plus issue-scoped execution artifacts under `issues/<issue-key>/`.
 3. **Agent discovery adapters** — tiny `SKILL.md` entry points placed where each agent surface discovers skills.
 4. **Maintainer tooling (`scripts/`, `tests/`, `evals/`)** — installation and regression checks for this workflow repository.
+
+## State scope and parallel work
+
+Project-scoped state describes the project: `PROJECT_PROFILE.yaml`, `PROJECT_BLUEPRINT.yaml`, `PROJECT_RULES.md`, `LEARNINGS.md`, reports, and proposals. Issue-scoped execution state lives under `.implement-issue/issues/<issue-key>/`.
+
+This is a **semantic ownership boundary**, not a promise that separate worktrees share local files. A worktree/check-out sees only files available through that workspace and the repository's integration/version-control policy. Optimistic concurrency therefore reconciles visible state; it cannot detect another workspace's uncommitted local file.
+
+Intentional concurrent mutation should prefer isolated physical workspaces. Same-working-tree concurrent mutation is unsafe. IssueCraft deliberately does not add a daemon, lock server, heartbeat, scheduler, automatic worktree lifecycle, or automatic rebase/merge.
 
 ## Why Blueprint and Profile are separate
 
