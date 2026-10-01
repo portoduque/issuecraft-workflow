@@ -32,6 +32,8 @@ A proposed change should be rejected, kept project-specific/adapter-specific, or
 
 When a proposed generic rule is justified primarily by fewer tokens, shorter output, or smaller context, evaluate **net benefit**, not output length alone. Account for recurring instruction/context overhead, extra turns/retries, tool/context expansion, and any loss of evidence or clarity. A rule that makes the final reply shorter but increases total recurring cost or weakens another invariant has not demonstrated an economy gain.
 
+Repeated immediate re-expansion of content that a compression rule just hid is evidence about net cost: count the extra retrieval, tool work, and turn cost against the apparent savings, and consider relaxing or repositioning the compression when that pattern is material. Do not impose a universal re-expansion-rate threshold; interpret the frequency and materiality using comparable evidence from the workflow being evaluated.
+
 When practical, compare a candidate against both the existing baseline and a **minimal terse control** that requests concision without the candidate rule. The candidate's marginal benefit over that terse control is the relevant evidence for adding more canonical instruction text. Provider-billed or runtime-reported usage, when available and comparable, outranks local token estimates; otherwise label estimates honestly. Do not invent a numeric savings claim when the evidence does not support one.
 
 A useful portability test is: **could the rule still be justified without naming the model/host/tool that originally failed?** If not, it is not yet a canonical-core rule.
