@@ -38,7 +38,7 @@ Use these supporting documents when their phase is reached:
 - `TEST_STRATEGY.md` — risk-based selection across functional, regression, robustness, security, performance, compatibility, and non-functional tests.
 - `SECURITY.md` — mandatory security-impact triage and secure implementation/validation rules.
 - `PERFORMANCE.md` — mandatory performance-impact triage and measurement rules.
-- `VALIDATION.md` — automated and human validation orchestration.
+- `VALIDATION.md` — automated/manual validation, validation-subject identity, evidence freshness/provenance, and differential verification.
 - `HUMAN_GATES.md` — mandatory approval boundaries.
 - `CONTINUOUS_IMPROVEMENT.md` — improvement proposals without self-modification.
 
@@ -161,6 +161,8 @@ Retrieve context progressively rather than reading the repository exhaustively:
 7. Stop retrieval when no unresolved material gap remains. Do not keep reading merely to maximize repository coverage.
 
 Before editing a materially coupled surface, perform **risk-based impact reconnaissance**. Establish the relevant upstream consumers/callers, downstream dependencies, public contracts/interfaces, persistence/data effects, analogous implementation, and existing tests to the extent required by the change. Trivial isolated edits do not require artificial call-graph work.
+
+Scale impact and validation depth by **behavioral reach**: affected callers/consumers, contracts, runtime/build/agent behavior, persistence, risk boundaries, and shared ownership. Do not use diff size, file count, filename extension, or a `docs`/`config` label as a proxy for behavioral impact. Prompts, agent/skill instructions, configuration, schemas, templates, generator inputs, and build/CI definitions are behavioral inputs when a runtime, agent, generator, or delivery path consumes them; a tiny textual change can therefore require broader evidence than a large explanatory-prose edit.
 
 If current tracker/VCS/repository evidence reveals another active change touching the same public contract, migration, persistence boundary, or other high-collision surface, treat the overlap as a coordination risk. Overlap alone is not an implicit dependency and must not fabricate ordering; only an explicit/evidenced dependency blocks or constrains execution.
 
@@ -285,25 +287,28 @@ Apply `TEST_STRATEGY.md`, `SECURITY.md`, `PERFORMANCE.md`, and `VALIDATION.md` u
 
 A command counts as successful only from actual execution evidence. If execution is unavailable, mark it unverified and apply the safe probe-before-`unavailable` rule from `VALIDATION.md`. Material behavior/acceptance obligations use evidence-or-zero rather than inferred coverage.
 
+Before final automated evidence is presented as current, capture/reconcile the validation subject and evidence origin/freshness required by `VALIDATION.md`. A result for a materially different subject is stale even if it was green when originally produced.
+
 Fix failures caused by the implementation. Separate pre-existing failures from introduced failures with evidence whenever possible. A known material security regression, violation of an established performance budget, or other unresolved release-blocking regression prevents `In Review` unless the specific residual risk is explicitly accepted by a human.
 
 ## 8. Prepare In Review
 
 When implementation is complete enough for human review:
 
-1. Generate the issue-specific manual validation plan defined in `VALIDATION.md`.
+1. Capture/reconcile the current validation subject, then generate the issue-specific manual validation plan defined in `VALIDATION.md` for that subject.
 2. Include exact prerequisites, steps, expected results, regression checks, edge cases, security-sensitive checks, performance-sensitive checks, accessibility/compatibility checks, data/migration checks, and cleanup when relevant to the change.
 3. Save/update `.implement-issue/issues/<issue-key>/MANUAL_VALIDATION_PLAN.md` when filesystem writes are available.
 4. Transition to semantic `In Review` if possible; otherwise report the requested transition.
-5. Present a compact handoff: semantic state, material implementation delta, validation summary, unresolved risks/unavailable checks, artifact path, and one concrete human next action. Do not duplicate the full manual validation artifact in chat.
+5. Present a compact handoff: semantic state, material implementation delta, validation subject, validation summary, unresolved risks/unavailable checks, artifact path, and one concrete human next action. Do not duplicate the full manual validation artifact in chat.
 
 Treat generation of the manual plan and entry into `In Review` as one handoff.
 
 ## 9. Human validation gate
 
-Stop before `Done`. The human must report whether manual validation passed.
+Stop before `Done`. The human must report whether manual validation passed. Immediately before acting on that result, compare the current implementation with the validation subject bound to the manual plan/pass; a materially changed subject makes the old PASS stale.
 
-- **Passed:** transition to `Done` if possible. Keep the chat completion terse; place detailed evidence in the execution report/artifacts when required.
+- **Passed and subject still current/materially equivalent:** transition to `Done` if possible. Keep the chat completion terse; place detailed evidence in the execution report/artifacts when required.
+- **Passed but subject materially changed:** remain/return to `In Review`, selectively refresh affected automated evidence and the manual plan, and obtain validation of the current subject. Do not transfer the old PASS to different work.
 - **Failed:** capture the observed failure, transition back to `In Progress` if possible, investigate, repair, rerun automated validation, regenerate the manual plan as needed, and return to `In Review`.
 - **Partial/unclear:** remain `In Review`; do not infer success.
 
@@ -315,5 +320,5 @@ During any phase, note reusable workflow gaps. Apply `CONTINUOUS_IMPROVEMENT.md`
 
 The workflow is complete only when one of these is true:
 
-- Human validation passed and the issue reached `Done` (or a clearly reported manual status transition is required because tracker writes are unavailable).
+- Human validation passed for the current/materially equivalent validation subject and the issue reached `Done` (or a clearly reported manual status transition is required because tracker writes are unavailable).
 - Work is blocked by a concrete unresolved dependency, missing required capability, conflicting requirement, or human gate. Report the blocker and evidence without claiming completion.
