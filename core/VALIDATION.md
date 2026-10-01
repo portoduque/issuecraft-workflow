@@ -37,6 +37,20 @@ Evidence can support part of an obligation without proving the whole obligation.
 - Continue validating whatever evidence is available, but label the unsupported portion explicitly.
 - An overall `pass` requires evidence for every material applicable member, except members correctly classified `not_applicable`.
 
+## Validation subject identity
+
+Final validation proves a **validation subject**: the materially relevant implementation state to which the evidence and human review apply. The purpose is to prevent a valid result for state A from being silently reused as proof for materially different state B.
+
+Before the final applicable automated checks used to enter `In Review`, capture the strongest practical identity of the current subject from evidence already available to the workflow. Depending on the project/environment this may include repository/workspace identity, branch/reference, current revision and integration base, working-tree state, materially changed surfaces, or an equivalent project-native identity. When no VCS/revision identity exists, record the strongest equivalent workspace evidence and the remaining uncertainty.
+
+- Do **not** require a universal content hash, persistent candidate object, lock service, or new framework merely to create identity. A digest may be used when the project/runtime already exposes one cheaply and it materially improves binding, but semantic freshness remains the controlling rule.
+- Bind the final automated-validation summary, execution report, and manual validation plan to the same validation subject or explicitly explain why an evidence item belongs to a different subject.
+- If code, configuration, dependencies, generated inputs, test definitions, or another materially relevant input changes after evidence was produced, mark only the dependent evidence stale and update the subject before presenting it as current.
+- A non-material change that cannot affect the behavior/risk being validated does not invalidate unrelated evidence merely because bytes or timestamps changed.
+- Before accepting a human manual-validation PASS for `Done`, compare the current implementation state with the subject the human actually validated. A material subject change makes the prior PASS stale; remain/return to `In Review`, refresh affected evidence and the manual plan, and obtain validation of the current subject.
+
+This is evidence binding, not a freeze on normal engineering. Implementation may continue after a subject is captured, but material changes must create a new/reconciled subject before old evidence or approval is presented as current.
+
 ## Validation cadence and evidence freshness
 
 Order validation by information value, risk, and cost rather than running every check after every edit.
@@ -69,6 +83,10 @@ The goal is selective invalidation, not full revalidation after every unrelated 
 Preserve complete validation evidence, but compress routine presentation. **Compact output must be a projection of the complete validation result, never a reduced validation scope.** The same applicable checks, material obligations, verdicts, failures, unavailable checks, and risk decisions must exist before presentation is compressed:
 
 - Detailed command/action, rationale, result, and evidence belong in the execution/validation artifact or equivalent durable record when available.
+- Preserve enough evidence origin to distinguish a result executed for the current subject from CI/external evidence, reused earlier evidence, and unknown origin. This is provenance for interpretation, not a mandatory new enum/schema.
+- When reusing earlier evidence, keep its original subject/revision or other identity when available plus the freshness rationale that makes reuse legitimate. Do not relabel reused or externally supplied evidence as a new execution.
+- CI/external evidence may count as current only when its subject and materially relevant inputs can be bound to the current validation subject; otherwise report it as external/reused with the limitation.
+- Unknown evidence origin or an unbound subject is not positive proof of a material obligation.
 - In chat, group routine successful checks into a compact summary instead of narrating each one.
 - For verbose logs/test output, surface the decisive result, material counts/status, and the shortest useful failure/error/location evidence; preserve or reference the complete diagnostic artifact when available instead of dumping routine noise into chat.
 - Multiple `not_applicable` categories may be grouped with a shared rationale when accurate.
@@ -121,6 +139,17 @@ When the issue materially changes behavior or a contract, verify the resulting s
 - **unchanged-but-at-risk** — nearby behavior exposed to regression by the diff remains intact with proportionate evidence.
 
 When the baseline cannot be established from evidence, report the relevant preservation/delta claim as unverified rather than inventing what used to be true.
+
+### Optional differential verification
+
+When a material change has a stable representative input and comparing baseline versus candidate can resolve compatibility/preservation uncertainty cheaply, use **differential verification** as an additional technique:
+
+1. use the same representative input and materially equivalent environment/conditions on the evidenced baseline and candidate;
+2. compare observable outputs/behavior relevant to the contract;
+3. classify differences as intended by the requested delta, preserved/equivalent behavior, or unexpected differences requiring investigation;
+4. keep the baseline identity and candidate validation subject explicit enough that the comparison is interpretable.
+
+Do not require differential testing for every issue and do not invent a new harness when ordinary tests already prove the contract. Regenerating a snapshot, golden file, fixture, or generated artifact from the candidate proves candidate consistency; by itself it does **not** prove compatibility with the evidenced baseline or show that every observed difference was intended.
 
 ### Change coherence review
 
@@ -194,24 +223,25 @@ For backward compatibility, a legacy root-level `.implement-issue/MANUAL_VALIDAT
 
 Include when applicable:
 
-1. **Objective** — what the human is proving.
-2. **Prerequisites** — environment, role/permissions, seed/test data, services, feature flags.
-3. **Setup** — exact preparation steps without secret values.
-4. **Happy-path scenarios** — numbered actions and expected result after each meaningful step.
-5. **Edge/error scenarios** — boundaries introduced or affected by the change.
-6. **Regression/preservation checks** — nearby behavior most likely to break because of the diff, including unchanged obligations on a modified surface that the issue did not authorize removing.
-7. **Security checks** — authorization, isolation, sensitive data, negative inputs, trust boundaries, or other changed security surfaces when relevant.
-8. **Performance/reliability checks** — responsiveness, representative workload, resource behavior, concurrency, or budgets when relevant.
-9. **Cross-surface/device/accessibility/compatibility checks** — only when relevant.
-10. **Data/migration/recovery checks** — only when relevant.
-11. **Observability/log checks** — only when relevant and safe; ensure sensitive data is not exposed.
-12. **Cleanup/rollback of test data** — when manual testing creates state.
-13. **Pass/fail recording** — a clear place for the human to report failure details.
+1. **Validation subject** — strongest available identity of the implementation state the human is being asked to validate, with enough context to detect a material later change without requiring a universal hash.
+2. **Objective** — what the human is proving.
+3. **Prerequisites** — environment, role/permissions, seed/test data, services, feature flags.
+4. **Setup** — exact preparation steps without secret values.
+5. **Happy-path scenarios** — numbered actions and expected result after each meaningful step.
+6. **Edge/error scenarios** — boundaries introduced or affected by the change.
+7. **Regression/preservation checks** — nearby behavior most likely to break because of the diff, including unchanged obligations on a modified surface that the issue did not authorize removing.
+8. **Security checks** — authorization, isolation, sensitive data, negative inputs, trust boundaries, or other changed security surfaces when relevant.
+9. **Performance/reliability checks** — responsiveness, representative workload, resource behavior, concurrency, or budgets when relevant.
+10. **Cross-surface/device/accessibility/compatibility checks** — only when relevant.
+11. **Data/migration/recovery checks** — only when relevant.
+12. **Observability/log checks** — only when relevant and safe; ensure sensitive data is not exposed.
+13. **Cleanup/rollback of test data** — when manual testing creates state.
+14. **Pass/fail recording** — a clear place for the human to report failure details.
 
 Use exact UI labels/routes/commands from repository or issue evidence when known. If a value is unknown, say so instead of inventing it.
 
 ## Human result
 
-- Pass → final human gate satisfied.
+- Pass → final human gate is satisfied only if the current validation subject is materially equivalent to the subject the human validated. If the implementation changed materially after that validation, the prior PASS is stale; stay/return to `In Review`, refresh only affected evidence/plan sections, and obtain validation for the current subject.
 - Fail → capture failing step, actual result, environment details supplied by the human, then return to implementation.
 - Not run/partial → stay in `In Review`.
