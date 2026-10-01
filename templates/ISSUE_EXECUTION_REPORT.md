@@ -31,6 +31,16 @@
 - Relevant base changes reconciled:
 - Validation evidence invalidated/rerun:
 
+## Validation subject / evidence provenance
+
+- Validation subject identity (strongest available repository/workspace/revision/material-state evidence):
+- Final subject freshness check:
+- Evidence executed for this subject:
+- CI/external evidence and subject binding:
+- Reused evidence, original subject/revision, and freshness rationale:
+- Unknown/unbound evidence limitations:
+- Human manual validation subject:
+
 ## Solution economy / known limits
 
 - Existing capability reused / why new ownership was necessary:
@@ -58,6 +68,7 @@
 - Unproven material obligations / verification precision gaps:
 - Unavailable checks and probe/capability evidence:
 - Discrimination/fault checks performed (if risk-justified):
+- Differential verification performed (if material/useful): baseline subject / candidate subject / intended vs unexpected differences
 - Partial/unverified obligation members:
 - Change coherence findings / resolution:
 
@@ -75,6 +86,7 @@
 ## Manual validation
 
 - Human result:
+- Validation subject still current/materially equivalent at Done gate:
 - Notes:
 
 ## Known limitations / follow-ups
