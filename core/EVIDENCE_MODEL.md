@@ -49,6 +49,28 @@ Partial evidence supports only the conclusion it actually proves.
 - Evidence from one path, role, environment, mode, or scenario does not automatically generalize to another materially distinct one.
 - Continue using valid partial evidence, but mark the unsupported remainder unverified/unknown as appropriate.
 - Do not convert "no contradictory evidence found" into positive proof.
+- A bounded, paginated, truncated, sampled, or partially readable result remains partial evidence. An item missing from the returned subset is not evidence that it is absent from the complete set.
+
+## Derived/indexed evidence integrity
+
+Indexes, dependency/knowledge graphs, semantic engines, caches, generated summaries, static-analysis projections, and similar derived views can be high-signal evidence, but they remain projections of an underlying subject.
+
+Before using derived evidence to support a completeness or absence claim, consider the properties that materially affect that claim:
+
+- **subject freshness** — whether the view describes the current relevant code/configuration/revision/state;
+- **coverage** — whether the relevant files, languages, relation types, paths, modes, or environments are actually represented;
+- **completeness limits** — pagination, result caps, depth limits, sampling, truncation, or omitted regions;
+- **degraded/partial state** — parse failures, stale caches, unavailable dependencies, timeouts, or other conditions that reduce fidelity;
+- **known blind spots** — dynamic behavior, reflection, generated code, framework conventions, external systems, or other relationships the mechanism cannot reliably observe;
+- **provenance** — whether a relation/result is directly observed/extracted or inferred/heuristic.
+
+A zero/empty derived result supports `absent` only when currentness, relevant coverage, completeness, and mechanism limits make that conclusion reliable. Otherwise classify it as `not_detected` or `unknown` as appropriate and use stronger evidence when the distinction is material.
+
+When current authoritative repository/runtime evidence conflicts with a derived view, prefer the authoritative evidence for the immediate decision and preserve the material discrepancy rather than silently treating the derived view as current truth.
+
+## Evaluation evidence independence
+
+When an evaluation oracle, reference answer, benchmark ground truth, or expected ordering is derived wholly or partly from the same mechanism being evaluated, disclose that circularity. Treat the result as consistency/upper-bound evidence rather than independent proof of correctness, and seek an independent signal when the adoption claim depends on correctness of that mechanism.
 
 ## Mutable evidence and conversation memory
 
