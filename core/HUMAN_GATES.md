@@ -14,6 +14,15 @@ Do not turn this rule into approval ceremony for ordinary reversible implementat
 
 Approval for one target, environment, operation, or risk acceptance does not imply authorization for another. A materially distinct rollback, recovery, cleanup, destructive correction, or production-impacting follow-up is evaluated under its own applicable gate rather than inheriting authorization merely because it responds to an already-approved action.
 
+## Decision-request quality
+
+Before asking the human for a material decision:
+
+1. Resolve what current repository/project evidence can answer safely instead of asking the human to restate discoverable facts.
+2. If multiple unresolved decisions materially depend on one another, ask the **upstream decision** first, then re-evaluate downstream questions after the answer. Do not batch downstream questions whose necessity or options may disappear once the upstream choice is resolved.
+3. Present only real alternatives and the decision-bearing trade-offs. When current evidence supports one option, recommend it and state the evidence/rationale concisely; when it does not, say that no evidence-backed recommendation is available rather than inventing certainty.
+4. Keep ordinary reversible implementation judgment autonomous. This rule improves necessary human decisions; it does not create new gates.
+
 ## Gate A — create/update project knowledge
 
 Explicit human approval is required before persisting a newly inferred/proposed `PROJECT_PROFILE` or `PROJECT_BLUEPRINT`, and before changing material facts/decisions in them due to discovery or drift.

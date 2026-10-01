@@ -37,6 +37,15 @@ Evidence can support part of an obligation without proving the whole obligation.
 - Continue validating whatever evidence is available, but label the unsupported portion explicitly.
 - An overall `pass` requires evidence for every material applicable member, except members correctly classified `not_applicable`.
 
+### Rendered-surface evidence
+
+When a material obligation concerns rendered appearance, layout, responsive behavior, visual state, or another property that is only faithfully observable after rendering, **source inspection alone is insufficient proof**. Use the lowest-cost rendered/runtime evidence that can faithfully prove the obligation when the project/environment supports it, such as direct browser/runtime observation, a screenshot or visual-regression artifact, or another project-approved rendered-output mechanism.
+
+- Scope rendered checks to viewports, themes, states, platforms, and interactions supported by the issue, project rules/design system, established compatibility targets, or concrete change risk. Do not invent a universal visual matrix.
+- A screenshot or other rendered artifact is evidence only for the surface/state it actually captures. Unseen states, interactions, roles, environments, or breakpoints remain unverified unless other evidence covers them.
+- If rendered inspection is applicable but unavailable, follow the normal probe-before-`unavailable` rule and place the strongest issue-specific visual checks in the manual validation plan rather than claiming the source code proves the result.
+- Agent-observed rendered evidence can support implementation/review, but it does not satisfy the human-owned final `Done` gate.
+
 ## Validation cadence and evidence freshness
 
 Order validation by information value, risk, and cost rather than running every check after every edit.
@@ -94,6 +103,8 @@ Only report a review finding when there is enough evidence to state:
 - a specific corrective action when the evidence makes one known.
 
 A clean review may legitimately produce zero findings. Do not invent nits or inflate severity to make the review look productive.
+
+For **visual findings**, tie the claim to an authoritative or observable basis such as an issue/acceptance requirement, approved design artifact or design-system rule, established accessibility/compatibility baseline, existing project convention, or a concrete rendering defect. Do not turn the agent's aesthetic preference into a defect. When rendered evidence exists, reference the relevant screenshot/visual-regression/runtime artifact or observation so the finding is traceable to what was actually rendered.
 
 ### Solution-economy / ownership review
 
