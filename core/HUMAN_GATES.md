@@ -53,7 +53,9 @@ If the implementation would proceed to review with a known material security reg
 
 Only a human can satisfy final manual validation. The agent must not infer that manual validation passed because automated tests passed, the diff looks correct, or the agent itself exercised a UI.
 
-Explicit confirmation such as “passed”, “approved”, “validated”, or an equivalent clear statement can authorize the `Done` transition. Ambiguous feedback does not.
+Explicit confirmation such as “passed”, “approved”, “validated”, or an equivalent clear statement can authorize the `Done` transition only for the **validation subject the human actually reviewed**. Immediately before `Done`, compare the current materially relevant implementation state with the subject bound to the manual validation plan/pass. If code, configuration, dependencies, generated inputs, test definitions, or another relevant input changed materially after the human validated it, the prior PASS is stale: remain/return to `In Review`, refresh only affected evidence/plan sections, and obtain validation of the current subject.
+
+Do not require a universal hash, lock, or frozen candidate merely to apply this gate. Use the strongest practical repository/workspace identity available and semantic materiality from `VALIDATION.md`. Incidental changes that cannot affect the validated behavior/risk do not invalidate the pass solely because bytes or timestamps differ. Ambiguous feedback does not satisfy the gate.
 
 ## Gate G — hard-to-reverse implementation decisions
 
