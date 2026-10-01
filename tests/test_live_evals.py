@@ -68,6 +68,8 @@ class LiveEvalTests(unittest.TestCase):
             )
 
             self.assertEqual("candidate", row["condition"])
+            self.assertEqual(2, row["schema_version"])
+            self.assertEqual(64, len(row["scenario_fingerprint"]))
             self.assertTrue(row["runner_metadata"]["workflow_present"])
             self.assertTrue(row["runner_isolation"]["verified"])
             paths = {item["path"] for item in row["workspace_changes"]}
@@ -134,6 +136,7 @@ class LiveEvalTests(unittest.TestCase):
 
             blind, mapping = live.blind_pairs(output)
             self.assertEqual(1, len(blind))
+            self.assertEqual(64, len(blind[0]["scenario_fingerprint"]))
             self.assertEqual({"A", "B"}, set(blind[0]["responses"]))
             self.assertEqual(1, len(mapping))
             self.assertEqual(
@@ -141,6 +144,56 @@ class LiveEvalTests(unittest.TestCase):
                 set(mapping[0]["labels"].values()),
             )
             self.assertNotIn("condition", json.dumps(blind[0]))
+
+    def test_blind_export_rejects_mismatched_scenario_fingerprint(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            config = self._runner_config(root)
+            output = root / "responses.jsonl"
+            for condition in ("baseline", "candidate"):
+                live.run_once(
+                    config,
+                    "fake",
+                    "human-done-gate",
+                    condition,
+                    1,
+                    output,
+                )
+
+            rows = live.read_rows(output)
+            rows[1]["scenario_fingerprint"] = "0" * 64
+            live.write_jsonl(output, rows)
+
+            with self.assertRaisesRegex(
+                live.LiveEvalError,
+                "requires matching scenario fingerprint",
+            ):
+                live.blind_pairs(output)
+
+    def test_blind_export_rejects_missing_scenario_fingerprint(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            config = self._runner_config(root)
+            output = root / "responses.jsonl"
+            for condition in ("baseline", "candidate"):
+                live.run_once(
+                    config,
+                    "fake",
+                    "human-done-gate",
+                    condition,
+                    1,
+                    output,
+                )
+
+            rows = live.read_rows(output)
+            rows[0].pop("scenario_fingerprint")
+            live.write_jsonl(output, rows)
+
+            with self.assertRaisesRegex(
+                live.LiveEvalError,
+                "requires scenario fingerprint",
+            ):
+                live.blind_pairs(output)
 
     def test_blind_export_rejects_unverified_isolation(self):
         with tempfile.TemporaryDirectory() as td:

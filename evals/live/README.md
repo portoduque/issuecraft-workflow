@@ -29,6 +29,10 @@ The external runner adapter remains responsible for provider-specific isolation 
 
 A baseline/candidate comparison is only causal evidence when **intervention isolation is verified**: the baseline must not receive IssueCraft through global/personal configuration, and the candidate must receive it only through the intended candidate path. Runner configuration records this under `isolation.verified` plus concrete `isolation.evidence`. Individual runs may remain exploratory with unverified isolation, but blind pairing refuses them.
 
+Comparison also requires **experiment identity freshness**. Each captured row records a deterministic `scenario_fingerprint` over the scenario definition and fixture file paths/contents that materially define the task. Blind pairing refuses a pair when either fingerprint is missing or the fingerprints differ. Reusing the same scenario id, trial, and runner after editing `scenario.json` or its fixture does not make the old and new runs comparable.
+
+The fingerprint deliberately excludes transient runtime outputs and the candidate-installed IssueCraft copy; it identifies the committed evaluation input, not the agent's result or the intervention being compared.
+
 ## Runner protocol
 
 A runner is any executable that:
@@ -128,7 +132,7 @@ python scripts/run_live_evals.py blind \
   --mapping evals/live/results/blind-mapping.json
 ```
 
-The blind file exposes responses as `A` and `B`. The mapping is deliberately separate so the evaluator does not need to see which condition produced each result. Blind export requires verified isolation evidence for both conditions; this prevents a contaminated baseline from being presented as a clean comparison.
+The blind file exposes responses as `A` and `B`. The mapping is deliberately separate so the evaluator does not need to see which condition produced each result. Blind export requires verified isolation evidence for both conditions and matching `scenario_fingerprint` values, preventing either a contaminated baseline or a stale/mismatched experiment definition from being presented as a clean comparison.
 
 Use [rubric.md](rubric.md) plus each scenario's criteria. IssueCraft intentionally does not assign global numeric weights yet.
 

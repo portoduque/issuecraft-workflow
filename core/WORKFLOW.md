@@ -188,6 +188,8 @@ Do not introduce speculative abstractions, extension points, wrappers, configura
 
 For bug fixes, prefer the **smallest common correct enforcement point** supported by evidence. Trace materially relevant callers/sibling paths when the same invariant can fail through more than the named symptom. Fix the shared cause when that actually restores the invariant across affected paths; if the shared surface broadens blast radius, validate that broader contract rather than assuming the common location is automatically safer.
 
+When behavior is controlled by layered, inherited, or overridden configuration/policy, resolve the **effective configuration at the affected scope** before mutating a shared layer. Establish the project's evidenced precedence, identify which layer actually supplies the effective value, and change the narrowest authoritative layer that matches the intended scope. Change a broader/base layer only when evidence shows the invariant is genuinely shared; when that broader change can affect sibling scopes, validate the materially affected siblings instead of assuming inheritance makes the change safe.
+
 When a deliberately simpler design has a **material known ceiling**, record the ceiling and an evidence-based revisit trigger in the execution report or equivalent durable artifact. Do not create synthetic debt or TODOs for harmless simplicity.
 
 ### Version-aware authoritative-source verification
