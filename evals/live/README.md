@@ -12,6 +12,12 @@ Live-agent evals add a second question:
 
 > Given the same repository state and task, does the candidate behavior actually improve or preserve correctness, safety, validation quality, scope discipline, and autonomy?
 
+### Black-box behavioral criteria
+
+Prefer criteria based on **externally observable repository/task outcomes** and decision behavior. Do not require the candidate to repeat canonical IssueCraft terminology, headings, or internal workflow mechanisms unless that exact representation is itself part of a public artifact contract or scenario acceptance requirement.
+
+Deterministic contract evals own assertions that canonical rules/wording exist. Live evals should instead test whether those rules produce the intended behavior. This separation reduces teaching to the test and avoids rewarding terminology recognition when the underlying task outcome is wrong.
+
 ## Safety model
 
 Live evals must never point an agent at a real project, production system, personal home directory, or repository containing secrets.

@@ -12,6 +12,17 @@ Run this checklist for a release that changes adapters, installer behavior, skil
 - record exact agent/host version when available;
 - never use production data or credentials.
 
+## Implicit routing smoke
+
+When a host supports description-based/implicit skill discovery, verify routing as part of adapter/invocation changes and periodic compatibility checks:
+
+1. Run a **positive trigger** using a natural repository task that should activate `implement-issue` without explicitly naming the skill.
+2. Run a **negative adjacent prompt** that is related to code/repository work but should not activate the implementation workflow (for example, explanation-only/read-only help).
+3. Record whether the host selected the skill in each case and the exact host/version tested.
+4. If the host does not expose or support implicit routing, mark this check `not_applicable`; do not infer success from explicit invocation.
+
+This is a host-compatibility smoke check, not canonical workflow behavior, and does not belong in provider-neutral `core/`.
+
 ## Required hosts
 
 ### Codex

@@ -2,6 +2,8 @@
 
 Use the scenario-specific criteria first. The dimensions below are intentionally unweighted so IssueCraft does not optimize for a synthetic score before enough real evidence exists.
 
+Prefer **observable task/repository outcomes** over recognition or repetition of IssueCraft terminology. Do not reward a candidate merely for naming an internal workflow concept if the corresponding behavior is missing or wrong. Exact canonical wording belongs in deterministic contract evals unless that wording itself is part of the scenario's public artifact or acceptance contract.
+
 Evaluate:
 
 - **Correctness** — the requested repository change is technically and functionally correct.
