@@ -37,6 +37,18 @@ Evidence can support part of an obligation without proving the whole obligation.
 - Continue validating whatever evidence is available, but label the unsupported portion explicitly.
 - An overall `pass` requires evidence for every material applicable member, except members correctly classified `not_applicable`.
 
+### Observation, interpretation, and refresh integrity
+
+A validation mechanism can produce a **raw observation** that project rules then interpret into an **effective verdict**. Examples include a measured value evaluated against an established tolerance, a scanner finding scoped by an approved exception, or a failure shown to be pre-existing rather than introduced by the issue.
+
+- When the effective verdict materially differs from the raw observation, preserve the raw observation, the effective verdict, and the evidence-backed interpretation/rationale that connects them. Do not overwrite or restate the raw result as though the interpretation were the original observation.
+- An exception, waiver, tolerance, baseline, or scoping rule can change the effective gate decision only to the extent supported by authoritative project/issue evidence; it does not erase the underlying observation.
+- When raw observation and effective verdict are materially the same, do not add duplicate fields or ceremony merely to represent both.
+
+Starting or retrying validation does not make an older result current. If the current attempt fails or stops before producing trustworthy fresh evidence, report that attempt as failed, unavailable, or incomplete as appropriate and do not present a previous artifact/result as if it came from the current attempt. Prior evidence may remain reusable only under the normal freshness rule above and must remain clearly identifiable as prior evidence.
+
+This is a semantic integrity rule, **not a requirement for universal hashes, receipts, transactional storage, or a new validation artifact format**. Reuse existing project mechanisms when they preserve the distinction faithfully.
+
 ### Rendered-surface evidence
 
 When a material obligation concerns rendered appearance, layout, responsive behavior, visual state, or another property that is only faithfully observable after rendering, **source inspection alone is insufficient proof**. Use the lowest-cost rendered/runtime evidence that can faithfully prove the obligation when the project/environment supports it, such as direct browser/runtime observation, a screenshot or visual-regression artifact, or another project-approved rendered-output mechanism.

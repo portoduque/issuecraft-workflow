@@ -175,6 +175,15 @@ def check_quality_contracts(errors: list[str]) -> None:
         if phrase.lower() not in validation.lower():
             errors.append(f"validation v0.7 contract missing phrase: {phrase}")
     for phrase in (
+        "Observation, interpretation, and refresh integrity",
+        "raw observation",
+        "effective verdict",
+        "previous artifact/result as if it came from the current attempt",
+        "not a requirement for universal hashes",
+    ):
+        if phrase.lower() not in validation.lower():
+            errors.append(f"validation evidence-interpretation contract missing phrase: {phrase}")
+    for phrase in (
         "Evidence-or-zero",
         "Compound obligation decomposition",
         "Verification precision gaps",
@@ -468,6 +477,9 @@ def check_eval_coverage(errors: list[str]) -> None:
         errors.append("live-agent eval runner missing")
 
     live_readme = (ROOT / "evals/live/README.md").read_text(encoding="utf-8")
+    live_rubric = (ROOT / "evals/live/rubric.md").read_text(encoding="utf-8")
+    freshness_scenario = (ROOT / "evals/scenarios/23-incremental-evidence-freshness.md").read_text(encoding="utf-8")
+    methodology_scenario = (ROOT / "evals/scenarios/46-live-eval-methodology.md").read_text(encoding="utf-8")
     live_runner = (ROOT / "scripts/run_live_evals.py").read_text(encoding="utf-8")
     for phrase in (
         "intervention isolation is verified",
@@ -475,9 +487,34 @@ def check_eval_coverage(errors: list[str]) -> None:
         "known-good/positive control",
         "known-bad/negative control",
         "Null and negative results",
+        "Observable action evidence and claim scope",
+        "does not override contradictory direct evidence",
+        "not required to expose a universal tool-call trace",
+        "proves only the scope it actually exercises",
     ):
         if phrase.lower() not in live_readme.lower():
-            errors.append(f"live-eval v0.10 methodology missing phrase: {phrase}")
+            errors.append(f"live-eval methodology missing phrase: {phrase}")
+    for phrase in (
+        "direct observable workspace/tool/runtime evidence outranks contradictory agent self-report",
+        "focused or partial scenario does not establish full-workflow or release proof",
+    ):
+        if phrase.lower() not in live_rubric.lower():
+            errors.append(f"live-eval evidence-precedence rubric missing phrase: {phrase}")
+    for phrase in (
+        "raw observation",
+        "effective verdict",
+        "failed refresh",
+        "universal hashes, receipts, transactional storage",
+    ):
+        if phrase.lower() not in freshness_scenario.lower():
+            errors.append(f"evidence-freshness scenario missing phrase: {phrase}")
+    for phrase in (
+        "direct workspace/tool/runtime evidence",
+        "focused/protocol/partial-workflow pass",
+        "universal tool-trace schema",
+    ):
+        if phrase.lower() not in methodology_scenario.lower():
+            errors.append(f"live-eval methodology scenario missing phrase: {phrase}")
     for phrase in (
         "verified runner isolation evidence",
         "verified isolation requires concrete evidence",
@@ -496,7 +533,6 @@ def check_eval_coverage(errors: list[str]) -> None:
         if phrase.lower() not in criteria_text.lower():
             errors.append(f"live-eval v0.16 issue-scoped artifact criterion missing phrase: {phrase}")
 
-    live_rubric = (ROOT / "evals/live/rubric.md").read_text(encoding="utf-8")
     for phrase in (
         "whole intervention",
         "minimal terse control",

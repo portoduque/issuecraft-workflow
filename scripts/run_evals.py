@@ -282,6 +282,7 @@ def eval_version_aware_source_verification() -> None:
 def eval_incremental_evidence_freshness() -> None:
     workflow = read("core/WORKFLOW.md")
     validation = read("core/VALIDATION.md")
+    scenario = read("evals/scenarios/23-incremental-evidence-freshness.md")
     require(
         workflow,
         "Incremental execution for non-trivial changes",
@@ -294,6 +295,18 @@ def eval_incremental_evidence_freshness() -> None:
         "previous green result remains reusable only while",
         "prior result is stale",
         "Do not repeat an unchanged green command",
+        "Observation, interpretation, and refresh integrity",
+        "raw observation",
+        "effective verdict",
+        "previous artifact/result as if it came from the current attempt",
+        "not a requirement for universal hashes",
+    )
+    require(
+        scenario,
+        "raw observation",
+        "effective verdict",
+        "failed refresh",
+        "universal hashes, receipts, transactional storage",
     )
 
 
@@ -624,6 +637,7 @@ def eval_live_eval_methodology() -> None:
     rubric = read("evals/live/rubric.md")
     learning = read("core/CONTINUOUS_IMPROVEMENT.md")
     runner = read("scripts/run_live_evals.py")
+    scenario = read("evals/scenarios/46-live-eval-methodology.md")
     require(
         live,
         "intervention isolation is verified",
@@ -632,6 +646,10 @@ def eval_live_eval_methodology() -> None:
         "known-good/positive control",
         "known-bad/negative control",
         "Null and negative results",
+        "Observable action evidence and claim scope",
+        "does not override contradictory direct evidence",
+        "not required to expose a universal tool-call trace",
+        "proves only the scope it actually exercises",
     )
     require(
         runner,
@@ -643,6 +661,14 @@ def eval_live_eval_methodology() -> None:
         "Solution economy",
         "tie/null result is legitimate",
         "irrelevant when it comes from missing behavior",
+        "direct observable workspace/tool/runtime evidence outranks contradictory agent self-report",
+        "focused or partial scenario does not establish full-workflow or release proof",
+    )
+    require(
+        scenario,
+        "direct workspace/tool/runtime evidence",
+        "focused/protocol/partial-workflow pass",
+        "universal tool-trace schema",
     )
     require(
         learning,

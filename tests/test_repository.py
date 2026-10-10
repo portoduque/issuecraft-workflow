@@ -299,6 +299,54 @@ class RepositoryTests(unittest.TestCase):
             (ROOT / "evals/live/scenarios/root-cause-shared-path/scenario.json").is_file()
         )
 
+    def test_evidence_interpretation_and_live_eval_scope_integrity(self):
+        validation = (ROOT / "core/VALIDATION.md").read_text(encoding="utf-8")
+        freshness = (ROOT / "evals/scenarios/23-incremental-evidence-freshness.md").read_text(encoding="utf-8")
+        live_readme = (ROOT / "evals/live/README.md").read_text(encoding="utf-8")
+        live_rubric = (ROOT / "evals/live/rubric.md").read_text(encoding="utf-8")
+        methodology = (ROOT / "evals/scenarios/46-live-eval-methodology.md").read_text(encoding="utf-8")
+
+        for phrase in (
+            "Observation, interpretation, and refresh integrity",
+            "raw observation",
+            "effective verdict",
+            "previous artifact/result as if it came from the current attempt",
+            "not a requirement for universal hashes",
+        ):
+            self.assertIn(phrase.lower(), validation.lower())
+
+        for phrase in (
+            "raw observation",
+            "effective verdict",
+            "failed refresh",
+            "universal hashes, receipts, transactional storage",
+        ):
+            self.assertIn(phrase.lower(), freshness.lower())
+
+        for phrase in (
+            "Observable action evidence and claim scope",
+            "does not override contradictory direct evidence",
+            "not required to expose a universal tool-call trace",
+            "proves only the scope it actually exercises",
+        ):
+            self.assertIn(phrase.lower(), live_readme.lower())
+
+        self.assertIn(
+            "direct observable workspace/tool/runtime evidence outranks contradictory agent self-report".lower(),
+            live_rubric.lower(),
+        )
+        self.assertIn(
+            "focused or partial scenario does not establish full-workflow or release proof".lower(),
+            live_rubric.lower(),
+        )
+
+        for phrase in (
+            "direct workspace/tool/runtime evidence",
+            "focused/protocol/partial-workflow pass",
+            "universal tool-trace schema",
+        ):
+            self.assertIn(phrase.lower(), methodology.lower())
+
     def test_v011_approval_scope_integrity_contracts(self):
         workflow = (ROOT / "core/WORKFLOW.md").read_text(encoding="utf-8")
         gates = (ROOT / "core/HUMAN_GATES.md").read_text(encoding="utf-8")
