@@ -216,6 +216,25 @@ class ValidatorResistanceTests(unittest.TestCase):
                     "installer adapter-collision protection missing",
                 )
 
+                mutate_text(
+                    "core/VALIDATION.md",
+                    "Observation, interpretation, and refresh integrity",
+                    "Observation and refresh handling",
+                    "validation evidence-interpretation contract missing phrase",
+                )
+                mutate_text(
+                    "evals/live/README.md",
+                    "Observable action evidence and claim scope",
+                    "Live evidence handling",
+                    "live-eval methodology missing phrase",
+                )
+                mutate_text(
+                    "evals/scenarios/46-live-eval-methodology.md",
+                    "universal tool-trace schema",
+                    "mandatory tool trace",
+                    "live-eval methodology scenario missing phrase",
+                )
+
                 manifest_path = sandbox / "manifest.json"
                 manifest_original = manifest_path.read_text(encoding="utf-8")
                 manifest = json.loads(manifest_original)
