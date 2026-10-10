@@ -136,6 +136,14 @@ When runner metadata exposes token usage/cost, retain it as a secondary efficien
 
 For a workflow change whose primary claim is token/output/context economy, measure the whole intervention when practical: recurring instruction/context overhead plus output/tool/turn effects, not only the final answer length. Add a minimal terse control when the experiment can isolate whether the candidate rule adds value beyond a plain concision request. Keep usage bases explicit; provider/runtime-reported usage and local estimates are not interchangeable. A shorter candidate that is not net-better, or that weakens semantic/evidence fidelity, is a null/negative result rather than proof for adoption.
 
+## Observable action evidence and claim scope
+
+When an evaluation criterion concerns an **observable action or state**, prefer direct workspace, tool, runtime/browser, or other mechanically captured evidence over the agent's self-report when such evidence is available. A transcript claim may explain intent or reasoning, but it does not override contradictory direct evidence. When the criterion is itself about user-facing wording or another property directly contained in the transcript, the transcript can be the direct evidence.
+
+A runner is **not required to expose a universal tool-call trace**. Use the strongest direct evidence the runner already provides; when an action cannot be verified, mark that claim unverified instead of inventing a provider-specific protocol or treating the agent's assertion as proof.
+
+A focused routing, protocol, checkpoint, or partial-workflow scenario proves only the scope it actually exercises. Do not present such a pass as full-workflow, cross-host, or release evidence unless the evaluation actually covers that broader claim.
+
 ## Multi-turn scenarios
 
 A scenario may contain multiple turns. A real runner adapter should preserve the native session when practical. If a host cannot resume sessions reliably, the adapter may provide the previous transcript explicitly, but it must record that limitation in result metadata.
