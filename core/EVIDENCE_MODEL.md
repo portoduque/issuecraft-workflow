@@ -55,16 +55,19 @@ Partial evidence supports only the conclusion it actually proves.
 
 Indexes, dependency/knowledge graphs, semantic engines, caches, generated summaries, static-analysis projections, and similar derived views can be high-signal evidence, but they remain projections of an underlying subject.
 
-Before using derived evidence to support a completeness or absence claim, consider the properties that materially affect that claim:
+Before using derived evidence to support a decision, completeness claim, or absence claim, consider the properties that materially affect that claim:
 
 - **subject freshness** — whether the view describes the current relevant code/configuration/revision/state;
+- **applicability** — whether the result actually fits the decision's subject, scope, version/environment, mode/platform, and relevant contract rather than merely resembling it;
 - **coverage** — whether the relevant files, languages, relation types, paths, modes, or environments are actually represented;
 - **completeness limits** — pagination, result caps, depth limits, sampling, truncation, or omitted regions;
 - **degraded/partial state** — parse failures, stale caches, unavailable dependencies, timeouts, or other conditions that reduce fidelity;
 - **known blind spots** — dynamic behavior, reflection, generated code, framework conventions, external systems, or other relationships the mechanism cannot reliably observe;
 - **provenance** — whether a relation/result is directly observed/extracted or inferred/heuristic.
 
-A zero/empty derived result supports `absent` only when currentness, relevant coverage, completeness, and mechanism limits make that conclusion reliable. Otherwise classify it as `not_detected` or `unknown` as appropriate and use stronger evidence when the distinction is material.
+A high-ranked, nearest, or otherwise retrieved recommendation is not automatically a project fact. When applicability is material and uncertain, narrow or reframe retrieval, corroborate with stronger project/runtime evidence, or keep the conclusion explicitly unverified/fallback rather than persisting it as authoritative knowledge.
+
+A zero/empty derived result supports `absent` only when currentness, applicability, relevant coverage, completeness, and mechanism limits make that conclusion reliable. Otherwise classify it as `not_detected` or `unknown` as appropriate and use stronger evidence when the distinction is material.
 
 When current authoritative repository/runtime evidence conflicts with a derived view, prefer the authoritative evidence for the immediate decision and preserve the material discrepancy rather than silently treating the derived view as current truth.
 

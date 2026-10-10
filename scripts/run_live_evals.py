@@ -98,6 +98,29 @@ def load_scenario(directory: Path) -> dict[str, Any]:
     return scenario
 
 
+def scenario_fingerprint(directory: Path, scenario: dict[str, Any]) -> str:
+    """Identify the committed scenario definition and fixture inputs."""
+    digest = hashlib.sha256()
+    canonical_scenario = json.dumps(
+        scenario,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    digest.update(b"scenario.json\0")
+    digest.update(canonical_scenario)
+    digest.update(b"\0")
+
+    fixture_root = directory / scenario["fixture"]
+    for path in sorted(p for p in fixture_root.rglob("*") if p.is_file()):
+        relative = path.relative_to(fixture_root).as_posix()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
 def validate_scenarios() -> list[str]:
     errors: list[str] = []
     directories = scenario_dirs()
@@ -268,6 +291,7 @@ def run_once(
         raise LiveEvalError("trial must be a positive integer")
 
     scenario_dir, scenario = find_scenario(scenario_id)
+    fingerprint = scenario_fingerprint(scenario_dir, scenario)
     runner = load_runner(runner_config, runner_name, len(scenario["turns"]))
 
     key = (scenario_id, trial, condition, runner_name)
@@ -349,8 +373,9 @@ def run_once(
 
         after = snapshot_workspace(workspace)
         row = {
-            "schema_version": 1,
+            "schema_version": 2,
             "scenario_id": scenario_id,
+            "scenario_fingerprint": fingerprint,
             "description": scenario["description"],
             "risk": scenario["risk"],
             "criteria": scenario["criteria"],
@@ -408,6 +433,20 @@ def blind_pairs(responses: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
         if set(pair) != {"baseline", "candidate"}:
             raise LiveEvalError(f"blind comparison requires baseline and candidate for {key}")
 
+        fingerprints: dict[str, str] = {}
+        for condition in ("baseline", "candidate"):
+            fingerprint = pair[condition].get("scenario_fingerprint")
+            if not isinstance(fingerprint, str) or not fingerprint.strip():
+                raise LiveEvalError(
+                    f"blind baseline/candidate comparison requires scenario fingerprint for {key} / {condition}"
+                )
+            fingerprints[condition] = fingerprint
+        if fingerprints["baseline"] != fingerprints["candidate"]:
+            raise LiveEvalError(
+                "blind baseline/candidate comparison requires matching scenario fingerprint "
+                f"for both conditions: {key}"
+            )
+
         for condition in ("baseline", "candidate"):
             isolation = pair[condition].get("runner_isolation", {})
             if (
@@ -437,6 +476,7 @@ def blind_pairs(responses: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
         blind.append(
             {
                 "scenario_id": key[0],
+                "scenario_fingerprint": fingerprints["baseline"],
                 "trial": key[1],
                 "runner": key[2],
                 "description": sample.get("description"),
@@ -455,6 +495,7 @@ def blind_pairs(responses: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
         mapping.append(
             {
                 "scenario_id": key[0],
+                "scenario_fingerprint": fingerprints["baseline"],
                 "trial": key[1],
                 "runner": key[2],
                 "labels": labels,
